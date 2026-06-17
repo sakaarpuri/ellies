@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { navItems, site } from "@/lib/site";
 
 export function SiteFooter() {
@@ -6,8 +7,15 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-brand">
         <Link href="/" className="brand-mark">
-          <span>Ellie&apos;s</span>
-          <strong>Botanics</strong>
+          <Image
+            className="site-logo footer-logo"
+            src="/images/eb-logo.png"
+            alt=""
+            width={112}
+            height={112}
+            unoptimized
+          />
+          <span className="sr-only">Ellie&apos;s Botanics</span>
         </Link>
         <p>
           Herbal wellness education, Ayurveda-inspired care, and grounded botanical notes for

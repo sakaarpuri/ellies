@@ -83,6 +83,16 @@ main {
   transform: translateY(0);
 }
 
+.sr-only {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 .site-header {
   position: sticky;
   top: 0;
@@ -101,17 +111,24 @@ main {
 }
 
 .brand-mark {
-  display: inline-grid;
-  min-width: 148px;
+  display: inline-flex;
+  width: fit-content;
+  min-width: 88px;
+  align-items: center;
   color: var(--leaf);
-  font-family: var(--font-instrument-serif), Georgia, serif;
-  font-size: clamp(1.65rem, 3vw, 2.45rem);
-  line-height: 0.84;
 }
 
-.brand-mark span,
-.brand-mark strong {
-  font-weight: 400;
+.brand-mark .site-logo {
+  display: block;
+  width: clamp(72px, 6vw, 94px);
+  height: clamp(72px, 6vw, 94px);
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.brand-mark .footer-logo {
+  width: clamp(92px, 8vw, 118px);
+  height: clamp(92px, 8vw, 118px);
 }
 
 .desktop-nav {
