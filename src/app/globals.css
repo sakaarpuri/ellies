@@ -113,22 +113,25 @@ main {
 .brand-mark {
   display: inline-flex;
   width: fit-content;
-  min-width: 88px;
+  min-width: 112px;
   align-items: center;
   color: var(--leaf);
 }
 
 .brand-mark .site-logo {
   display: block;
-  width: clamp(72px, 6vw, 94px);
-  height: clamp(72px, 6vw, 94px);
   border-radius: 50%;
   object-fit: contain;
 }
 
+.brand-mark .header-logo {
+  width: clamp(108px, 9vw, 144px);
+  height: clamp(108px, 9vw, 144px);
+}
+
 .brand-mark .footer-logo {
-  width: clamp(92px, 8vw, 118px);
-  height: clamp(92px, 8vw, 118px);
+  width: clamp(120px, 10vw, 156px);
+  height: clamp(120px, 10vw, 156px);
 }
 
 .desktop-nav {

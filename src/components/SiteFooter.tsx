@@ -9,10 +9,10 @@ export function SiteFooter() {
         <Link href="/" className="brand-mark">
           <Image
             className="site-logo footer-logo"
-            src="/images/eb-logo.png"
+            src="/images/eb-logo.jpg"
             alt=""
-            width={112}
-            height={112}
+            width={156}
+            height={156}
             unoptimized
           />
           <span className="sr-only">Ellie&apos;s Botanics</span>

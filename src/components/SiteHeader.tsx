@@ -7,11 +7,11 @@ export function SiteHeader() {
     <header className="site-header">
       <Link href="/" className="brand-mark" aria-label={`${site.name} home`}>
         <Image
-          className="site-logo"
-          src="/images/eb-logo.png"
+          className="site-logo header-logo"
+          src="/images/eb-logo.jpg"
           alt=""
-          width={88}
-          height={88}
+          width={132}
+          height={132}
           priority
           unoptimized
         />
