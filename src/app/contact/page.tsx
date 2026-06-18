@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ConsultationPanel } from "@/components/ConsultationPanel";
 import { ContactCTA } from "@/components/ContactCTA";
 import { site } from "@/lib/site";
 
@@ -51,7 +50,6 @@ export default function ContactPage() {
         </p>
       </section>
 
-      <ConsultationPanel />
       <ContactCTA />
     </>
   );
