@@ -11,6 +11,15 @@ export const site = {
     "Ellie's Botanics shares herbal wellness education, Ayurveda-inspired care, and grounded botanical wisdom for everyday routines.",
 };
 
+export const consultation = {
+  name: "Shattayu Ayurveda",
+  doctor: "Dr. Sheetal Garg",
+  url: "https://www.shattayuayurveda.in/",
+  email: "drsheetal@shattayuayurveda.in",
+  phone: { label: "+91 98555-77571", href: "tel:+919855577571" },
+  whatsapp: "https://wa.me/9855577571",
+};
+
 export const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
