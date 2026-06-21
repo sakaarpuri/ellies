@@ -16,13 +16,16 @@ export const consultation = {
   url: "https://www.shattayuayurveda.in/",
   email: "drsheetal@shattayuayurveda.in",
   phone: { label: "9815007269", href: "tel:+919815007269" },
-  whatsapp: "https://wa.me/917717607269",
+  whatsappNumber: "917717607269",
+  whatsapp:
+    "https://wa.me/917717607269?text=Hello%2C%20I%20came%20from%20Ellie%27s%20Botanics.%20I%20would%20like%20professional%20guidance%20for%20a%20joint%20comfort%20concern.",
 };
 
 export const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Herbal Wisdom", href: "/education" },
+  { label: "Consultation", href: "/consultation" },
   { label: "Contact", href: "/contact" },
 ];
 

@@ -681,6 +681,10 @@ h3 {
   max-width: 880px;
 }
 
+.consultation-hero {
+  max-width: 980px;
+}
+
 .contact-page-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -740,6 +744,154 @@ h3 {
   transform: translateY(1px);
 }
 
+.intake-section {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(360px, 1fr);
+  gap: clamp(30px, 6vw, 88px);
+  align-items: start;
+  width: min(100% - 40px, 1360px);
+  margin-right: auto;
+  margin-bottom: 58px;
+  margin-left: auto;
+}
+
+.intake-intro {
+  position: sticky;
+  top: 160px;
+}
+
+.intake-intro ol {
+  display: grid;
+  gap: 18px;
+  margin: 32px 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: intake;
+}
+
+.intake-intro li {
+  counter-increment: intake;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  color: var(--muted);
+}
+
+.intake-intro li::before {
+  content: "0" counter(intake);
+  color: var(--clay);
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.consultation-mini-card {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 24px 0;
+}
+
+.consultation-mini-card h3 {
+  margin: 0 0 14px;
+}
+
+.consultation-mini-card a {
+  display: block;
+  width: fit-content;
+  margin-top: 8px;
+  color: var(--leaf);
+  font-weight: 900;
+}
+
+.intake-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: clamp(22px, 4vw, 42px);
+  box-shadow: var(--shadow);
+}
+
+.intake-form {
+  display: grid;
+  gap: 18px;
+}
+
+.form-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.form-grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.intake-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.intake-form label > span {
+  color: var(--leaf);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.intake-form input,
+.intake-form select,
+.intake-form textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font: inherit;
+  padding: 12px 13px;
+}
+
+.intake-form textarea {
+  resize: vertical;
+}
+
+.intake-form input:focus,
+.intake-form select:focus,
+.intake-form textarea:focus {
+  outline: 2px solid rgba(185, 111, 74, 0.5);
+  outline-offset: 2px;
+}
+
+.consent-row {
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  color: var(--muted);
+}
+
+.consent-row input {
+  margin-top: 4px;
+}
+
+.consent-row span {
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-transform: none;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.form-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .contact-page-grid article {
   display: flex;
   min-height: 250px;
@@ -759,6 +911,10 @@ h3 {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   padding: 34px 0;
+}
+
+.note-panel .button {
+  margin-top: 22px;
 }
 
 .legal-page {
@@ -933,6 +1089,7 @@ h3 {
   .education-grid,
   .contact-page-grid,
   .pillar-grid,
+  .intake-section,
   .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -960,6 +1117,7 @@ h3 {
   .learning-path,
   .contact-page-grid,
   .consultation-panel,
+  .intake-section,
   .note-panel,
   .legal-page,
   .article-page,
@@ -1004,13 +1162,19 @@ h3 {
   .education-grid,
   .contact-page-grid,
   .consultation-panel,
+  .intake-section,
   .pillar-grid,
   .footer-grid,
   .editorial-copy,
   .text-columns,
   .disclaimer-callout,
-  .article-card {
+  .article-card,
+  .form-grid.two {
     grid-template-columns: 1fr;
+  }
+
+  .intake-intro {
+    position: static;
   }
 
   .tall-image,

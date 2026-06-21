@@ -1,4 +1,5 @@
 import { consultation } from "@/lib/site";
+import Link from "next/link";
 
 export function ConsultationPanel() {
   return (
@@ -13,6 +14,7 @@ export function ConsultationPanel() {
           readers may contact {consultation.doctor} for a professional Ayurvedic consultation.
         </p>
         <div className="consultation-links" aria-label="Consultation contact links">
+          <Link href="/consultation">Request consultation</Link>
           <a href={consultation.url} target="_blank" rel="noreferrer">
             Visit consultation website
           </a>

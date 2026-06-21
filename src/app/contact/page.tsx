@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ContactCTA } from "@/components/ContactCTA";
 import { site } from "@/lib/site";
 
@@ -48,6 +49,9 @@ export default function ContactPage() {
           decisions should be discussed with a qualified professional who understands your full
           context.
         </p>
+        <Link className="button secondary" href="/consultation">
+          Share a consultation concern
+        </Link>
       </section>
 
       <ContactCTA />
