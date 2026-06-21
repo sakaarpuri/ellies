@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ConsultationIntakeForm } from "@/components/ConsultationIntakeForm";
+import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSection";
 import { consultation, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -7,12 +7,6 @@ export const metadata: Metadata = {
   description:
     "Share a joint comfort concern with Ellie’s Botanics for professional Ayurvedic consultation follow-up.",
 };
-
-const expectations = [
-  "Share your concern, duration, and preferred contact details.",
-  "Your message is sent to Ellie’s Botanics by email for follow-up.",
-  "A qualified practitioner can help decide whether a personal consultation is appropriate.",
-];
 
 export default function ConsultationPage() {
   return (
@@ -27,28 +21,7 @@ export default function ConsultationPage() {
         </p>
       </section>
 
-      <section className="intake-section">
-        <div className="intake-intro">
-          <p className="eyebrow">How It Works</p>
-          <h2>Email first, simple follow-up.</h2>
-          <ol>
-            {expectations.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ol>
-          <div className="consultation-mini-card">
-            <p className="eyebrow">Consultation Contact</p>
-            <h3>{consultation.doctor}</h3>
-            <a href={consultation.phone.href}>{consultation.phone.label}</a>
-            <a href={consultation.whatsapp} target="_blank" rel="noreferrer">
-              WhatsApp consultation
-            </a>
-          </div>
-        </div>
-        <div className="intake-card">
-          <ConsultationIntakeForm />
-        </div>
-      </section>
+      <ConsultationIntakeSection />
 
       <aside className="disclaimer-callout">
         <p className="eyebrow">Responsible Care</p>

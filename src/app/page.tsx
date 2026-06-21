@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArticleCard } from "@/components/ArticleCard";
 import { BotanicalImage } from "@/components/BotanicalImage";
 import { BotanicalCollage } from "@/components/BotanicalCollage";
+import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSection";
 import { ConsultationPanel } from "@/components/ConsultationPanel";
 import { ContactCTA } from "@/components/ContactCTA";
 import { DisclaimerCallout } from "@/components/DisclaimerCallout";
@@ -51,6 +52,8 @@ export default function Home() {
         </div>
         <BotanicalCollage />
       </section>
+
+      <ConsultationIntakeSection />
 
       <section className="intro-section">
         <div className="rule-label">Ellie&apos;s Botanics</div>
