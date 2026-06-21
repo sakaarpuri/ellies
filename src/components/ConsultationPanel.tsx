@@ -10,12 +10,11 @@ export function ConsultationPanel() {
       <div className="consultation-details">
         <p>
           Ellie&apos;s Botanics shares general education only. For individual health questions,
-          readers may contact {consultation.name}, led by {consultation.doctor}, for a professional
-          Ayurvedic consultation.
+          readers may contact {consultation.doctor} for a professional Ayurvedic consultation.
         </p>
         <div className="consultation-links" aria-label="Consultation contact links">
           <a href={consultation.url} target="_blank" rel="noreferrer">
-            Visit {consultation.name}
+            Visit consultation website
           </a>
           <a href={consultation.phone.href}>{consultation.phone.label}</a>
           <a href={`mailto:${consultation.email}`}>{consultation.email}</a>

@@ -12,12 +12,11 @@ export const site = {
 };
 
 export const consultation = {
-  name: "Shattayu Ayurveda",
   doctor: "Dr. Sheetal Garg",
   url: "https://www.shattayuayurveda.in/",
   email: "drsheetal@shattayuayurveda.in",
-  phone: { label: "+91 98555-77571", href: "tel:+919855577571" },
-  whatsapp: "https://wa.me/9855577571",
+  phone: { label: "9815007269", href: "tel:+919815007269" },
+  whatsapp: "https://wa.me/917717607269",
 };
 
 export const navItems = [

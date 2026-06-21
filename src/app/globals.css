@@ -239,18 +239,18 @@ h2 {
 
 h1 {
   margin-bottom: 24px;
-  font-size: clamp(3.5rem, 8.4vw, 8.6rem);
+  font-size: clamp(2.8rem, 6.72vw, 6.88rem);
   max-width: 980px;
 }
 
 h2 {
   margin-bottom: 20px;
-  font-size: clamp(2.25rem, 5vw, 5.4rem);
+  font-size: clamp(1.8rem, 4vw, 4.32rem);
   max-width: 980px;
 }
 
 h3 {
-  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  font-size: clamp(1rem, 1.6vw, 1.36rem);
   line-height: 1.12;
 }
 
@@ -560,7 +560,7 @@ h3 {
 
 .contact-band h2 {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 4.5rem);
+  font-size: clamp(1.6rem, 3.2vw, 3.6rem);
 }
 
 .contact-band .button {
@@ -658,7 +658,7 @@ h3 {
   align-items: center;
   padding: 22px 0;
   font-family: var(--font-instrument-serif), Georgia, serif;
-  font-size: clamp(1.5rem, 3vw, 2.6rem);
+  font-size: clamp(1.2rem, 2.4vw, 2.08rem);
   line-height: 1;
 }
 
@@ -703,7 +703,7 @@ h3 {
 
 .consultation-panel h2 {
   margin-bottom: 0;
-  font-size: clamp(2rem, 4.6vw, 4.2rem);
+  font-size: clamp(1.6rem, 3.68vw, 3.36rem);
 }
 
 .consultation-details p {
@@ -767,12 +767,12 @@ h3 {
 }
 
 .legal-page h1 {
-  font-size: clamp(3rem, 8vw, 6.8rem);
+  font-size: clamp(2.4rem, 6.4vw, 5.44rem);
 }
 
 .legal-page h2 {
   margin-top: 44px;
-  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  font-size: clamp(1.44rem, 3.2vw, 2.56rem);
 }
 
 .legal-page a {
@@ -795,7 +795,7 @@ h3 {
 }
 
 .article-hero h1 {
-  font-size: clamp(3rem, 7vw, 7rem);
+  font-size: clamp(2.4rem, 5.6vw, 5.6rem);
 }
 
 .article-hero figure {
@@ -815,7 +815,7 @@ h3 {
 
 .article-body h2 {
   margin-top: 58px;
-  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-size: clamp(1.6rem, 3.2vw, 2.88rem);
 }
 
 .article-body h3 {
@@ -974,7 +974,7 @@ h3 {
   }
 
   h1 {
-    font-size: clamp(3rem, 17vw, 5rem);
+    font-size: clamp(2.4rem, 13.6vw, 4rem);
   }
 
   .botanical-collage,

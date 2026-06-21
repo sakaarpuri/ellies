@@ -26,9 +26,9 @@ export default function MedicalDisclaimerPage() {
       <p>
         For Ayurvedic consultation, readers may contact{" "}
         <a href={consultation.url} target="_blank" rel="noreferrer">
-          {consultation.name}
+          {consultation.doctor}
         </a>
-        , led by {consultation.doctor}, at{" "}
+        , at{" "}
         <a href={consultation.phone.href}>{consultation.phone.label}</a> or{" "}
         <a href={`mailto:${consultation.email}`}>{consultation.email}</a>.
       </p>
