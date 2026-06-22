@@ -145,7 +145,7 @@ export function ConsultationIntakeForm() {
         <input name="consent" type="checkbox" required />
         <span>
           I agree to share these details for consultation follow-up. I understand this website does
-          not provide emergency care, diagnosis, or a substitute for a qualified medical opinion.
+          not provide emergency care or diagnosis.
         </span>
       </label>
       <div className="form-actions">
