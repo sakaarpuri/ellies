@@ -13,8 +13,6 @@ export const site = {
 
 export const consultation = {
   doctor: "Dr. Sheetal Garg",
-  url: "https://www.shattayuayurveda.in/",
-  email: "drsheetal@shattayuayurveda.in",
   phone: { label: "9815007269", href: "tel:+919815007269" },
   whatsappNumber: "917717607269",
   whatsapp:
@@ -25,7 +23,6 @@ export const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Herbal Wisdom", href: "/education" },
-  { label: "Consultation", href: "/consultation" },
   { label: "Contact", href: "/contact" },
 ];
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { consultation } from "@/lib/site";
+import { consultation, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Medical Disclaimer",
@@ -24,13 +24,9 @@ export default function MedicalDisclaimerPage() {
       </p>
       <h2>Consultation resource</h2>
       <p>
-        For Ayurvedic consultation, readers may contact{" "}
-        <a href={consultation.url} target="_blank" rel="noreferrer">
-          {consultation.doctor}
-        </a>
-        , at{" "}
+        For Ayurvedic consultation, readers may contact {consultation.doctor} at{" "}
         <a href={consultation.phone.href}>{consultation.phone.label}</a> or{" "}
-        <a href={`mailto:${consultation.email}`}>{consultation.email}</a>.
+        <a href={`mailto:${site.email}`}>{site.email}</a>.
       </p>
       <h2>No personal diagnosis</h2>
       <p>

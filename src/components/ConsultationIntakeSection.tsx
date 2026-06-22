@@ -8,7 +8,11 @@ const expectations = [
 
 export function ConsultationIntakeSection() {
   return (
-    <section className="intake-section" aria-labelledby="intake-title">
+    <section
+      id="joint-comfort-check-in"
+      className="intake-section"
+      aria-labelledby="intake-title"
+    >
       <div className="intake-intro">
         <p className="eyebrow">Joint Comfort Check-In</p>
         <h2 id="intake-title">Share what you are experiencing.</h2>
@@ -22,9 +26,18 @@ export function ConsultationIntakeSection() {
           ))}
         </ol>
       </div>
-      <div className="intake-card">
-        <ConsultationIntakeForm />
-      </div>
+      <details className="intake-disclosure">
+        <summary>
+          <span>
+            <strong>Share your concern</strong>
+            <small>Open the private check-in form</small>
+          </span>
+          <span className="disclosure-icon" aria-hidden="true" />
+        </summary>
+        <div className="intake-card">
+          <ConsultationIntakeForm />
+        </div>
+      </details>
     </section>
   );
 }

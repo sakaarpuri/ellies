@@ -1,4 +1,4 @@
-import { consultation } from "@/lib/site";
+import { consultation, site } from "@/lib/site";
 import Link from "next/link";
 
 export function ConsultationPanel() {
@@ -14,12 +14,9 @@ export function ConsultationPanel() {
           readers may contact {consultation.doctor} for a professional Ayurvedic consultation.
         </p>
         <div className="consultation-links" aria-label="Consultation contact links">
-          <Link href="/consultation">Request consultation</Link>
-          <a href={consultation.url} target="_blank" rel="noreferrer">
-            Visit consultation website
-          </a>
+          <Link href="/#joint-comfort-check-in">Share your concern</Link>
           <a href={consultation.phone.href}>{consultation.phone.label}</a>
-          <a href={`mailto:${consultation.email}`}>{consultation.email}</a>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
           <a href={consultation.whatsapp} target="_blank" rel="noreferrer">
             WhatsApp consultation
           </a>

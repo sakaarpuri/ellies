@@ -9,7 +9,7 @@ export function ContactCTA() {
         <h2 id="contact-cta-title">Questions, collaborations, or thoughtful notes are welcome.</h2>
       </div>
       <div className="contact-actions">
-        <Link className="button primary" href="/consultation">
+        <Link className="button primary" href="/#joint-comfort-check-in">
           Request consultation
         </Link>
         <a className="button secondary" href={`mailto:${site.email}`}>

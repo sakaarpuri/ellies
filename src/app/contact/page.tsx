@@ -49,7 +49,7 @@ export default function ContactPage() {
           decisions should be discussed with a qualified professional who understands your full
           context.
         </p>
-        <Link className="button secondary" href="/consultation">
+        <Link className="button secondary" href="/#joint-comfort-check-in">
           Share a consultation concern
         </Link>
       </section>
