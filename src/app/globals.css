@@ -63,6 +63,14 @@ main {
   object-fit: cover;
 }
 
+.parallax-media {
+  --parallax-y: 0px;
+  position: absolute;
+  inset: -7% 0;
+  transform: translate3d(0, var(--parallax-y), 0);
+  will-change: transform;
+}
+
 ::selection {
   background: var(--sage);
   color: var(--ink);
@@ -498,6 +506,14 @@ h3 {
 
 .article-card:hover .article-image-link img {
   transform: scale(1.035);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallax-media {
+    inset: 0;
+    transform: none;
+    will-change: auto;
+  }
 }
 
 .article-card-content {
