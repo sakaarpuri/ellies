@@ -9,10 +9,6 @@ export function ConsultationPanel() {
         <h2 id="consultation-title">For personal guidance, speak with an Ayurvedic doctor.</h2>
       </div>
       <div className="consultation-details">
-        <p>
-          Ellie&apos;s Botanics shares general education only. For individual health questions,
-          readers may contact {consultation.doctor} for a professional Ayurvedic consultation.
-        </p>
         <div className="consultation-links" aria-label="Consultation contact links">
           <Link href="/#joint-comfort-check-in">Share your concern</Link>
           <a href={consultation.phone.href}>{consultation.phone.label}</a>
