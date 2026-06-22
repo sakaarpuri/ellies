@@ -709,57 +709,6 @@ h3 {
   margin-bottom: 42px;
 }
 
-.consultation-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(320px, 1fr);
-  gap: clamp(28px, 6vw, 78px);
-  align-items: start;
-  width: min(100% - 40px, 1360px);
-  margin: 42px auto 72px;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: clamp(34px, 5vw, 58px) 0;
-}
-
-.consultation-panel h2 {
-  margin-bottom: 0;
-  font-size: clamp(1.6rem, 3.68vw, 3.36rem);
-}
-
-.consultation-details p {
-  max-width: 64ch;
-  color: var(--muted);
-  font-size: 1.08rem;
-}
-
-.consultation-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 24px;
-}
-
-.consultation-links a {
-  border: 1px solid var(--line);
-  padding: 10px 12px;
-  color: var(--leaf);
-  font-size: 0.78rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  transition:
-    background 180ms ease,
-    transform 180ms ease;
-}
-
-.consultation-links a:hover,
-.consultation-links a:focus-visible {
-  background: var(--olive);
-}
-
-.consultation-links a:active {
-  transform: translateY(1px);
-}
-
 .intake-section {
   display: grid;
   grid-template-columns: minmax(260px, 0.72fr) minmax(360px, 1fr);
@@ -903,7 +852,56 @@ h3 {
 
 .intake-form {
   display: grid;
+  gap: 26px;
+}
+
+.form-section {
+  display: grid;
+  min-width: 0;
   gap: 18px;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  padding: 24px 0 0;
+}
+
+.form-section:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.form-section legend {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 18px;
+  padding: 0;
+}
+
+.form-section legend > span:last-child {
+  display: grid;
+  gap: 2px;
+}
+
+.form-section legend strong {
+  color: var(--leaf);
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.form-section legend small {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.form-step {
+  padding-top: 3px;
+  color: var(--clay);
+  font-size: 0.72rem;
+  font-weight: 900;
 }
 
 .form-grid {
@@ -950,6 +948,75 @@ h3 {
   outline-offset: 2px;
 }
 
+.choice-field {
+  display: grid;
+  gap: 8px;
+}
+
+.form-label {
+  margin: 0;
+  color: var(--leaf);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.choice-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.choice-grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.choice-grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.choice-option {
+  position: relative;
+  display: block;
+}
+
+.choice-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  opacity: 0;
+}
+
+.choice-option > span {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  padding: 10px 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-align: center;
+  text-transform: none;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.choice-option input:checked + span {
+  border-color: var(--leaf);
+  background: var(--olive);
+  color: var(--leaf);
+}
+
+.choice-option input:focus-visible + span {
+  outline: 2px solid var(--clay);
+  outline-offset: 2px;
+}
+
 .consent-row {
   grid-template-columns: 18px minmax(0, 1fr);
   gap: 12px;
@@ -958,7 +1025,11 @@ h3 {
 }
 
 .consent-row input {
+  width: 18px;
+  height: 18px;
   margin-top: 4px;
+  padding: 0;
+  accent-color: var(--leaf);
 }
 
 .consent-row span {
@@ -1205,7 +1276,6 @@ h3 {
   .education-grid,
   .learning-path,
   .contact-page-grid,
-  .consultation-panel,
   .intake-section,
   .note-panel,
   .legal-page,
@@ -1250,7 +1320,6 @@ h3 {
   .article-grid,
   .education-grid,
   .contact-page-grid,
-  .consultation-panel,
   .intake-section,
   .pillar-grid,
   .footer-grid,
@@ -1258,7 +1327,9 @@ h3 {
   .text-columns,
   .disclaimer-callout,
   .article-card,
-  .form-grid.two {
+  .form-grid.two,
+  .choice-grid.two,
+  .choice-grid.three {
     grid-template-columns: 1fr;
   }
 

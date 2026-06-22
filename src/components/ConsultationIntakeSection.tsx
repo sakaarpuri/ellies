@@ -29,8 +29,8 @@ export function ConsultationIntakeSection() {
       <details className="intake-disclosure">
         <summary>
           <span>
-            <strong>Request a consultation</strong>
-            <small>Open the consultation form</small>
+            <strong>Complete your details</strong>
+            <small>A short form for consultation follow-up</small>
           </span>
           <span className="disclosure-icon" aria-hidden="true" />
         </summary>

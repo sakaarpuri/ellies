@@ -3,7 +3,6 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { BotanicalImage } from "@/components/BotanicalImage";
 import { BotanicalCollage } from "@/components/BotanicalCollage";
 import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSection";
-import { ConsultationPanel } from "@/components/ConsultationPanel";
 import { ContactCTA } from "@/components/ContactCTA";
 import { DisclaimerCallout } from "@/components/DisclaimerCallout";
 import { SectionHeader } from "@/components/SectionHeader";
@@ -58,9 +57,9 @@ export default function Home() {
       <section className="intro-section">
         <div className="rule-label">Ellie&apos;s Botanics</div>
         <div className="intro-grid">
-          <h2>Traditional herbal knowledge, thoughtfully presented for modern life.</h2>
+          <h2>Traditional herbal knowledge, clearly explained.</h2>
           <p>
-            Explore clear, responsible writing on Ayurvedic herbs, everyday wellness practices, and
+            Explore clear, responsible guidance on Ayurvedic herbs, everyday wellness practices, and
             safe use, designed to help you ask better questions and make informed choices.
           </p>
         </div>
@@ -105,8 +104,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
-      <ConsultationPanel />
 
       <section className="featured-section">
         <SectionHeader
