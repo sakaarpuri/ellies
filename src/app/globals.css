@@ -205,10 +205,10 @@ main {
 .hero-shell {
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr);
-  align-items: center;
+  align-items: start;
   gap: clamp(32px, 7vw, 112px);
   min-height: calc(100dvh - 92px);
-  padding: clamp(48px, 7vw, 96px) 0 72px;
+  padding: clamp(24px, 3vw, 42px) 0 72px;
 }
 
 .hero-copy {

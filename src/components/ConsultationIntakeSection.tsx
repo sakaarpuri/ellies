@@ -1,9 +1,9 @@
 import { ConsultationIntakeForm } from "@/components/ConsultationIntakeForm";
 
 const expectations = [
-  "Share your concern, duration, and preferred contact details.",
-  "Your message opens as an email to Ellie’s Botanics for review before sending.",
-  "The team can follow up and help decide whether professional guidance is appropriate.",
+  "Complete the short form with your contact details and joint-related concern.",
+  "Review and send the prepared email to Ellie’s Botanics.",
+  "Our team will contact you to arrange an Ayurvedic consultation.",
 ];
 
 export function ConsultationIntakeSection() {
@@ -14,11 +14,12 @@ export function ConsultationIntakeSection() {
       aria-labelledby="intake-title"
     >
       <div className="intake-intro">
-        <p className="eyebrow">Joint Comfort Check-In</p>
-        <h2 id="intake-title">Share what you are experiencing.</h2>
+        <p className="eyebrow">Ayurvedic Consultation</p>
+        <h2 id="intake-title">Request guidance for a joint health concern.</h2>
         <p>
-          If joint stiffness, movement changes, or daily discomfort are on your mind, share a few
-          details so Ellie&apos;s Botanics can follow up with care.
+          Tell us where you feel discomfort, how long it has been present, and how it affects daily
+          movement. Our team will review your message and coordinate a consultation with Dr. Sheetal
+          Garg.
         </p>
         <ol>
           {expectations.map((item) => (
@@ -29,8 +30,8 @@ export function ConsultationIntakeSection() {
       <details className="intake-disclosure">
         <summary>
           <span>
-            <strong>Share your concern</strong>
-            <small>Open the private check-in form</small>
+            <strong>Request a consultation</strong>
+            <small>Open the consultation form</small>
           </span>
           <span className="disclosure-icon" aria-hidden="true" />
         </summary>
