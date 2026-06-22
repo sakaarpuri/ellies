@@ -65,9 +65,10 @@ main {
 
 .parallax-media {
   --parallax-y: 0px;
+  --scene-y: 0px;
   position: absolute;
   inset: -7% 0;
-  transform: translate3d(0, var(--parallax-y), 0);
+  transform: translate3d(0, calc(var(--parallax-y) + var(--scene-y)), 0);
   will-change: transform;
 }
 
@@ -336,6 +337,16 @@ h3 {
   min-height: 560px;
 }
 
+.botanical-collage.hero {
+  --hero-main-pan: 0px;
+  --hero-oval-pan: 0px;
+  --hero-leaf-pan: 0px;
+}
+
+.botanical-collage.hero .parallax-media {
+  inset: -18% 0;
+}
+
 .collage-orbit {
   position: absolute;
   inset: 11% 10% 12% 18%;
@@ -353,6 +364,7 @@ h3 {
 }
 
 .collage-frame.main {
+  --scene-y: var(--hero-main-pan);
   inset: 0 2% auto auto;
   width: min(74%, 520px);
   aspect-ratio: 4 / 5;
@@ -360,6 +372,7 @@ h3 {
 }
 
 .collage-frame.oval {
+  --scene-y: var(--hero-oval-pan);
   left: 0;
   top: 31%;
   width: min(48%, 330px);
@@ -368,6 +381,7 @@ h3 {
 }
 
 .collage-frame.leaf {
+  --scene-y: var(--hero-leaf-pan);
   right: 0;
   bottom: 3%;
   width: min(44%, 300px);
@@ -1260,6 +1274,34 @@ h3 {
 
   .contact-band {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 981px) {
+  .hero-shell {
+    min-height: 140dvh;
+  }
+
+  .botanical-collage.hero {
+    min-height: min(760px, calc(100dvh - 196px));
+  }
+
+  .hero-copy,
+  .botanical-collage.hero {
+    position: sticky;
+    top: 176px;
+  }
+}
+
+@media (min-width: 981px) and (prefers-reduced-motion: reduce) {
+  .hero-shell {
+    min-height: calc(100dvh - 92px);
+  }
+
+  .hero-copy,
+  .botanical-collage.hero {
+    position: relative;
+    top: auto;
   }
 }
 
