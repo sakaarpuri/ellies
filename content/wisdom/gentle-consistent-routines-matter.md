@@ -1,7 +1,7 @@
 ---
 title: "Why Gentle, Consistent Routines Matter"
 slug: "gentle-consistent-routines-matter"
-description: "Why the most useful wellness routines are often quiet, repeatable, and easy to return to."
+description: "How simple, repeatable wellness routines support consistency and long-term practice."
 date: "2026-06-13"
 category: "Ayurveda & Daily Wellness"
 readingTime: "3 min read"
@@ -27,6 +27,6 @@ These are not grand gestures. That is the point.
 
 ## Build routines you can return to
 
-Ellie&apos;s Botanics believes good wellness education should lower the pressure. Start small. Stay curious. Notice what feels steady. Ask for guidance when your situation needs more than general reading.
+Effective wellness education turns broad principles into routines that can be understood and maintained. Begin with one practical change, observe it consistently, and seek qualified guidance when individual context matters.
 
-The quiet routines are often the ones that remain.
+The routines that fit daily life are the ones most likely to remain.

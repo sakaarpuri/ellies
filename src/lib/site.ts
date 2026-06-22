@@ -8,7 +8,7 @@ export const site = {
     { label: "7717607269", href: "tel:+917717607269" },
   ],
   description:
-    "Ellie's Botanics shares herbal wellness education, Ayurveda-inspired care, and grounded botanical wisdom for everyday routines.",
+    "Ellie's Botanics provides Ayurveda-informed herbal education, responsible wellness guidance, and access to qualified consultation.",
 };
 
 export const consultation = {

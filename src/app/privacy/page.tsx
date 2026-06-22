@@ -11,9 +11,9 @@ export default function PrivacyPage() {
       <p className="eyebrow">Privacy</p>
       <h1>Privacy Policy</h1>
       <p>
-        Ellie&apos;s Botanics keeps privacy simple. If you contact us by email, phone, or a future
-        website form, we use the details you provide only to respond to your enquiry, share requested
-        information, or maintain a direct relationship with you.
+        When you contact Ellie&apos;s Botanics by email, phone, WhatsApp, or the consultation form,
+        your information is used to respond to your enquiry, coordinate requested guidance, and
+        maintain relevant communication records.
       </p>
       <h2>Information we may receive</h2>
       <p>

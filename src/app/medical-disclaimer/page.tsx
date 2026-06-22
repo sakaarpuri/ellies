@@ -3,35 +3,35 @@ import { consultation, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Medical Disclaimer",
-  description: "Educational-use disclaimer for Ellie&apos;s Botanics.",
+  description: "Scope of educational content and professional consultation at Ellie's Botanics.",
 };
 
 export default function MedicalDisclaimerPage() {
   return (
     <section className="legal-page">
       <p className="eyebrow">Medical Disclaimer</p>
-      <h1>Educational information only.</h1>
+      <h1>Education supported by professional guidance.</h1>
       <p>
-        Ellie&apos;s Botanics publishes general information about herbs, Ayurveda-inspired ideas,
-        and everyday wellness routines. This content is not medical advice and should not replace
-        guidance from a qualified professional.
+        Ellie&apos;s Botanics publishes Ayurveda-informed educational content on herbs, preparation
+        methods, and wellness practices. Website content explains general principles; individual
+        assessment, diagnosis, and recommendations require consultation with a qualified
+        practitioner.
       </p>
-      <h2>Speak with a professional</h2>
+      <h2>Personal recommendations</h2>
       <p>
-        Before changing your routine, consult a qualified practitioner, especially if you are
-        pregnant, nursing, taking medication, managing a health condition, or preparing for a
-        procedure.
+        Consult a qualified practitioner before making changes, particularly during pregnancy or
+        nursing, while taking medication, when managing a health condition, or before a procedure.
       </p>
-      <h2>Consultation resource</h2>
+      <h2>Qualified Ayurvedic consultation</h2>
       <p>
-        For Ayurvedic consultation, readers may contact {consultation.doctor} at{" "}
+        Individual Ayurvedic guidance is available from {consultation.doctor} at{" "}
         <a href={consultation.phone.href}>{consultation.phone.label}</a> or{" "}
         <a href={`mailto:${site.email}`}>{site.email}</a>.
       </p>
-      <h2>No personal diagnosis</h2>
+      <h2>Scope of website content</h2>
       <p>
-        Website content cannot evaluate your individual needs, history, or risks. Use it as a
-        starting point for better questions, not as a final answer.
+        Articles and general website content do not assess individual health history, suitability,
+        or risk. Those questions belong within a personal consultation.
       </p>
     </section>
   );

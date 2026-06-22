@@ -11,8 +11,9 @@ export default function TermsPage() {
       <p className="eyebrow">Terms</p>
       <h1>Terms of Use</h1>
       <p>
-        By using this website, you agree to read the information as general educational content.
-        Ellie&apos;s Botanics may update the site, content, and policies over time.
+        Website articles provide general, Ayurveda-informed education. Individual assessment and
+        recommendations are provided separately through qualified consultation. Ellie&apos;s Botanics
+        may update site content and policies over time.
       </p>
       <h2>Content use</h2>
       <p>

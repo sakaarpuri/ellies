@@ -6,7 +6,7 @@ export function ContactCTA() {
     <section className="contact-band" aria-labelledby="contact-cta-title">
       <div>
         <p className="eyebrow">Begin A Conversation</p>
-        <h2 id="contact-cta-title">Questions, collaborations, or thoughtful notes are welcome.</h2>
+        <h2 id="contact-cta-title">Consultation requests and professional enquiries are welcome.</h2>
       </div>
       <div className="contact-actions">
         <Link className="button primary" href="/#joint-comfort-check-in">

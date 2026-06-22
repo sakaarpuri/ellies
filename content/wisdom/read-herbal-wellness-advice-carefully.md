@@ -1,7 +1,7 @@
 ---
 title: "How to Read Herbal Wellness Advice Carefully"
 slug: "read-herbal-wellness-advice-carefully"
-description: "A practical guide to reading herbal content with better questions, less fear, and less hype."
+description: "A practical framework for evaluating herbal wellness information, claims, and context."
 date: "2026-06-15"
 category: "Safe Use & Responsible Care"
 readingTime: "4 min read"
@@ -35,4 +35,4 @@ Context is what separates education from noise.
 
 The best wellness writing does not need to shout. It can explain what is known, what is general, and where personal guidance should begin.
 
-That is the tone Ellie&apos;s Botanics aims for: clear language, beautiful presentation, and no rush to overstate.
+Ellie&apos;s Botanics applies this standard throughout its educational resources: clear language, relevant context, measured claims, and professional guidance where individual assessment is required.

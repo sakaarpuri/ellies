@@ -15,8 +15,8 @@ export default function ContactPage() {
         <p className="eyebrow">Contact</p>
         <h1>Reach Ellie&apos;s Botanics directly.</h1>
         <p>
-          For thoughtful questions, collaboration notes, or general enquiries, email or call the
-          team using the official details below.
+          For consultation requests, editorial questions, professional collaborations, or general
+          enquiries, contact the team using the official details below.
         </p>
       </section>
 
@@ -43,11 +43,11 @@ export default function ContactPage() {
       </section>
 
       <section className="note-panel">
-        <h2>A note on wellness questions</h2>
+        <h2>Personal wellness guidance</h2>
         <p>
-          Ellie&apos;s Botanics can answer general and education-related questions. Personal health
-          decisions should be discussed with a qualified professional who understands your full
-          context.
+          Concerns requiring individual assessment can be discussed through an Ayurvedic
+          consultation with Dr. Sheetal Garg. Use the consultation form to share the relevant
+          details and preferred method of follow-up.
         </p>
         <Link className="button secondary" href="/#joint-comfort-check-in">
           Share a consultation concern

@@ -13,18 +13,18 @@ import { imagery } from "@/lib/site";
 const pillars = [
   {
     label: "01",
-    title: "Traditional Knowledge",
-    body: "We look to long-practiced botanical traditions with respect, context, and humility.",
+    title: "Ayurvedic Foundations",
+    body: "Established Ayurvedic principles and long-practiced botanical traditions inform every educational resource.",
   },
   {
     label: "02",
-    title: "Careful Sourcing Intent",
-    body: "Plant quality, thoughtful preparation, and clear information all shape how herbal care is understood.",
+    title: "Ingredient Standards",
+    body: "Plant identity, quality, preparation, and intended use are essential to responsible herbal care.",
   },
   {
     label: "03",
-    title: "Everyday Wellness",
-    body: "The focus is small, repeatable routines that help people approach self-care with more attention.",
+    title: "Practical Application",
+    body: "Traditional principles are presented as clear, realistic guidance for contemporary wellness routines.",
   },
 ];
 
@@ -38,15 +38,15 @@ export default function Home() {
           <p className="eyebrow">Botanical Wellness Notes</p>
           <h1>Rooted in herbal wisdom. Made for modern wellness.</h1>
           <p>
-            Ellie&apos;s Botanics shares thoughtful writing on herbal traditions, Ayurveda-inspired
-            routines, and the careful way plant knowledge can support everyday self-care.
+            Ellie&apos;s Botanics presents Ayurveda-informed guidance on herbs, daily routines, and
+            responsible self-care for modern life.
           </p>
           <div className="hero-actions">
             <Link className="button primary" href="/education">
               Explore herbal wisdom
             </Link>
             <Link className="button secondary" href="/about">
-              Our intention
+              About Ellie&apos;s Botanics
             </Link>
           </div>
         </div>
@@ -72,19 +72,19 @@ export default function Home() {
         </figure>
         <div className="why-copy">
           <SectionHeader
-            eyebrow="Why Herbal Solutions?"
-            title="Plants have always been part of how people care, cook, rest, and restore."
-            body="The useful question is not whether nature is trendy. It is how to approach plant-based wellness with enough patience, context, and responsibility to make it meaningful."
+            eyebrow="Herbal Care In Context"
+            title="Responsible herbal care begins with the right plant, preparation, and context."
+            body="Ayurveda considers the individual, season, preparation, and routine together. Understanding that context is essential to applying herbal knowledge responsibly."
           />
           <div className="text-columns">
             <p>
-              Herbal traditions often begin with observation: season, constitution, preparation,
-              routine, and rhythm. Ellie&apos;s Botanics translates those ideas into accessible
-              reading without making dramatic promises.
+              Botanical traditions are structured systems of knowledge. Plant part, preparation,
+              timing, quality, and individual suitability all influence how an herb is understood
+              and used.
             </p>
             <p>
-              The aim is simple: information that is beautiful enough to invite attention, clear
-              enough to be useful, and careful enough to read with confidence.
+              Ellie&apos;s Botanics explains these principles in clear language, connecting
+              traditional Ayurvedic knowledge with responsible contemporary practice.
             </p>
           </div>
         </div>
@@ -92,8 +92,8 @@ export default function Home() {
 
       <section className="pillars-section">
         <SectionHeader
-          eyebrow="Our Foundation"
-          title="Herbal learning shaped by clarity, patience, and respect."
+          eyebrow="Our Approach"
+          title="A disciplined approach to herbal wellness."
         />
         <div className="pillar-grid">
           {pillars.map((pillar) => (
@@ -111,8 +111,8 @@ export default function Home() {
       <section className="featured-section">
         <SectionHeader
           eyebrow="Herbal Wisdom"
-          title="Begin with gentle, grounded reading."
-          body="Short educational notes for people exploring herbal and Ayurveda-inspired care without hype."
+          title="Explore Ayurveda and herbal wellness."
+          body="Clear introductions to herbal preparations, Ayurvedic principles, daily routines, and responsible use."
         />
         <div className="article-grid">
           {featuredPosts.map((post, index) => (

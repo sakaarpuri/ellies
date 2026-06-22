@@ -18,8 +18,8 @@ export function SiteFooter() {
           <span className="sr-only">Ellie&apos;s Botanics</span>
         </Link>
         <p>
-          Herbal wellness education, Ayurveda-inspired care, and grounded botanical notes for
-          everyday readers.
+          Ayurveda-informed herbal education, responsible wellness guidance, and access to
+          qualified consultation.
         </p>
       </div>
       <div className="footer-grid">
@@ -49,7 +49,7 @@ export function SiteFooter() {
       </div>
       <div className="footer-bottom">
         <p>Copyright © 2026 Ellie&apos;s Botanics. All rights reserved.</p>
-        <p>Herbal wisdom, Ayurveda-inspired care, and practical wellness notes.</p>
+        <p>Traditional knowledge. Responsible use. Professional guidance.</p>
       </div>
     </footer>
   );

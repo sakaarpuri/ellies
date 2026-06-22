@@ -7,11 +7,11 @@ import { getAllPosts } from "@/lib/wisdom";
 const categories = [
   {
     title: "Herbal Basics",
-    body: "Accessible introductions to leaves, roots, oils, preparations, and the language of botanical care.",
+    body: "Foundational guidance on leaves, roots, oils, preparations, and the language of botanical care.",
   },
   {
     title: "Ayurveda & Daily Wellness",
-    body: "Gentle explanations of balance, routine, seasonality, and everyday self-care ideas.",
+    body: "Core Ayurvedic principles of balance, routine, seasonality, and everyday self-care.",
   },
   {
     title: "Ingredients & Traditions",
@@ -19,7 +19,7 @@ const categories = [
   },
   {
     title: "Safe Use & Responsible Care",
-    body: "Careful notes on reading wellness advice, asking better questions, and knowing when to seek guidance.",
+    body: "Practical standards for evaluating wellness advice, understanding limits, and seeking qualified guidance.",
   },
 ];
 
@@ -36,10 +36,10 @@ export default function EducationPage() {
     <>
       <section className="page-hero">
         <p className="eyebrow">Herbal Wisdom</p>
-        <h1>A reading room for plant-based wellness, built with restraint.</h1>
+        <h1>A structured guide to herbs, Ayurveda, and responsible use.</h1>
         <p>
-          Start here if you are curious about herbs, Ayurveda-inspired routines, or the difference
-          between useful education and overconfident wellness noise.
+          Explore foundational concepts, preparation methods, daily wellness practices, and the
+          standards that distinguish responsible herbal guidance.
         </p>
       </section>
 
@@ -54,9 +54,9 @@ export default function EducationPage() {
 
       <section className="learning-path">
         <SectionHeader
-          eyebrow="Suggested Path"
-          title="Five useful first reads."
-          body="These articles build from broad orientation to everyday practice."
+          eyebrow="Suggested Reading"
+          title="Five foundational articles."
+          body="Follow the series from core herbal concepts to informed everyday practice."
         />
         <ol>
           {posts.map((post) => (

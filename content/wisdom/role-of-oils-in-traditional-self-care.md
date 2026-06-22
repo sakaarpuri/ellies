@@ -1,7 +1,7 @@
 ---
 title: "The Role of Oils in Traditional Self-Care"
 slug: "role-of-oils-in-traditional-self-care"
-description: "A calm look at why oils appear in many traditional care rituals and how to think about them responsibly."
+description: "How oils function in traditional self-care, including preparation, quality, and responsible use."
 date: "2026-06-14"
 category: "Ingredients & Traditions"
 readingTime: "5 min read"
@@ -19,7 +19,7 @@ An oil is not only a base material. It is also a format. It changes the pace of 
 
 Applying oil asks for a few minutes of attention. The hands are involved. The body is noticed. The routine becomes less abstract.
 
-That may be one reason oil-based rituals remain meaningful across generations.
+This combination of preparation, touch, and attention helps explain why oil-based rituals remain meaningful across generations.
 
 ## Quality and preparation matter
 
@@ -31,4 +31,4 @@ Responsible education should talk about those details instead of treating every 
 
 If you are exploring oil-based care, start with observation. Notice texture, scent, comfort, and your own context. If you have sensitivities, allergies, or a health-related concern, ask a qualified professional before making changes.
 
-Traditional self-care can be beautiful. It is even better when it is approached with patience.
+Traditional self-care is most useful when preparation, suitability, and individual context are treated with equal care.
