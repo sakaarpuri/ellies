@@ -58,11 +58,10 @@ export default function Home() {
       <section className="intro-section">
         <div className="rule-label">Ellie&apos;s Botanics</div>
         <div className="intro-grid">
-          <h2>A calm place to learn about herbs with clarity and care.</h2>
+          <h2>Traditional herbal knowledge, thoughtfully presented for modern life.</h2>
           <p>
-            Many people are curious about herbs but unsure where to begin. Ellie&apos;s Botanics
-            makes the first step clearer with simple explanations, careful framing, and respect for
-            both traditional wisdom and modern caution.
+            Explore clear, responsible writing on Ayurvedic herbs, everyday wellness practices, and
+            safe use, designed to help you ask better questions and make informed choices.
           </p>
         </div>
       </section>
