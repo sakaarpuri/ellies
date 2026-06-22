@@ -12,7 +12,6 @@ export const site = {
 };
 
 export const consultation = {
-  doctor: "Dr. Sheetal Garg",
   phone: { label: "9815007269", href: "tel:+919815007269" },
   whatsappNumber: "917717607269",
   whatsapp:

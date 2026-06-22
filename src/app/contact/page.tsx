@@ -45,9 +45,9 @@ export default function ContactPage() {
       <section className="note-panel">
         <h2>Personal wellness guidance</h2>
         <p>
-          Concerns requiring individual assessment can be discussed through an Ayurvedic
-          consultation with Dr. Sheetal Garg. Use the consultation form to share the relevant
-          details and preferred method of follow-up.
+          Concerns requiring individual assessment can be discussed through a consultation with a
+          doctor. Use the consultation form to share the relevant details and preferred method of
+          follow-up.
         </p>
         <Link className="button secondary" href="/#joint-comfort-check-in">
           Share a consultation concern

@@ -18,8 +18,7 @@ export function ConsultationIntakeSection() {
         <h2 id="intake-title">Request guidance for a joint health concern.</h2>
         <p>
           Tell us where you feel discomfort, how long it has been present, and how it affects daily
-          movement. Our team will review your message and coordinate a consultation with Dr. Sheetal
-          Garg.
+          movement. Our team will review your message and coordinate a consultation with a doctor.
         </p>
         <ol>
           {expectations.map((item) => (

@@ -24,7 +24,7 @@ export default function MedicalDisclaimerPage() {
       </p>
       <h2>Qualified Ayurvedic consultation</h2>
       <p>
-        Individual Ayurvedic guidance is available from {consultation.doctor} at{" "}
+        Individual guidance is available from a doctor at{" "}
         <a href={consultation.phone.href}>{consultation.phone.label}</a> or{" "}
         <a href={`mailto:${site.email}`}>{site.email}</a>.
       </p>
