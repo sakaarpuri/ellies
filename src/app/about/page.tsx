@@ -2,13 +2,19 @@ import type { Metadata } from "next";
 import { BotanicalCollage } from "@/components/BotanicalCollage";
 import { ContactCTA } from "@/components/ContactCTA";
 import { DisclaimerCallout } from "@/components/DisclaimerCallout";
+import { JsonLdScript } from "@/components/JsonLd";
 import { SectionHeader } from "@/components/SectionHeader";
+import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About",
+const description =
+  "Learn about Ellie's Botanics, an India-focused Ayurveda-informed herbal wellness education brand with qualified consultation access.";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Ayurvedic Herbal Wellness Education in India",
   description:
-    "Learn about Ellie's Botanics and its Ayurveda-informed approach to herbal wellness education.",
-};
+    "Learn about Ellie's Botanics, an India-focused Ayurveda-informed herbal wellness education brand with qualified consultation access.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (
@@ -71,6 +77,19 @@ export default function AboutPage() {
 
       <DisclaimerCallout />
       <ContactCTA />
+      <JsonLdScript
+        data={[
+          webPageJsonLd({
+            path: "/about",
+            name: "About Ellie’s Botanics",
+            description,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "About", path: "/about" },
+          ]),
+        ]}
+      />
     </>
   );
 }

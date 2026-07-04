@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ContactCTA } from "@/components/ContactCTA";
+import { JsonLdScript } from "@/components/JsonLd";
 import { SectionHeader } from "@/components/SectionHeader";
 import { getAllPosts } from "@/lib/wisdom";
+import { breadcrumbJsonLd, faqJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
 const categories = [
   {
@@ -23,11 +25,32 @@ const categories = [
   },
 ];
 
-export const metadata: Metadata = {
-  title: "Herbal Wisdom",
-  description:
-    "Explore Ellie's Botanics educational guide to herbal basics, Ayurveda-inspired wellness, ingredients, and responsible care.",
-};
+const description =
+  "Explore Ellie’s Botanics Herbal Wisdom guide to Ayurvedic herbs, daily wellness, ingredient traditions, and responsible herbal care.";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Herbal Wisdom | Ayurvedic Herbs and Responsible Wellness",
+  description,
+  path: "/education",
+});
+
+const educationFaqs = [
+  {
+    question: "What can I learn in Herbal Wisdom?",
+    answer:
+      "Herbal Wisdom explains Ayurvedic principles, botanical preparations, ingredient context, daily routines, and responsible use in plain language.",
+  },
+  {
+    question: "Is this content a personal recommendation?",
+    answer:
+      "No. The articles provide general education. Individual suitability depends on health history, medicines, routine, and personal needs.",
+  },
+  {
+    question: "How should I use herbal education safely?",
+    answer:
+      "Use herbal education to ask better questions, check preparation and dosage context, read labels carefully, and seek professional guidance for personal concerns.",
+  },
+];
 
 export default function EducationPage() {
   const posts = getAllPosts();
@@ -70,7 +93,36 @@ export default function EducationPage() {
         </ol>
       </section>
 
+      <section className="faq-section" aria-labelledby="education-faq-title">
+        <div>
+          <p className="eyebrow">Helpful Context</p>
+          <h2 id="education-faq-title">How to read Herbal Wisdom.</h2>
+        </div>
+        <div className="faq-list">
+          {educationFaqs.map((item) => (
+            <details key={item.question}>
+              <summary>{item.question}</summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
       <ContactCTA />
+      <JsonLdScript
+        data={[
+          webPageJsonLd({
+            path: "/education",
+            name: "Herbal Wisdom",
+            description,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Herbal Wisdom", path: "/education" },
+          ]),
+          faqJsonLd(educationFaqs),
+        ]}
+      />
     </>
   );
 }

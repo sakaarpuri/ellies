@@ -1,35 +1,56 @@
 import type { Metadata } from "next";
+import { JsonLdScript } from "@/components/JsonLd";
+import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Terms",
-  description: "Terms of use for Ellie&apos;s Botanics.",
-};
+const description =
+  "Terms of use for Ellie’s Botanics herbal wellness education, website content, and consultation enquiry information.";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Terms of Use",
+  description,
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (
-    <section className="legal-page">
-      <p className="eyebrow">Terms</p>
-      <h1>Terms of Use</h1>
-      <p>
-        Website articles provide general, Ayurveda-informed education. Individual assessment and
-        recommendations are provided separately through qualified consultation. Ellie&apos;s Botanics
-        may update site content and policies over time.
-      </p>
-      <h2>Content use</h2>
-      <p>
-        Site text, layout, and visual presentation belong to Ellie&apos;s Botanics unless otherwise
-        noted. Please request permission before reusing original content.
-      </p>
-      <h2>External references</h2>
-      <p>
-        Links and references are provided for context. Ellie&apos;s Botanics is not responsible for
-        third-party websites.
-      </p>
-      <h2>Contact</h2>
-      <p>
-        Questions about these terms can be sent to{" "}
-        <a href="mailto:elliesbotanics@gmail.com">elliesbotanics@gmail.com</a>.
-      </p>
-    </section>
+    <>
+      <section className="legal-page">
+        <p className="eyebrow">Terms</p>
+        <h1>Terms of Use</h1>
+        <p>
+          Website articles provide general, Ayurveda-informed education. Individual assessment and
+          recommendations are provided separately through qualified consultation. Ellie&apos;s
+          Botanics may update site content and policies over time.
+        </p>
+        <h2>Content use</h2>
+        <p>
+          Site text, layout, and visual presentation belong to Ellie&apos;s Botanics unless
+          otherwise noted. Please request permission before reusing original content.
+        </p>
+        <h2>External references</h2>
+        <p>
+          Links and references are provided for context. Ellie&apos;s Botanics is not responsible for
+          third-party websites.
+        </p>
+        <h2>Contact</h2>
+        <p>
+          Questions about these terms can be sent to{" "}
+          <a href="mailto:elliesbotanics@gmail.com">elliesbotanics@gmail.com</a>.
+        </p>
+      </section>
+      <JsonLdScript
+        data={[
+          webPageJsonLd({
+            path: "/terms",
+            name: "Terms of Use",
+            description,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Terms", path: "/terms" },
+          ]),
+        ]}
+      />
+    </>
   );
 }

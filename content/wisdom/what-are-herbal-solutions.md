@@ -3,6 +3,7 @@ title: "What Are Herbal Solutions?"
 slug: "what-are-herbal-solutions"
 description: "An introduction to herbal preparations, quality, context, and responsible use."
 date: "2026-06-17"
+lastUpdated: "2026-07-04"
 category: "Herbal Basics"
 readingTime: "8 min read"
 heroImage: "https://images.unsplash.com/photo-1726241966334-6e9f1de905d6?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1600"
@@ -24,7 +25,7 @@ Two products that contain the same botanical name may be very different preparat
 - **Powders:** Dried plant material ground for use in food or another preparation.
 - **Infused oils:** Botanicals prepared in a carrier oil for topical use.
 - **Extracts:** Preparations designed to concentrate selected plant constituents.
-- **Tablets or capsules:** Measured formats that may contain powders, extracts, or combinations.
+- **Measured formats:** Prepared portions that may contain powders, extracts, or combinations.
 
 These forms are not automatically interchangeable. A culinary amount in food is not the same as a concentrated extract. A topical oil is not necessarily suitable for ingestion. A product label should make the format and intended route of use unmistakably clear.
 

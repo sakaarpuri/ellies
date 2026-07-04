@@ -42,6 +42,7 @@ export function SiteFooter() {
         </div>
         <div>
           <p className="footer-title">Care Notes</p>
+          <Link href="/editorial-standards">Editorial Standards</Link>
           <Link href="/medical-disclaimer">Medical Disclaimer</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>

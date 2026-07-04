@@ -9,6 +9,7 @@ export type WisdomArticle = {
   slug: string;
   description: string;
   date: string;
+  lastUpdated: string;
   category: string;
   readingTime: string;
   heroImage: string;
@@ -52,6 +53,7 @@ function assertFrontmatter(data: Record<string, unknown>, fileName: string): Wis
     "slug",
     "description",
     "date",
+    "lastUpdated",
     "category",
     "readingTime",
     "heroImage",
@@ -69,6 +71,7 @@ function assertFrontmatter(data: Record<string, unknown>, fileName: string): Wis
     slug: String(data.slug),
     description: String(data.description),
     date: String(data.date),
+    lastUpdated: String(data.lastUpdated),
     category: String(data.category),
     readingTime: String(data.readingTime),
     heroImage: String(data.heroImage),
@@ -99,6 +102,29 @@ export function getAllPosts({ includeDrafts = false } = {}) {
 
 export function getFeaturedPosts(limit = 3) {
   return getAllPosts().slice(0, limit);
+}
+
+export function getRelatedPosts(slug: string, limit = 3) {
+  const posts = getAllPosts();
+  const currentPost = posts.find((post) => post.slug === slug);
+
+  if (!currentPost) {
+    return posts.filter((post) => post.slug !== slug).slice(0, limit);
+  }
+
+  return posts
+    .filter((post) => post.slug !== slug)
+    .sort((a, b) => {
+      const categoryScore =
+        Number(b.category === currentPost.category) - Number(a.category === currentPost.category);
+
+      if (categoryScore !== 0) {
+        return categoryScore;
+      }
+
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    })
+    .slice(0, limit);
 }
 
 export function getPostBySlug(slug: string) {

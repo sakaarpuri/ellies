@@ -1,12 +1,36 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ContactCTA } from "@/components/ContactCTA";
+import { JsonLdScript } from "@/components/JsonLd";
 import { site } from "@/lib/site";
+import { breadcrumbJsonLd, faqJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: "Contact Ellie's Botanics by email or mobile.",
-};
+const description =
+  "Contact Ellie’s Botanics in India for Ayurvedic herbal wellness enquiries, consultation follow-up, email, phone, and WhatsApp details.";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Contact & Ayurvedic Consultation Enquiries",
+  description,
+  path: "/contact",
+});
+
+const contactFaqs = [
+  {
+    question: "How can I contact Ellie’s Botanics?",
+    answer:
+      "Email elliesbotanics@gmail.com or call 9815007269 or 7717607269 for official Ellie’s Botanics enquiries.",
+  },
+  {
+    question: "Can I request Ayurvedic guidance online?",
+    answer:
+      "Yes. Use the consultation form on the homepage to share your concern and preferred contact details for follow-up.",
+  },
+  {
+    question: "Where does Ellie’s Botanics serve enquiries?",
+    answer:
+      "Ellie’s Botanics is India-focused, with local relevance for Punjab and consultation enquiries handled through direct follow-up.",
+  },
+];
 
 export default function ContactPage() {
   return (
@@ -54,7 +78,36 @@ export default function ContactPage() {
         </Link>
       </section>
 
+      <section className="faq-section compact" aria-labelledby="contact-faq-title">
+        <div>
+          <p className="eyebrow">Contact FAQ</p>
+          <h2 id="contact-faq-title">How enquiries are handled.</h2>
+        </div>
+        <div className="faq-list">
+          {contactFaqs.map((item) => (
+            <details key={item.question}>
+              <summary>{item.question}</summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
       <ContactCTA />
+      <JsonLdScript
+        data={[
+          webPageJsonLd({
+            path: "/contact",
+            name: "Contact Ellie’s Botanics",
+            description,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Contact", path: "/contact" },
+          ]),
+          faqJsonLd(contactFaqs),
+        ]}
+      />
     </>
   );
 }

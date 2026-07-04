@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 import { DM_Sans, Instrument_Serif } from "next/font/google";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { JsonLdScript } from "@/components/JsonLd";
+import { organizationJsonLd, pageMetadata, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -19,31 +21,33 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
+const defaultMetadata = pageMetadata({
+  title: "Ellie's Botanics | Herbal Wisdom for Modern Wellness",
+  description: site.description,
+  path: "/",
+  imageAlt: "Ellie's Botanics botanical editorial wellness card",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
     default: "Ellie's Botanics | Herbal Wisdom for Modern Wellness",
     template: "%s | Ellie's Botanics",
   },
-  description: site.description,
-  openGraph: {
-    title: "Ellie's Botanics | Herbal Wisdom for Modern Wellness",
-    description: site.description,
-    url: site.url,
-    siteName: site.name,
-    type: "website",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Ellie's Botanics botanical editorial card",
-      },
-    ],
+  description: defaultMetadata.description,
+  keywords: defaultMetadata.keywords,
+  alternates: defaultMetadata.alternates,
+  openGraph: defaultMetadata.openGraph,
+  twitter: defaultMetadata.twitter,
+  icons: {
+    icon: site.logo,
+    apple: site.logo,
   },
-  alternates: {
-    canonical: site.url,
-  },
+  applicationName: site.name,
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  publisher: site.name,
+  category: "Ayurvedic herbal wellness education",
 };
 
 export default function RootLayout({
@@ -51,15 +55,6 @@ export default function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const organizationJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: site.name,
-    url: site.url,
-    email: site.email,
-    telephone: site.phones.map((phone) => phone.label),
-  };
-
   return (
     <html lang="en" className={`${dmSans.variable} ${instrumentSerif.variable}`}>
       <body>
@@ -69,10 +64,7 @@ export default function RootLayout({
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-        />
+        <JsonLdScript data={[organizationJsonLd(), websiteJsonLd()]} />
       </body>
     </html>
   );

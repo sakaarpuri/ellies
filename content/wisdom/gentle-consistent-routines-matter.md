@@ -3,6 +3,7 @@ title: "Why Gentle, Consistent Routines Matter"
 slug: "gentle-consistent-routines-matter"
 description: "How simple, repeatable wellness routines support consistency and long-term practice."
 date: "2026-06-13"
+lastUpdated: "2026-07-04"
 category: "Ayurveda & Daily Wellness"
 readingTime: "7 min read"
 heroImage: "https://images.unsplash.com/photo-1726241966334-6e9f1de905d6?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1600"
@@ -103,7 +104,7 @@ Adaptation is part of consistency. The goal is a stable method, not inflexible r
 
 ## Do not use routine to delay assessment
 
-Daily practices can support organization and self-care, but they are not a substitute for assessment of persistent, severe, unexplained, or worsening symptoms.
+Daily practices can support organization and self-care, while persistent, severe, unexplained, or worsening symptoms should be assessed by a qualified professional.
 
 Seek appropriate guidance when a concern affects daily function, follows an injury, involves swelling or sudden change, or continues despite reasonable adjustments. Bring a short routine record to the consultation; it can help describe timing and patterns clearly.
 

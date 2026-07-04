@@ -2,13 +2,24 @@ export const site = {
   name: "Ellie's Botanics",
   domain: "www.elliesbotanics.com",
   url: "https://www.elliesbotanics.com",
+  logo: "/images/eb-logo.jpg",
   email: "elliesbotanics@gmail.com",
   phones: [
     { label: "9815007269", href: "tel:+919815007269" },
     { label: "7717607269", href: "tel:+917717607269" },
   ],
   description:
-    "Ellie's Botanics provides Ayurveda-informed herbal education, responsible wellness guidance, and access to qualified consultation.",
+    "Ellie's Botanics provides Ayurveda-informed herbal education, responsible wellness guidance, and access to qualified Ayurvedic consultation in India.",
+  locale: "en_IN",
+  areaServed: ["India", "Punjab"],
+  keywords: [
+    "Ellie's Botanics",
+    "Ayurvedic herbal wellness",
+    "herbal wellness education",
+    "Ayurveda consultation India",
+    "Ayurvedic consultation Punjab",
+    "responsible herbal guidance",
+  ],
 };
 
 export const consultation = {
@@ -22,6 +33,7 @@ export const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Herbal Wisdom", href: "/education" },
+  { label: "Editorial Standards", href: "/editorial-standards" },
   { label: "Contact", href: "/contact" },
 ];
 
