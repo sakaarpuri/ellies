@@ -10,23 +10,36 @@ export function SiteHeader() {
           className="site-logo header-logo"
           src="/images/eb-logo.jpg"
           alt=""
-          width={132}
-          height={132}
+          width={40}
+          height={40}
           priority
           unoptimized
         />
-        <span className="sr-only">Ellie&apos;s Botanics</span>
+        <span>Ellie&apos;s Botanics</span>
       </Link>
       <nav className="desktop-nav" aria-label="Primary navigation">
         {navItems.map((item) => (
           <Link key={item.href} href={item.href}>
-            {item.label}
-          </Link>
+          {item.label}
+        </Link>
         ))}
       </nav>
-      <a className="header-contact" href={`mailto:${site.email}`}>
-        Write to us
-      </a>
+      <Link className="header-contact" href="/#joint-comfort-check-in">
+        Consult a doctor
+      </Link>
+      <details className="mobile-nav">
+        <summary aria-label="Open menu">
+          <span />
+          <span />
+        </summary>
+        <nav aria-label="Mobile navigation">
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href}>
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </details>
     </header>
   );
 }

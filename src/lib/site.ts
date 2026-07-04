@@ -9,7 +9,7 @@ export const site = {
     { label: "7717607269", href: "tel:+917717607269" },
   ],
   description:
-    "Ellie's Botanics provides Ayurveda-informed herbal education, responsible wellness guidance, and access to qualified Ayurvedic consultation in India.",
+    "Ellie's Botanics shares practical Ayurvedic herbal education and helps readers in India request qualified Ayurvedic consultation.",
   locale: "en_IN",
   areaServed: ["India", "Punjab"],
   keywords: [
@@ -31,9 +31,9 @@ export const consultation = {
 
 export const navItems = [
   { label: "Home", href: "/" },
+  { label: "Journal", href: "/education" },
   { label: "About", href: "/about" },
-  { label: "Herbal Wisdom", href: "/education" },
-  { label: "Editorial Standards", href: "/editorial-standards" },
+  { label: "Consultation", href: "/#joint-comfort-check-in" },
   { label: "Contact", href: "/contact" },
 ];
 

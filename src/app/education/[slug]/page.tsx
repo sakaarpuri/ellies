@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BotanicalImage } from "@/components/BotanicalImage";
-import { ContactCTA } from "@/components/ContactCTA";
-import { DisclaimerCallout } from "@/components/DisclaimerCallout";
 import { JsonLdScript } from "@/components/JsonLd";
 import { getAllPosts, getPostBySlug, getRelatedPosts, renderMarkdown } from "@/lib/wisdom";
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
@@ -86,17 +84,12 @@ export default async function WisdomArticlePage({ params }: WisdomArticlePagePro
       <article className="article-page">
         <header className="article-hero">
           <div>
-            <p className="eyebrow">{post.category}</p>
+            <p className="eyebrow">
+              {post.category} · {post.readingTime}
+            </p>
             <h1>{post.title}</h1>
             <p>{post.description}</p>
             <div className="article-meta large">
-              <span>
-                {new Intl.DateTimeFormat("en", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                }).format(new Date(post.date))}
-              </span>
               <span>
                 Updated{" "}
                 {new Intl.DateTimeFormat("en", {
@@ -112,26 +105,22 @@ export default async function WisdomArticlePage({ params }: WisdomArticlePagePro
             <BotanicalImage src={post.heroImage} alt={`Botanical visual for ${post.title}`} priority />
           </figure>
         </header>
-        <div
-          className="article-body"
-          dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
-        />
-        <footer className="article-footer-links">
-          <section className="article-consultation-note">
-            <p className="eyebrow">Personal Context</p>
-            <h2>Need guidance for your own concern?</h2>
+
+        <div className="reading-sheet">
+          <div
+            className="article-body"
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }}
+          />
+          <aside className="doctor-aside">
+            <p className="eyebrow">When to see a doctor</p>
             <p>
-              Herbal education is most useful when it leads to better questions. If you need
-              individual guidance, share the relevant details so Ellie&apos;s Botanics can follow up
-              for consultation.
+              If a concern is persistent, worsening, or you are pregnant, nursing, or taking
+              medicines — speak to a qualified doctor before trying anything new.
             </p>
-            <Link className="button secondary" href="/#joint-comfort-check-in">
-              Share a consultation concern
-            </Link>
-          </section>
+          </aside>
           <section className="related-reading" aria-labelledby="related-reading-title">
             <p className="eyebrow">Related Reading</p>
-            <h2 id="related-reading-title">Continue with Herbal Wisdom.</h2>
+            <h2 id="related-reading-title">Keep reading.</h2>
             <ul>
               {relatedPosts.map((relatedPost) => (
                 <li key={relatedPost.slug}>
@@ -143,10 +132,14 @@ export default async function WisdomArticlePage({ params }: WisdomArticlePagePro
               ))}
             </ul>
           </section>
-        </footer>
+          <Link className="button primary article-cta" href="/#joint-comfort-check-in">
+            Ask about your situation
+          </Link>
+        </div>
       </article>
-      <DisclaimerCallout />
-      <ContactCTA />
+      <footer className="mini-footer">
+        <p>Education, not diagnosis. © 2026 Ellie&apos;s Botanics</p>
+      </footer>
       <JsonLdScript
         data={[
           articleJsonLd,

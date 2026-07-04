@@ -1,9 +1,9 @@
 import { ConsultationIntakeForm } from "@/components/ConsultationIntakeForm";
 
 const expectations = [
-  "Complete the short form with your contact details and joint-related concern.",
-  "Review and send the prepared email to Ellie’s Botanics.",
-  "Our team will contact you to arrange an Ayurvedic consultation.",
+  "Fill the short form below — two minutes",
+  "Send it by email or WhatsApp — you review it first",
+  "We call you back to arrange the consultation",
 ];
 
 export function ConsultationIntakeSection() {
@@ -15,29 +15,29 @@ export function ConsultationIntakeSection() {
     >
       <div className="intake-intro">
         <p className="eyebrow">Ayurvedic Consultation</p>
-        <h2 id="intake-title">Request guidance for a joint health concern.</h2>
+        <h2 id="intake-title">Speak with a qualified Ayurvedic doctor.</h2>
         <p>
-          Tell us where you feel discomfort, how long it has been present, and how it affects daily
-          movement. Our team will review your message and coordinate a consultation with a doctor.
+          Starting with joint and movement concerns. Tell us a little, and our team arranges the
+          rest.
         </p>
+        <div className="doctor-row dark">
+          <div className="doctor-photo" aria-hidden="true">
+            photo
+          </div>
+          <div>
+            <p>Ayurvedic doctor</p>
+            <small>BAMS · credentials to come</small>
+          </div>
+        </div>
         <ol>
           {expectations.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ol>
       </div>
-      <details className="intake-disclosure">
-        <summary>
-          <span>
-            <strong>Complete your details</strong>
-            <small>A short form for consultation follow-up</small>
-          </span>
-          <span className="disclosure-icon" aria-hidden="true" />
-        </summary>
-        <div className="intake-card">
-          <ConsultationIntakeForm />
-        </div>
-      </details>
+      <div className="intake-card">
+        <ConsultationIntakeForm />
+      </div>
     </section>
   );
 }

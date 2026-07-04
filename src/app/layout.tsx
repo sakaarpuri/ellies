@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { DM_Sans, Instrument_Serif } from "next/font/google";
+import { DM_Sans, Marcellus } from "next/font/google";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLdScript } from "@/components/JsonLd";
@@ -14,9 +14,9 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
+const marcellus = Marcellus({
   subsets: ["latin"],
-  variable: "--font-instrument-serif",
+  variable: "--font-marcellus",
   weight: "400",
   display: "swap",
 });
@@ -56,7 +56,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${instrumentSerif.variable}`}>
+    <html lang="en" className={`${dmSans.variable} ${marcellus.variable}`}>
       <body>
         <a className="skip-link" href="#main">
           Skip to content
