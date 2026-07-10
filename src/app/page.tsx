@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { BotanicalCollage } from "@/components/BotanicalCollage";
+import { BotanicalRibbon } from "@/components/BotanicalRibbon";
 import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSection";
 import { JsonLdScript } from "@/components/JsonLd";
 import { getFeaturedPosts } from "@/lib/wisdom";
@@ -84,6 +86,8 @@ export default function Home() {
         </div>
       </section>
 
+      <BotanicalRibbon />
+
       <section className="journal-section" aria-labelledby="journal-title">
         <div className="journal-heading">
           <div>
@@ -96,7 +100,12 @@ export default function Home() {
         </div>
         <div className="journal-row-grid">
           {featuredPosts.map((post, index) => (
-            <Link key={post.slug} href={`/education/${post.slug}`} className="journal-card">
+            <Link
+              key={post.slug}
+              href={`/education/${post.slug}`}
+              className="journal-card"
+              style={{ "--index": index } as CSSProperties}
+            >
               <span>{String(index + 1).padStart(2, "0")}</span>
               <strong>{post.title}</strong>
               <small>

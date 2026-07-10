@@ -46,13 +46,19 @@ export const navItems = [
 
 export const imagery = {
   hero:
-    "https://images.unsplash.com/photo-1726241966334-6e9f1de905d6?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=2200",
+    "https://images.pexels.com/photos/5480236/pexels-photo-5480236.jpeg?auto=compress&cs=tinysrgb&w=2200",
   basil:
-    "https://images.unsplash.com/photo-1726241966334-6e9f1de905d6?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1600",
+    "https://images.pexels.com/photos/8329272/pexels-photo-8329272.jpeg?auto=compress&cs=tinysrgb&w=1600",
   turmeric:
-    "https://images.unsplash.com/photo-1702041295331-840d4d9aa7c9?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1600",
+    "https://images.pexels.com/photos/6220708/pexels-photo-6220708.jpeg?auto=compress&cs=tinysrgb&w=1600",
   roots:
-    "https://images.unsplash.com/photo-1702041295331-840d4d9aa7c9?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1600",
+    "https://images.pexels.com/photos/8330249/pexels-photo-8330249.jpeg?auto=compress&cs=tinysrgb&w=1600",
   turmericRoot:
-    "https://images.unsplash.com/photo-1702041295331-840d4d9aa7c9?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1600",
+    "https://images.pexels.com/photos/6220708/pexels-photo-6220708.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  oils:
+    "https://images.pexels.com/photos/672051/pexels-photo-672051.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  driedHerbs:
+    "https://images.pexels.com/photos/10083955/pexels-photo-10083955.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  consultation:
+    "https://images.pexels.com/photos/20419214/pexels-photo-20419214.jpeg?auto=compress&cs=tinysrgb&w=1600",
 };

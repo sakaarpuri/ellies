@@ -8,6 +8,7 @@ type BotanicalImageProps = {
   alt: string;
   sizes?: string;
   priority?: boolean;
+  depth?: number;
 };
 
 export function BotanicalImage({
@@ -15,6 +16,7 @@ export function BotanicalImage({
   alt,
   sizes = "(max-width: 720px) 100vw, 50vw",
   priority = false,
+  depth = 34,
 }: BotanicalImageProps) {
   const mediaRef = useRef<HTMLSpanElement>(null);
 
@@ -46,7 +48,7 @@ export function BotanicalImage({
       const travel = viewportHeight / 2 + bounds.height / 2;
       const distanceFromCenter = bounds.top + bounds.height / 2 - viewportHeight / 2;
       const progress = Math.max(-1, Math.min(1, distanceFromCenter / travel));
-      const offset = progress * -24;
+      const offset = progress * -depth;
 
       media.style.setProperty("--parallax-y", `${offset.toFixed(2)}px`);
     };
@@ -81,7 +83,7 @@ export function BotanicalImage({
         window.cancelAnimationFrame(frame);
       }
     };
-  }, []);
+  }, [depth]);
 
   return (
     <span ref={mediaRef} className="parallax-media">

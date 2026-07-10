@@ -6,7 +6,7 @@ date: "2026-07-08"
 lastUpdated: "2026-07-08"
 category: "Ayurveda & Daily Wellness"
 readingTime: "5 min read"
-heroImage: "https://images.unsplash.com/photo-1702041295331-840d4d9aa7c9?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1600"
+heroImage: "https://images.pexels.com/photos/672051/pexels-photo-672051.jpeg?auto=compress&cs=tinysrgb&w=1600"
 draft: false
 ---
 

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import type { CSSProperties } from "react";
 import { BotanicalImage } from "@/components/BotanicalImage";
 
 type JournalPost = {
@@ -52,7 +53,12 @@ export function JournalList({ posts }: JournalListProps) {
 
       <section className="journal-list" aria-label="Journal articles">
         {visiblePosts.map((post, index) => (
-          <Link key={post.slug} href={`/education/${post.slug}`} className="journal-list-row">
+          <Link
+            key={post.slug}
+            href={`/education/${post.slug}`}
+            className="journal-list-row"
+            style={{ "--index": index } as CSSProperties}
+          >
             <span>{String(index + 1).padStart(2, "0")}</span>
             <span>
               <strong>{post.title}</strong>

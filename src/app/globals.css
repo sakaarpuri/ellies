@@ -118,9 +118,24 @@ main {
   --parallax-y: 0px;
   --scene-y: 0px;
   position: absolute;
-  inset: -7% 0;
+  inset: -12% 0;
   transform: translate3d(0, calc(var(--parallax-y) + var(--scene-y)), 0);
   will-change: transform;
+}
+
+.collage-frame .parallax-media,
+.botanical-ribbon figure .parallax-media,
+.article-hero figure .parallax-media,
+.article-image-link .parallax-media,
+.journal-list-row figure .parallax-media {
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.collage-frame:hover .parallax-media,
+.botanical-ribbon figure:hover .parallax-media,
+.article-image-link:hover .parallax-media,
+.journal-list-row:hover figure .parallax-media {
+  --scene-y: -6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -128,6 +143,28 @@ main {
     inset: 0;
     transform: none;
     will-change: auto;
+  }
+
+  .knowing-panel,
+  .botanical-ribbon,
+  .journal-section,
+  .consult-card,
+  .intake-section,
+  .page-hero,
+  .editorial-section,
+  .values-list,
+  .contact-page-grid,
+  .note-panel,
+  .faq-section,
+  .article-hero,
+  .reading-sheet,
+  .botanical-ribbon figure,
+  .journal-card,
+  .journal-list-row,
+  .article-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -453,11 +490,50 @@ h3 {
 .journal-section,
 .answer-section,
 .note-panel,
+.botanical-ribbon,
 .editorial-section,
 .values-list,
 .contact-page-grid,
 .mini-footer {
   margin-top: clamp(44px, 6vw, 72px);
+}
+
+.botanical-ribbon {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.18fr) minmax(0, 0.9fr);
+  gap: clamp(14px, 2vw, 24px);
+  align-items: end;
+}
+
+.botanical-ribbon figure {
+  position: relative;
+  overflow: hidden;
+  min-height: 260px;
+  margin: 0;
+  border: 1px solid rgba(246, 241, 234, 0.24);
+  border-radius: 999px 999px 10px 10px;
+  background: rgba(246, 241, 234, 0.06);
+  aspect-ratio: 3 / 3.7;
+}
+
+.botanical-ribbon figure.tall {
+  min-height: 360px;
+  aspect-ratio: 3 / 4.45;
+}
+
+.botanical-ribbon figcaption {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  border: 1px solid rgba(246, 241, 234, 0.3);
+  border-radius: 999px;
+  background: rgba(47, 61, 42, 0.74);
+  color: var(--cream);
+  padding: 6px 10px;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .journal-heading {
@@ -930,6 +1006,48 @@ h3 {
   font-size: 0.72rem;
 }
 
+@supports (animation-timeline: view()) {
+  .knowing-panel,
+  .botanical-ribbon,
+  .journal-section,
+  .consult-card,
+  .intake-section,
+  .page-hero,
+  .editorial-section,
+  .values-list,
+  .contact-page-grid,
+  .note-panel,
+  .faq-section,
+  .article-hero,
+  .reading-sheet {
+    animation: reveal-up both;
+    animation-timeline: view();
+    animation-range: entry 8% cover 32%;
+  }
+
+  .botanical-ribbon figure,
+  .journal-card,
+  .journal-list-row,
+  .article-card {
+    animation: reveal-up both;
+    animation-delay: calc(var(--index, 0) * 80ms);
+    animation-timeline: view();
+    animation-range: entry 0% cover 28%;
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0.001;
+    transform: translate3d(0, 28px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 .article-page {
   width: 100%;
   margin: 0;
@@ -1302,6 +1420,7 @@ h3 {
   .knowing-panel,
   .consult-card,
   .intake-section,
+  .botanical-ribbon,
   .page-hero.split,
   .article-hero,
   .answer-section,
@@ -1346,6 +1465,12 @@ h3 {
 
   .article-hero figure {
     min-height: auto;
+  }
+
+  .botanical-ribbon figure,
+  .botanical-ribbon figure.tall {
+    min-height: 280px;
+    aspect-ratio: 4 / 3;
   }
 
   .form-actions {

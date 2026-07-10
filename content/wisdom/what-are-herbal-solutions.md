@@ -6,7 +6,7 @@ date: "2026-06-17"
 lastUpdated: "2026-07-04"
 category: "Herbal Basics"
 readingTime: "8 min read"
-heroImage: "https://images.unsplash.com/photo-1726241966334-6e9f1de905d6?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1600"
+heroImage: "https://images.pexels.com/photos/5480236/pexels-photo-5480236.jpeg?auto=compress&cs=tinysrgb&w=1600"
 draft: false
 ---
 

@@ -6,7 +6,7 @@ date: "2026-07-08"
 lastUpdated: "2026-07-08"
 category: "Ingredients & Traditions"
 readingTime: "5 min read"
-heroImage: "https://images.unsplash.com/photo-1726241966334-6e9f1de905d6?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1600"
+heroImage: "https://images.pexels.com/photos/5378790/pexels-photo-5378790.jpeg?auto=compress&cs=tinysrgb&w=1600"
 draft: false
 ---
 
