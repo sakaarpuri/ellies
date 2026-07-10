@@ -3,10 +3,11 @@ title: "Why Gentle, Consistent Routines Matter"
 slug: "gentle-consistent-routines-matter"
 description: "How simple, repeatable wellness routines support consistency and long-term practice."
 date: "2026-06-13"
-lastUpdated: "2026-07-04"
+lastUpdated: "2026-07-10"
 category: "Ayurveda & Daily Wellness"
 readingTime: "7 min read"
 heroImage: "https://images.pexels.com/photos/8330249/pexels-photo-8330249.jpeg?auto=compress&cs=tinysrgb&w=1600"
+heroImageAlt: "Herbal tea and dried botanicals arranged in small bowls on a wooden tray"
 draft: false
 ---
 

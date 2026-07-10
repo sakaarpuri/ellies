@@ -11,6 +11,7 @@ type JournalPost = {
   category: string;
   readingTime: string;
   heroImage: string;
+  heroImageAlt: string;
 };
 
 type JournalListProps = {
@@ -67,7 +68,7 @@ export function JournalList({ posts }: JournalListProps) {
               </small>
             </span>
             <figure>
-              <BotanicalImage src={post.heroImage} alt={`Botanical visual for ${post.title}`} />
+              <BotanicalImage src={post.heroImage} alt={post.heroImageAlt} />
             </figure>
           </Link>
         ))}

@@ -3,10 +3,11 @@ title: "Herbal Skincare 101: Natural Butters and Botanicals"
 slug: "herbal-skincare-shea-butter"
 description: "A beginner-friendly guide to herbal skincare, shea butter, and simple botanical ingredients that support a gentle daily routine."
 date: "2026-07-08"
-lastUpdated: "2026-07-08"
+lastUpdated: "2026-07-10"
 category: "Ingredients & Traditions"
 readingTime: "5 min read"
 heroImage: "https://images.pexels.com/photos/5378790/pexels-photo-5378790.jpeg?auto=compress&cs=tinysrgb&w=1600"
+heroImageAlt: "Natural skincare cream texture with botanical ingredients on a warm surface"
 draft: false
 ---
 

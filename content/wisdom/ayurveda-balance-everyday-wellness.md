@@ -3,10 +3,11 @@ title: "Ayurveda, Balance, and Everyday Wellness"
 slug: "ayurveda-balance-everyday-wellness"
 description: "An introduction to Ayurvedic principles of daily rhythm, seasonality, and consistent wellness practice."
 date: "2026-06-16"
-lastUpdated: "2026-07-04"
+lastUpdated: "2026-07-10"
 category: "Ayurveda & Daily Wellness"
 readingTime: "8 min read"
 heroImage: "https://images.pexels.com/photos/6220708/pexels-photo-6220708.jpeg?auto=compress&cs=tinysrgb&w=1600"
+heroImageAlt: "Turmeric powder and fresh turmeric roots arranged on a dark wooden surface"
 draft: false
 ---
 

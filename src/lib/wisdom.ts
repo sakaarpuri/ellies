@@ -13,6 +13,7 @@ export type WisdomArticle = {
   category: string;
   readingTime: string;
   heroImage: string;
+  heroImageAlt: string;
   draft: boolean;
   content: string;
 };
@@ -57,6 +58,7 @@ function assertFrontmatter(data: Record<string, unknown>, fileName: string): Wis
     "category",
     "readingTime",
     "heroImage",
+    "heroImageAlt",
     "draft",
   ] as const;
 
@@ -75,6 +77,7 @@ function assertFrontmatter(data: Record<string, unknown>, fileName: string): Wis
     category: String(data.category),
     readingTime: String(data.readingTime),
     heroImage: String(data.heroImage),
+    heroImageAlt: String(data.heroImageAlt),
     draft: Boolean(data.draft),
   };
 }

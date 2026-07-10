@@ -12,7 +12,7 @@ export function ArticleCard({ post, index = 0 }: ArticleCardProps) {
   return (
     <article className="article-card" style={{ "--index": index } as CSSProperties}>
       <Link href={`/education/${post.slug}`} className="article-image-link">
-        <BotanicalImage src={post.heroImage} alt={`Botanical visual for ${post.title}`} />
+        <BotanicalImage src={post.heroImage} alt={post.heroImageAlt} />
       </Link>
       <div className="article-card-content">
         <div className="article-meta">

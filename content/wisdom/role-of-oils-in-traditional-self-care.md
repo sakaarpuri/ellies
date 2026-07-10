@@ -3,10 +3,11 @@ title: "The Role of Oils in Traditional Self-Care"
 slug: "role-of-oils-in-traditional-self-care"
 description: "How oils function in traditional self-care, including preparation, quality, and responsible use."
 date: "2026-06-14"
-lastUpdated: "2026-07-04"
+lastUpdated: "2026-07-10"
 category: "Ingredients & Traditions"
 readingTime: "7 min read"
 heroImage: "https://images.pexels.com/photos/672051/pexels-photo-672051.jpeg?auto=compress&cs=tinysrgb&w=1600"
+heroImageAlt: "Clear glass bottles of botanical oil with fresh flowers on woven cloth"
 draft: false
 ---
 

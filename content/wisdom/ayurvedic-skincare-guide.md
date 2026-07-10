@@ -3,10 +3,11 @@ title: "Ayurvedic Skincare: An Ancient Approach to Healthy Skin"
 slug: "ayurvedic-skincare-guide"
 description: "Learn the basics of Ayurvedic skincare, including dosha types, traditional ingredients, and simple daily rituals for natural skin care."
 date: "2026-07-08"
-lastUpdated: "2026-07-08"
+lastUpdated: "2026-07-10"
 category: "Ayurveda & Daily Wellness"
 readingTime: "5 min read"
 heroImage: "https://images.pexels.com/photos/672051/pexels-photo-672051.jpeg?auto=compress&cs=tinysrgb&w=1600"
+heroImageAlt: "Small glass bottles of botanical oil beside soft flowers on natural cloth"
 draft: false
 ---
 

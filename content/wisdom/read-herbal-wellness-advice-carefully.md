@@ -3,10 +3,11 @@ title: "How to Read Herbal Wellness Advice Carefully"
 slug: "read-herbal-wellness-advice-carefully"
 description: "A practical framework for evaluating herbal wellness information, claims, and context."
 date: "2026-06-15"
-lastUpdated: "2026-07-04"
+lastUpdated: "2026-07-10"
 category: "Safe Use & Responsible Care"
 readingTime: "8 min read"
 heroImage: "https://images.pexels.com/photos/10083955/pexels-photo-10083955.jpeg?auto=compress&cs=tinysrgb&w=1600"
+heroImageAlt: "Dried herbs, flowers, and botanical ingredients arranged on neutral fabric"
 draft: false
 ---
 

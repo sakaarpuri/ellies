@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: WisdomArticlePageProps): Prom
     path: `/education/${post.slug}`,
     type: "article",
     image: post.heroImage,
-    imageAlt: `Botanical visual for ${post.title}`,
+    imageAlt: post.heroImageAlt,
     publishedTime: post.date,
     modifiedTime: post.lastUpdated,
   });
@@ -71,7 +71,12 @@ export default async function WisdomArticlePage({ params }: WisdomArticlePagePro
         url: `${site.url}${site.logo}`,
       },
     },
-    image: absoluteUrl(post.heroImage),
+    image: {
+      "@type": "ImageObject",
+      url: absoluteUrl(post.heroImage),
+      caption: post.heroImageAlt,
+    },
+    thumbnailUrl: absoluteUrl(post.heroImage),
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${site.url}/education/${post.slug}`,
@@ -102,7 +107,7 @@ export default async function WisdomArticlePage({ params }: WisdomArticlePagePro
             </div>
           </div>
           <figure>
-            <BotanicalImage src={post.heroImage} alt={`Botanical visual for ${post.title}`} priority />
+            <BotanicalImage src={post.heroImage} alt={post.heroImageAlt} priority />
           </figure>
         </header>
 

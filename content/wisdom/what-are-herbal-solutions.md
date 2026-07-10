@@ -3,10 +3,11 @@ title: "What Are Herbal Solutions?"
 slug: "what-are-herbal-solutions"
 description: "An introduction to herbal preparations, quality, context, and responsible use."
 date: "2026-06-17"
-lastUpdated: "2026-07-04"
+lastUpdated: "2026-07-10"
 category: "Herbal Basics"
 readingTime: "8 min read"
 heroImage: "https://images.pexels.com/photos/5480236/pexels-photo-5480236.jpeg?auto=compress&cs=tinysrgb&w=1600"
+heroImageAlt: "Dried herbs and flowers arranged beside a mortar and pestle"
 draft: false
 ---
 
