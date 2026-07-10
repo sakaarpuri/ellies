@@ -1,4 +1,6 @@
+import Image from "next/image";
 import { ConsultationIntakeForm } from "@/components/ConsultationIntakeForm";
+import { doctor } from "@/lib/site";
 
 const expectations = [
   "Fill the short form below — two minutes",
@@ -21,12 +23,14 @@ export function ConsultationIntakeSection() {
           rest.
         </p>
         <div className="doctor-row dark">
-          <div className="doctor-photo" aria-hidden="true">
-            photo
+          <div className="doctor-photo">
+            <Image src={doctor.image} alt={doctor.name} width={72} height={72} />
           </div>
           <div>
-            <p>Ayurvedic doctor</p>
-            <small>BAMS · credentials to come</small>
+            <p>{doctor.name}</p>
+            <small>
+              {doctor.credentials} · {doctor.title}
+            </small>
           </div>
         </div>
         <ol>

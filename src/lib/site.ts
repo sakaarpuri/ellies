@@ -29,6 +29,13 @@ export const consultation = {
     "https://wa.me/917717607269?text=Hello%2C%20I%20came%20from%20Ellie%27s%20Botanics.%20I%20would%20like%20professional%20guidance%20for%20a%20joint%20comfort%20concern.",
 };
 
+export const doctor = {
+  name: "Dr. Sheetal Garg",
+  image: "/images/dr-sheetal-garg.png",
+  title: "Ayurvedic consultant & Panchkarma specialist",
+  credentials: "BAMS · MSc Clinical Research",
+};
+
 export const navItems = [
   { label: "Home", href: "/" },
   { label: "Journal", href: "/education" },

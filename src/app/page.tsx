@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { BotanicalCollage } from "@/components/BotanicalCollage";
 import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSection";
 import { JsonLdScript } from "@/components/JsonLd";
 import { getFeaturedPosts } from "@/lib/wisdom";
-import { consultation } from "@/lib/site";
+import { consultation, doctor } from "@/lib/site";
 import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -117,12 +118,14 @@ export default function Home() {
         </div>
         <div>
           <div className="doctor-row">
-            <div className="doctor-photo" aria-hidden="true">
-              photo
+            <div className="doctor-photo">
+              <Image src={doctor.image} alt={doctor.name} width={72} height={72} />
             </div>
             <div>
-              <p>Ayurvedic doctor</p>
-              <small>BAMS · credentials to come</small>
+              <p>{doctor.name}</p>
+              <small>
+                {doctor.credentials} · {doctor.title}
+              </small>
             </div>
           </div>
           <div className="consult-actions">
