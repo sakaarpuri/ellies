@@ -248,23 +248,7 @@ export function ConsultationIntakeForm() {
 
       <div className="form-actions">
         <button
-          className="button primary"
-          type="button"
-          onClick={(event) => {
-            const form = event.currentTarget.form;
-
-            if (form) {
-              handleWhatsapp(form);
-            }
-          }}
-        >
-          Send on WhatsApp
-        </button>
-        <button className="button secondary" type="submit">
-          Send by email instead
-        </button>
-        <button
-          className="button tertiary"
+          className="button primary pay-button"
           type="button"
           disabled={paymentStatus.kind === "loading"}
           onClick={(event) => {
@@ -275,7 +259,23 @@ export function ConsultationIntakeForm() {
             }
           }}
         >
-          {paymentStatus.kind === "loading" ? "Opening PayU..." : "Pay consultation fee"}
+          {paymentStatus.kind === "loading" ? "Opening PayU..." : "Pay consultation fee on PayU"}
+        </button>
+        <button
+          className="button secondary"
+          type="button"
+          onClick={(event) => {
+            const form = event.currentTarget.form;
+
+            if (form) {
+              handleWhatsapp(form);
+            }
+          }}
+        >
+          Send on WhatsApp only
+        </button>
+        <button className="button secondary" type="submit">
+          Open email only
         </button>
       </div>
       {paymentStatus.message ? (
