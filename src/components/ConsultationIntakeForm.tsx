@@ -145,7 +145,7 @@ export function ConsultationIntakeForm() {
       getFormValue(formData, "concern"),
       "",
       "Consent:",
-      "The visitor confirmed this is for consultation follow-up, not emergency care.",
+      "The visitor confirmed this is for consultation, not emergency care.",
     ].join("\n");
 
     window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
@@ -243,7 +243,7 @@ export function ConsultationIntakeForm() {
           checked={values.consent}
           onChange={(event) => updateValue("consent", event.target.checked)}
         />
-        <span>I understand this is for consultation follow-up, not emergency care.</span>
+        <span>I understand this is for consultation, not emergency care.</span>
       </label>
 
       <div className="form-actions">
@@ -284,7 +284,8 @@ export function ConsultationIntakeForm() {
         </p>
       ) : null}
       <p className="form-note">
-        PayU opens securely after the form is complete. Nothing is stored on this website.
+        WhatsApp and email do not charge you. Payment happens only if you choose Pay consultation
+        fee and complete PayU checkout.
       </p>
     </form>
   );
