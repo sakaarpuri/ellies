@@ -1,7 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { consultation, site } from "@/lib/site";
 
 type PaymentStatus = {
@@ -46,18 +46,12 @@ export function ConsultationIntakeForm() {
     kind: "idle",
     message: "",
   });
-  const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim());
-  const canSend = useMemo(
-    () =>
-      values.name.trim().length > 1 &&
-      values.phone.trim().length > 5 &&
-      emailIsValid &&
-      values.concern.trim().length > 8 &&
-      values.consent,
-    [emailIsValid, values],
-  );
 
   function updateValue(name: keyof typeof values, value: string | boolean) {
+    if (paymentStatus.kind === "error") {
+      setPaymentStatus({ kind: "idle", message: "" });
+    }
+
     setValues((current) => ({
       ...current,
       [name]: value,
@@ -65,7 +59,7 @@ export function ConsultationIntakeForm() {
   }
 
   async function handlePayment(form: HTMLFormElement) {
-    if (!form.reportValidity() || !canSend) {
+    if (!form.reportValidity()) {
       return;
     }
 
@@ -131,7 +125,7 @@ export function ConsultationIntakeForm() {
 
     const form = event.currentTarget;
 
-    if (!form.reportValidity() || !canSend) {
+    if (!form.reportValidity()) {
       return;
     }
 
@@ -160,7 +154,7 @@ export function ConsultationIntakeForm() {
   }
 
   function handleWhatsapp(form: HTMLFormElement) {
-    if (!form.reportValidity() || !canSend) {
+    if (!form.reportValidity()) {
       return;
     }
 
@@ -177,6 +171,7 @@ export function ConsultationIntakeForm() {
           type="text"
           autoComplete="name"
           required
+          minLength={2}
           value={values.name}
           onChange={(event) => updateValue("name", event.target.value)}
         />
@@ -189,6 +184,7 @@ export function ConsultationIntakeForm() {
           type="tel"
           autoComplete="tel"
           required
+          minLength={6}
           value={values.phone}
           onChange={(event) => updateValue("phone", event.target.value)}
         />
@@ -233,6 +229,7 @@ export function ConsultationIntakeForm() {
           rows={4}
           placeholder="What do you feel, since when, and what makes it better or worse?"
           required
+          minLength={2}
           value={values.concern}
           onChange={(event) => updateValue("concern", event.target.value)}
         />
@@ -253,7 +250,6 @@ export function ConsultationIntakeForm() {
         <button
           className="button primary"
           type="button"
-          disabled={!canSend}
           onClick={(event) => {
             const form = event.currentTarget.form;
 
@@ -264,13 +260,13 @@ export function ConsultationIntakeForm() {
         >
           Send on WhatsApp
         </button>
-        <button className="button secondary" type="submit" disabled={!canSend}>
+        <button className="button secondary" type="submit">
           Send by email instead
         </button>
         <button
           className="button tertiary"
           type="button"
-          disabled={!canSend || paymentStatus.kind === "loading"}
+          disabled={paymentStatus.kind === "loading"}
           onClick={(event) => {
             const form = event.currentTarget.form;
 
