@@ -28,7 +28,13 @@ export async function POST(request: Request) {
   const missing = getMissingPayuConfig(config);
 
   if (missing.length > 0) {
-    return NextResponse.json({ error: "Payment is not configured yet." }, { status: 503 });
+    return NextResponse.json(
+      {
+        error:
+          "Online payment is temporarily unavailable. Please send your request by WhatsApp or email.",
+      },
+      { status: 503 },
+    );
   }
 
   let amount: string;
@@ -36,7 +42,13 @@ export async function POST(request: Request) {
   try {
     amount = formatPayuAmount(config.amount as string);
   } catch {
-    return NextResponse.json({ error: "Payment amount is not configured correctly." }, { status: 503 });
+    return NextResponse.json(
+      {
+        error:
+          "Online payment is temporarily unavailable. Please send your request by WhatsApp or email.",
+      },
+      { status: 503 },
+    );
   }
 
   const firstname = sanitizePayuField(body.name, 60);

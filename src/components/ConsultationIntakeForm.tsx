@@ -65,7 +65,7 @@ export function ConsultationIntakeForm() {
 
     setPaymentStatus({
       kind: "loading",
-      message: "Opening PayU Hosted Checkout...",
+      message: "Opening secure checkout...",
     });
 
     const formData = new FormData(form);
@@ -259,7 +259,7 @@ export function ConsultationIntakeForm() {
             }
           }}
         >
-          {paymentStatus.kind === "loading" ? "Opening PayU..." : "Pay consultation fee on PayU"}
+          {paymentStatus.kind === "loading" ? "Opening checkout..." : "Pay consultation fee"}
         </button>
         <button
           className="button secondary"
@@ -285,7 +285,7 @@ export function ConsultationIntakeForm() {
       ) : null}
       <p className="form-note">
         WhatsApp and email do not charge you. Payment happens only if you choose Pay consultation
-        fee and complete PayU checkout.
+        fee and complete secure checkout.
       </p>
     </form>
   );

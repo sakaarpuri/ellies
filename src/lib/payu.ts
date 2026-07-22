@@ -1,4 +1,8 @@
+import "server-only";
+
 import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 import { site } from "@/lib/site";
 
 export type PayuPaymentFields = {
@@ -28,14 +32,61 @@ type PayuConfig = {
   productinfo: string;
 };
 
+let localEnvCache: Record<string, string> | null = null;
+
+function readLocalEnv() {
+  if (localEnvCache) {
+    return localEnvCache;
+  }
+
+  localEnvCache = {};
+
+  try {
+    const envPath = path.join(process.cwd(), ".env.local");
+    const content = fs.readFileSync(envPath, "utf8");
+
+    for (const line of content.split(/\r?\n/)) {
+      const trimmed = line.trim();
+
+      if (!trimmed || trimmed.startsWith("#")) {
+        continue;
+      }
+
+      const separatorIndex = trimmed.indexOf("=");
+
+      if (separatorIndex === -1) {
+        continue;
+      }
+
+      const key = trimmed.slice(0, separatorIndex).trim();
+      const value = trimmed
+        .slice(separatorIndex + 1)
+        .trim()
+        .replace(/^['"]|['"]$/g, "");
+
+      if (key && value) {
+        localEnvCache[key] = value;
+      }
+    }
+  } catch {
+    // Production hosts should provide payment values as real environment variables.
+  }
+
+  return localEnvCache;
+}
+
+function getEnvValue(key: string) {
+  return process.env[key]?.trim() || readLocalEnv()[key]?.trim();
+}
+
 export function getPayuConfig(): PayuConfig {
   return {
-    key: process.env.PAYU_MERCHANT_KEY?.trim(),
-    salt: process.env.PAYU_MERCHANT_SALT?.trim(),
-    baseUrl: process.env.PAYU_BASE_URL?.trim() || "https://test.payu.in/_payment",
-    siteUrl: (process.env.NEXT_PUBLIC_SITE_URL?.trim() || site.url).replace(/\/$/, ""),
-    amount: process.env.PAYU_CONSULTATION_AMOUNT?.trim(),
-    productinfo: process.env.PAYU_CONSULTATION_PRODUCTINFO?.trim() || "Ayurvedic Consultation",
+    key: getEnvValue("PAYU_MERCHANT_KEY"),
+    salt: getEnvValue("PAYU_MERCHANT_SALT"),
+    baseUrl: getEnvValue("PAYU_BASE_URL") || "https://test.payu.in/_payment",
+    siteUrl: (getEnvValue("NEXT_PUBLIC_SITE_URL") || site.url).replace(/\/$/, ""),
+    amount: getEnvValue("PAYU_CONSULTATION_AMOUNT"),
+    productinfo: getEnvValue("PAYU_CONSULTATION_PRODUCTINFO") || "Ayurvedic Consultation",
   };
 }
 
@@ -58,7 +109,13 @@ export function getMissingPayuConfig(config = getPayuConfig()) {
 }
 
 export function formatPayuAmount(amount: string) {
-  const parsed = Number(amount);
+  const normalizedAmount = amount
+    .trim()
+    .replace(/^inr\s*/i, "")
+    .replace(/^rs\.?\s*/i, "")
+    .replace(/[₹,\s]/g, "")
+    .replace(/\/-$/, "");
+  const parsed = Number(normalizedAmount);
 
   if (!Number.isFinite(parsed) || parsed <= 0) {
     throw new Error("Invalid PAYU_CONSULTATION_AMOUNT");
