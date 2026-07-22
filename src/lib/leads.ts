@@ -88,6 +88,7 @@ async function submitNetlifyForm(formName: string, fields: Record<string, string
 
 async function submitWebhook(fields: Record<string, string>) {
   const webhookUrl = process.env.LEADS_WEBHOOK_URL?.trim();
+  const webhookSecret = process.env.LEADS_WEBHOOK_SECRET?.trim();
 
   if (!webhookUrl) {
     return { target: "webhook", status: "skipped" } satisfies LeadStorageResult;
@@ -99,7 +100,7 @@ async function submitWebhook(fields: Record<string, string>) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(fields),
+      body: JSON.stringify(webhookSecret ? { ...fields, secret: webhookSecret } : fields),
     });
 
     return {
