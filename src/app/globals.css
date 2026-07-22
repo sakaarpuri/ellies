@@ -508,7 +508,7 @@ h3 {
 .botanical-ribbon figure {
   position: relative;
   overflow: hidden;
-  min-height: 260px;
+  min-height: 150px;
   margin: 0;
   border: 1px solid rgba(246, 241, 234, 0.24);
   border-radius: 999px 999px 10px 10px;
@@ -517,7 +517,7 @@ h3 {
 }
 
 .botanical-ribbon figure.tall {
-  min-height: 360px;
+  min-height: 205px;
   aspect-ratio: 3 / 4.45;
 }
 
@@ -1517,7 +1517,7 @@ h3 {
 
   .botanical-ribbon figure,
   .botanical-ribbon figure.tall {
-    min-height: 280px;
+    min-height: 170px;
     aspect-ratio: 4 / 3;
   }
 
