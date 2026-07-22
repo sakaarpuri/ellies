@@ -227,7 +227,7 @@ export function ConsultationIntakeForm() {
         <textarea
           name="concern"
           rows={4}
-          placeholder="What do you feel, since when, and what makes it better or worse?"
+          placeholder="What do you feel, since when, and what makes it better or worse? दर्द कैसा है, कब से है, और किस चीज़ से आराम या तकलीफ़ बढ़ती है?"
           required
           minLength={2}
           value={values.concern}
