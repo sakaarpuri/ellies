@@ -697,6 +697,12 @@ h3 {
   color: var(--forest);
 }
 
+.intake-form .button.tertiary {
+  border-color: var(--clay);
+  background: var(--clay);
+  color: var(--cream);
+}
+
 .intake-section {
   display: grid;
   grid-template-columns: minmax(270px, 0.74fr) minmax(320px, 1fr);
@@ -860,13 +866,55 @@ h3 {
 
 .form-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .form-note {
   margin: 0;
   color: var(--muted);
   font-size: 0.75rem;
+}
+
+.payment-status {
+  margin: -4px 0 0;
+  color: var(--forest);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.payment-status.error {
+  color: var(--clay);
+}
+
+.payment-page {
+  max-width: min(760px, 100%);
+}
+
+.payment-panel {
+  display: grid;
+  gap: 8px;
+  max-width: 620px;
+  margin: 28px 0;
+  border: 1px solid var(--green-line);
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.38);
+}
+
+.payment-panel strong {
+  color: var(--forest);
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.payment-panel p,
+.payment-panel small {
+  margin: 0;
+  color: var(--body-copy);
+}
+
+.payment-panel.caution {
+  border-color: rgba(185, 111, 74, 0.32);
 }
 
 .floating-whatsapp {

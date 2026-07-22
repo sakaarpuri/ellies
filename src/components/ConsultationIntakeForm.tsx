@@ -4,6 +4,11 @@ import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { consultation, site } from "@/lib/site";
 
+type PaymentStatus = {
+  kind: "idle" | "loading" | "error";
+  message: string;
+};
+
 function getFormValue(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
 }
@@ -11,12 +16,14 @@ function getFormValue(formData: FormData, key: string) {
 function buildWhatsappUrl(formData: FormData) {
   const name = getFormValue(formData, "name") || "Visitor";
   const phone = getFormValue(formData, "phone") || "not shared";
+  const email = getFormValue(formData, "email") || "not shared";
   const concernArea = getFormValue(formData, "concernArea") || "not selected";
   const concern = getFormValue(formData, "concern") || "not shared";
   const message = [
     "Hello, I came from Ellie's Botanics.",
     `Name: ${name}`,
     `Phone / WhatsApp: ${phone}`,
+    `Email: ${email}`,
     `Where is the discomfort: ${concernArea}`,
     "",
     "Tell us about it:",
@@ -30,17 +37,24 @@ export function ConsultationIntakeForm() {
   const [values, setValues] = useState({
     name: "",
     phone: "",
+    email: "",
     concernArea: "Knees",
     concern: "",
     consent: false,
   });
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>({
+    kind: "idle",
+    message: "",
+  });
+  const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim());
   const canSend = useMemo(
     () =>
       values.name.trim().length > 1 &&
       values.phone.trim().length > 5 &&
+      emailIsValid &&
       values.concern.trim().length > 8 &&
       values.consent,
-    [values],
+    [emailIsValid, values],
   );
 
   function updateValue(name: keyof typeof values, value: string | boolean) {
@@ -48,6 +62,68 @@ export function ConsultationIntakeForm() {
       ...current,
       [name]: value,
     }));
+  }
+
+  async function handlePayment(form: HTMLFormElement) {
+    if (!form.reportValidity() || !canSend) {
+      return;
+    }
+
+    setPaymentStatus({
+      kind: "loading",
+      message: "Opening PayU Hosted Checkout...",
+    });
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("/api/payu/initiate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: getFormValue(formData, "name"),
+          email: getFormValue(formData, "email"),
+          phone: getFormValue(formData, "phone"),
+          concernArea: getFormValue(formData, "concernArea"),
+          consent: values.consent,
+        }),
+      });
+      const payload = (await response.json()) as {
+        action?: string;
+        fields?: Record<string, string>;
+        error?: string;
+      };
+
+      if (!response.ok || !payload.action || !payload.fields) {
+        throw new Error(payload.error || "Payment could not be started.");
+      }
+
+      const checkoutForm = document.createElement("form");
+      checkoutForm.method = "POST";
+      checkoutForm.action = payload.action;
+      checkoutForm.style.display = "none";
+
+      Object.entries(payload.fields).forEach(([name, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = value;
+        checkoutForm.append(input);
+      });
+
+      document.body.append(checkoutForm);
+      checkoutForm.submit();
+    } catch (error) {
+      setPaymentStatus({
+        kind: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Payment could not be started. Please try WhatsApp or email.",
+      });
+    }
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -68,6 +144,7 @@ export function ConsultationIntakeForm() {
       "",
       `Name: ${name}`,
       `Phone / WhatsApp: ${getFormValue(formData, "phone")}`,
+      `Email: ${getFormValue(formData, "email")}`,
       `Where is the discomfort: ${getFormValue(formData, "concernArea")}`,
       "",
       "Tell us about it:",
@@ -114,6 +191,18 @@ export function ConsultationIntakeForm() {
           required
           value={values.phone}
           onChange={(event) => updateValue("phone", event.target.value)}
+        />
+      </label>
+
+      <label>
+        <span>Email</span>
+        <input
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          value={values.email}
+          onChange={(event) => updateValue("email", event.target.value)}
         />
       </label>
 
@@ -178,9 +267,28 @@ export function ConsultationIntakeForm() {
         <button className="button secondary" type="submit" disabled={!canSend}>
           Send by email instead
         </button>
+        <button
+          className="button tertiary"
+          type="button"
+          disabled={!canSend || paymentStatus.kind === "loading"}
+          onClick={(event) => {
+            const form = event.currentTarget.form;
+
+            if (form) {
+              handlePayment(form);
+            }
+          }}
+        >
+          {paymentStatus.kind === "loading" ? "Opening PayU..." : "Pay consultation fee"}
+        </button>
       </div>
+      {paymentStatus.message ? (
+        <p className={`payment-status ${paymentStatus.kind}`} role="status">
+          {paymentStatus.message}
+        </p>
+      ) : null}
       <p className="form-note">
-        Nothing is stored on this website. You see the full message before it is sent.
+        PayU opens securely after the form is complete. Nothing is stored on this website.
       </p>
     </form>
   );
