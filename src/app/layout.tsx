@@ -4,6 +4,7 @@ import { DM_Sans, Marcellus } from "next/font/google";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLdScript } from "@/components/JsonLd";
+import { NetlifyLeadForms } from "@/components/NetlifyLeadForms";
 import { organizationJsonLd, pageMetadata, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -63,6 +64,7 @@ export default function RootLayout({
         </a>
         <SiteHeader />
         <main id="main">{children}</main>
+        <NetlifyLeadForms />
         <SiteFooter />
         <JsonLdScript data={[organizationJsonLd(), websiteJsonLd()]} />
       </body>

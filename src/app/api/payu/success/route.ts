@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { recordLeadEvent } from "@/lib/leads";
 import { getPayuConfig, verifyPayuResponse } from "@/lib/payu";
 
 export const runtime = "nodejs";
@@ -11,6 +12,21 @@ async function handlePayuReturn(request: Request, pathname: string) {
   const config = getPayuConfig();
   const verified = config.salt ? verifyPayuResponse(params, config.salt) : false;
   const destination = new URL(pathname, config.siteUrl);
+
+  await recordLeadEvent({
+    eventType: "payment_success",
+    name: params.firstname,
+    phone: params.phone,
+    email: params.email,
+    concernArea: params.udf1,
+    concern: params.udf3,
+    txnid: params.txnid,
+    amount: params.amount,
+    productinfo: params.productinfo,
+    paymentStatus: params.status || "success",
+    verified,
+    source: "payment return",
+  });
 
   destination.searchParams.set("verified", verified ? "1" : "0");
 

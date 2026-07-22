@@ -33,6 +33,39 @@ function buildWhatsappUrl(formData: FormData) {
   return `https://wa.me/${consultation.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
+function getLeadPayload(formData: FormData, eventType: "whatsapp_opened" | "email_opened") {
+  return {
+    eventType,
+    name: getFormValue(formData, "name"),
+    phone: getFormValue(formData, "phone"),
+    email: getFormValue(formData, "email"),
+    concernArea: getFormValue(formData, "concernArea"),
+    concern: getFormValue(formData, "concern"),
+    consent: formData.get("consent") === "on",
+  };
+}
+
+async function recordLeadAction(
+  formData: FormData,
+  eventType: "whatsapp_opened" | "email_opened",
+) {
+  const request = fetch("/api/consultation/lead", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(getLeadPayload(formData, eventType)),
+    keepalive: true,
+  });
+  const timeout = new Promise((resolve) => setTimeout(resolve, 900));
+
+  try {
+    await Promise.race([request, timeout]);
+  } catch {
+    // The visitor should still be able to contact the team if storage is temporarily unavailable.
+  }
+}
+
 export function ConsultationIntakeForm() {
   const [values, setValues] = useState({
     name: "",
@@ -81,6 +114,7 @@ export function ConsultationIntakeForm() {
           email: getFormValue(formData, "email"),
           phone: getFormValue(formData, "phone"),
           concernArea: getFormValue(formData, "concernArea"),
+          concern: getFormValue(formData, "concern"),
           consent: values.consent,
         }),
       });
@@ -120,7 +154,7 @@ export function ConsultationIntakeForm() {
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -148,17 +182,20 @@ export function ConsultationIntakeForm() {
       "The visitor confirmed this is for consultation, not emergency care.",
     ].join("\n");
 
+    await recordLeadAction(formData, "email_opened");
+
     window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
       subject,
     )}&body=${encodeURIComponent(body)}`;
   }
 
-  function handleWhatsapp(form: HTMLFormElement) {
+  async function handleWhatsapp(form: HTMLFormElement) {
     if (!form.reportValidity()) {
       return;
     }
 
     const formData = new FormData(form);
+    await recordLeadAction(formData, "whatsapp_opened");
     window.open(buildWhatsappUrl(formData), "_blank", "noreferrer");
   }
 

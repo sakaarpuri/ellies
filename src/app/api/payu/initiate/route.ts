@@ -8,6 +8,7 @@ import {
   sanitizePayuField,
   type PayuPaymentFields,
 } from "@/lib/payu";
+import { recordLeadEvent } from "@/lib/leads";
 
 export const runtime = "nodejs";
 
@@ -55,6 +56,7 @@ export async function POST(request: Request) {
   const email = sanitizePayuField(body.email, 100).toLowerCase();
   const phone = sanitizePayuField(body.phone, 20);
   const concernArea = sanitizePayuField(body.concernArea || "Consultation", 60);
+  const concern = sanitizePayuField(body.concern, 180);
   const consent = body.consent === true;
 
   if (firstname.length < 2 || !isEmail(email) || phone.length < 6 || !consent) {
@@ -76,7 +78,7 @@ export async function POST(request: Request) {
     furl: `${config.siteUrl}/api/payu/failure`,
     udf1: concernArea,
     udf2: "consultation",
-    udf3: "",
+    udf3: concern,
     udf4: "",
     udf5: "",
   };
@@ -85,6 +87,22 @@ export async function POST(request: Request) {
     ...fieldsWithoutHash,
     hash: generatePaymentHash({ ...fieldsWithoutHash, salt: config.salt as string }),
   };
+
+  await recordLeadEvent({
+    eventType: "payment_started",
+    name: firstname,
+    phone,
+    email,
+    concernArea,
+    concern,
+    consent,
+    txnid: fields.txnid,
+    amount,
+    productinfo: config.productinfo,
+    paymentStatus: "checkout_created",
+    verified: "pending",
+    source: "consultation form",
+  });
 
   return NextResponse.json({
     action: config.baseUrl,
