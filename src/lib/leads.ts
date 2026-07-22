@@ -1,7 +1,5 @@
 import "server-only";
 
-import { site } from "@/lib/site";
-
 export type LeadEventType =
   | "payment_started"
   | "payment_success"
@@ -26,7 +24,7 @@ type LeadEventInput = {
 };
 
 type LeadStorageResult = {
-  target: "netlify_forms" | "webhook";
+  target: "webhook";
   status: "stored" | "skipped" | "failed";
 };
 
@@ -35,10 +33,6 @@ function clean(value: unknown, maxLength = 600) {
     .trim()
     .replace(/\s+/g, " ")
     .slice(0, maxLength);
-}
-
-function getSiteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL?.trim() || site.url).replace(/\/$/, "");
 }
 
 function normalizeLeadEvent(input: LeadEventInput) {
@@ -58,32 +52,6 @@ function normalizeLeadEvent(input: LeadEventInput) {
     verified: input.verified === true || input.verified === "true" ? "yes" : clean(input.verified, 30),
     source: clean(input.source || "elliesbotanics.com", 120),
   };
-}
-
-async function submitNetlifyForm(formName: string, fields: Record<string, string>) {
-  if (process.env.NETLIFY !== "true" && process.env.ENABLE_NETLIFY_FORM_STORAGE !== "true") {
-    return { target: "netlify_forms", status: "skipped" } satisfies LeadStorageResult;
-  }
-
-  try {
-    const response = await fetch(`${getSiteUrl()}/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        "form-name": formName,
-        ...fields,
-      }).toString(),
-    });
-
-    return {
-      target: "netlify_forms",
-      status: response.ok ? "stored" : "failed",
-    } satisfies LeadStorageResult;
-  } catch {
-    return { target: "netlify_forms", status: "failed" } satisfies LeadStorageResult;
-  }
 }
 
 async function submitWebhook(fields: Record<string, string>) {
@@ -119,10 +87,7 @@ export async function recordLeadEvent(input: LeadEventInput) {
       ? "consultation_payment"
       : "consultation_lead";
 
-  const results = await Promise.all([
-    submitNetlifyForm(formName, fields),
-    submitWebhook({ formName, ...fields }),
-  ]);
+  const results = [await submitWebhook({ formName, ...fields })];
 
   return {
     ok: results.some((result) => result.status === "stored"),
