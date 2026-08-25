@@ -18,7 +18,7 @@ const contactFaqs = [
   {
     question: "How can I contact Ellie’s Botanics?",
     answer:
-      "Email elliesbotanics@gmail.com or call 9815007269 or 7717607269 for official Ellie’s Botanics enquiries.",
+      "Email support@elliesbotanics.com or call 9815007269 or 7717607269 for official Ellie’s Botanics enquiries.",
   },
   {
     question: "Can I request Ayurvedic guidance online?",

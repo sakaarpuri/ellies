@@ -35,7 +35,7 @@ export default function TermsPage() {
         <h2>Contact</h2>
         <p>
           Questions about these terms can be sent to{" "}
-          <a href="mailto:elliesbotanics@gmail.com">elliesbotanics@gmail.com</a>.
+          <a href="mailto:support@elliesbotanics.com">support@elliesbotanics.com</a>.
         </p>
       </section>
       <JsonLdScript

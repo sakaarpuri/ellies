@@ -3,7 +3,7 @@ export const site = {
   domain: "www.elliesbotanics.com",
   url: "https://www.elliesbotanics.com",
   logo: "/images/eb-logo.jpg",
-  email: "elliesbotanics@gmail.com",
+  email: "support@elliesbotanics.com",
   phones: [
     { label: "9815007269", href: "tel:+919815007269" },
     { label: "7717607269", href: "tel:+917717607269" },

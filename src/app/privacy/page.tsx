@@ -35,7 +35,7 @@ export default function PrivacyPage() {
         <h2>Contact</h2>
         <p>
           For privacy questions, write to{" "}
-          <a href="mailto:elliesbotanics@gmail.com">elliesbotanics@gmail.com</a>.
+          <a href="mailto:support@elliesbotanics.com">support@elliesbotanics.com</a>.
         </p>
       </section>
       <JsonLdScript
