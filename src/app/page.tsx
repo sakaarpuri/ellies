@@ -121,8 +121,8 @@ export default function Home() {
           <p className="eyebrow">Consultation</p>
           <h2 id="consult-card-title">Speak with a qualified Ayurvedic doctor.</h2>
           <p>
-            Share your concern in a short form or on WhatsApp. Our team coordinates the rest —
-            nothing is stored on this site.
+            Share your concern in a short form. Our team receives the details and coordinates the
+            next step with care.
           </p>
         </div>
         <div>

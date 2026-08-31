@@ -4,7 +4,7 @@ import { doctor } from "@/lib/site";
 
 const expectations = [
   "Fill the short form below — two minutes",
-  "Send it by email or WhatsApp — you review it first",
+  "Submit your request so the team receives it securely",
   "We call you back to arrange the consultation",
 ];
 
