@@ -3,7 +3,11 @@ import { recordLeadEvent, type LeadEventType } from "@/lib/leads";
 
 export const runtime = "nodejs";
 
-const allowedEvents = new Set<LeadEventType>(["whatsapp_opened", "email_opened"]);
+const allowedEvents = new Set<LeadEventType>([
+  "request_submitted",
+  "whatsapp_opened",
+  "email_opened",
+]);
 
 export async function POST(request: Request) {
   let body: Record<string, unknown>;
@@ -20,7 +24,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
 
-  await recordLeadEvent({
+  const result = await recordLeadEvent({
     eventType,
     name: String(body.name || ""),
     phone: String(body.phone || ""),
@@ -30,6 +34,17 @@ export async function POST(request: Request) {
     consent: body.consent === true,
     source: "consultation form",
   });
+
+  if (!result.ok) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          "We could not save the request right now. Please contact Ellie’s Botanics by WhatsApp or email.",
+      },
+      { status: 502 },
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

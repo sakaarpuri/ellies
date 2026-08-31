@@ -2,12 +2,14 @@
 
 import type { FormEvent } from "react";
 import { useState } from "react";
-import { consultation, site } from "@/lib/site";
+import { consultation } from "@/lib/site";
 
 type PaymentStatus = {
-  kind: "idle" | "loading" | "error";
+  kind: "idle" | "loading" | "success" | "error";
   message: string;
 };
+
+type LeadAction = "request_submitted" | "whatsapp_opened" | "email_opened";
 
 function getFormValue(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
@@ -33,7 +35,7 @@ function buildWhatsappUrl(formData: FormData) {
   return `https://wa.me/${consultation.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
-function getLeadPayload(formData: FormData, eventType: "whatsapp_opened" | "email_opened") {
+function getLeadPayload(formData: FormData, eventType: LeadAction) {
   return {
     eventType,
     name: getFormValue(formData, "name"),
@@ -45,11 +47,8 @@ function getLeadPayload(formData: FormData, eventType: "whatsapp_opened" | "emai
   };
 }
 
-async function recordLeadAction(
-  formData: FormData,
-  eventType: "whatsapp_opened" | "email_opened",
-) {
-  const request = fetch("/api/consultation/lead", {
+async function recordLeadAction(formData: FormData, eventType: LeadAction) {
+  const response = await fetch("/api/consultation/lead", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -57,12 +56,10 @@ async function recordLeadAction(
     body: JSON.stringify(getLeadPayload(formData, eventType)),
     keepalive: true,
   });
-  const timeout = new Promise((resolve) => setTimeout(resolve, 900));
+  const payload = (await response.json()) as { ok?: boolean; error?: string };
 
-  try {
-    await Promise.race([request, timeout]);
-  } catch {
-    // The visitor should still be able to contact the team if storage is temporarily unavailable.
+  if (!response.ok || payload.ok !== true) {
+    throw new Error(payload.error || "We could not save your request right now.");
   }
 }
 
@@ -163,30 +160,35 @@ export function ConsultationIntakeForm() {
       return;
     }
 
-    const formData = new FormData(form);
-    const name = getFormValue(formData, "name");
-    const subjectName = name || "Visitor";
-    const subject = `Consultation request - ${subjectName}`;
-    const body = [
-      "New consultation request from Ellie’s Botanics website",
-      "",
-      `Name: ${name}`,
-      `Phone / WhatsApp: ${getFormValue(formData, "phone")}`,
-      `Email: ${getFormValue(formData, "email")}`,
-      `Where is the discomfort: ${getFormValue(formData, "concernArea")}`,
-      "",
-      "Tell us about it:",
-      getFormValue(formData, "concern"),
-      "",
-      "Consent:",
-      "The visitor confirmed this is for consultation, not emergency care.",
-    ].join("\n");
+    setPaymentStatus({
+      kind: "loading",
+      message: "Submitting your request...",
+    });
 
-    await recordLeadAction(formData, "email_opened");
-
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
-      subject,
-    )}&body=${encodeURIComponent(body)}`;
+    try {
+      await recordLeadAction(new FormData(form), "request_submitted");
+      setPaymentStatus({
+        kind: "success",
+        message: "Request received. Ellie’s Botanics will contact you soon.",
+      });
+      form.reset();
+      setValues({
+        name: "",
+        phone: "",
+        email: "",
+        concernArea: "Knees",
+        concern: "",
+        consent: false,
+      });
+    } catch (error) {
+      setPaymentStatus({
+        kind: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "We could not save your request right now. Please use WhatsApp or email.",
+      });
+    }
   }
 
   async function handleWhatsapp(form: HTMLFormElement) {
@@ -195,8 +197,19 @@ export function ConsultationIntakeForm() {
     }
 
     const formData = new FormData(form);
-    await recordLeadAction(formData, "whatsapp_opened");
-    window.open(buildWhatsappUrl(formData), "_blank", "noreferrer");
+    const whatsappWindow = window.open("", "_blank", "noreferrer");
+
+    try {
+      await recordLeadAction(formData, "whatsapp_opened");
+    } catch {
+      // WhatsApp remains available as a direct contact fallback if the sheet is unavailable.
+    }
+
+    if (whatsappWindow) {
+      whatsappWindow.location.href = buildWhatsappUrl(formData);
+    } else {
+      window.location.href = buildWhatsappUrl(formData);
+    }
   }
 
   return (
@@ -286,6 +299,13 @@ export function ConsultationIntakeForm() {
       <div className="form-actions">
         <button
           className="button primary pay-button"
+          type="submit"
+          disabled={paymentStatus.kind === "loading"}
+        >
+          {paymentStatus.kind === "loading" ? "Submitting..." : "Submit consultation request"}
+        </button>
+        <button
+          className="button secondary"
           type="button"
           disabled={paymentStatus.kind === "loading"}
           onClick={(event) => {
@@ -296,11 +316,12 @@ export function ConsultationIntakeForm() {
             }
           }}
         >
-          {paymentStatus.kind === "loading" ? "Opening checkout..." : "Pay consultation fee"}
+          Pay consultation fee
         </button>
         <button
           className="button secondary"
           type="button"
+          disabled={paymentStatus.kind === "loading"}
           onClick={(event) => {
             const form = event.currentTarget.form;
 
@@ -311,9 +332,6 @@ export function ConsultationIntakeForm() {
         >
           Send on WhatsApp only
         </button>
-        <button className="button secondary" type="submit">
-          Open email only
-        </button>
       </div>
       {paymentStatus.message ? (
         <p className={`payment-status ${paymentStatus.kind}`} role="status">
@@ -321,8 +339,8 @@ export function ConsultationIntakeForm() {
         </p>
       ) : null}
       <p className="form-note">
-        WhatsApp and email do not charge you. Payment happens only if you choose Pay consultation
-        fee and complete secure checkout.
+        Submitting sends your details for follow-up. WhatsApp does not charge you. Payment happens
+        only if you choose Pay consultation fee and complete secure checkout.
       </p>
     </form>
   );

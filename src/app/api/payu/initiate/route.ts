@@ -88,7 +88,7 @@ export async function POST(request: Request) {
     hash: generatePaymentHash({ ...fieldsWithoutHash, salt: config.salt as string }),
   };
 
-  await recordLeadEvent({
+  const leadResult = await recordLeadEvent({
     eventType: "payment_started",
     name: firstname,
     phone,
@@ -103,6 +103,16 @@ export async function POST(request: Request) {
     verified: "pending",
     source: "consultation form",
   });
+
+  if (!leadResult.ok) {
+    return NextResponse.json(
+      {
+        error:
+          "We could not save your request right now. Please contact Ellie’s Botanics by WhatsApp or email.",
+      },
+      { status: 502 },
+    );
+  }
 
   return NextResponse.json({
     action: config.baseUrl,

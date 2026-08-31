@@ -1,6 +1,7 @@
 import "server-only";
 
 export type LeadEventType =
+  | "request_submitted"
   | "payment_started"
   | "payment_success"
   | "payment_failure"
@@ -70,10 +71,18 @@ async function submitWebhook(fields: Record<string, string>) {
       },
       body: JSON.stringify(webhookSecret ? { ...fields, secret: webhookSecret } : fields),
     });
+    const responseText = await response.text();
+    let responseBody: { ok?: unknown } | null = null;
+
+    try {
+      responseBody = JSON.parse(responseText) as { ok?: unknown };
+    } catch {
+      responseBody = null;
+    }
 
     return {
       target: "webhook",
-      status: response.ok ? "stored" : "failed",
+      status: response.ok && responseBody?.ok !== false ? "stored" : "failed",
     } satisfies LeadStorageResult;
   } catch {
     return { target: "webhook", status: "failed" } satisfies LeadStorageResult;
