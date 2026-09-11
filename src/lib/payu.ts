@@ -32,6 +32,9 @@ type PayuConfig = {
   productinfo: string;
 };
 
+const WEEKEND_CONSULTATION_RATE = "200";
+const WEEKEND_CONSULTATION_RATE_END_UTC = Date.UTC(2026, 8, 13, 18, 30, 0);
+
 let localEnvCache: Record<string, string> | null = null;
 
 function readLocalEnv() {
@@ -79,13 +82,27 @@ function getEnvValue(key: string) {
   return process.env[key]?.trim() || readLocalEnv()[key]?.trim();
 }
 
+export function getConsultationRate(now = new Date()) {
+  const normalAmount = getEnvValue("PAYU_CONSULTATION_AMOUNT");
+  const isWeekendOfferActive = now.getTime() < WEEKEND_CONSULTATION_RATE_END_UTC;
+
+  return {
+    amount: isWeekendOfferActive ? WEEKEND_CONSULTATION_RATE : normalAmount,
+    normalAmount,
+    isWeekendOfferActive,
+    weekendOfferEndsAt: new Date(WEEKEND_CONSULTATION_RATE_END_UTC).toISOString(),
+  };
+}
+
 export function getPayuConfig(): PayuConfig {
+  const consultationRate = getConsultationRate();
+
   return {
     key: getEnvValue("PAYU_MERCHANT_KEY"),
     salt: getEnvValue("PAYU_MERCHANT_SALT"),
     baseUrl: getEnvValue("PAYU_BASE_URL") || "https://test.payu.in/_payment",
     siteUrl: (getEnvValue("NEXT_PUBLIC_SITE_URL") || site.url).replace(/\/$/, ""),
-    amount: getEnvValue("PAYU_CONSULTATION_AMOUNT"),
+    amount: consultationRate.amount,
     productinfo: getEnvValue("PAYU_CONSULTATION_PRODUCTINFO") || "Ayurvedic Consultation",
   };
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { consultation } from "@/lib/site";
 
 type PaymentStatus = {
@@ -11,8 +11,29 @@ type PaymentStatus = {
 
 type LeadAction = "request_submitted" | "whatsapp_opened" | "email_opened";
 
+type ConsultationRate = {
+  amount: string | null;
+  normalAmount: string | null;
+  isWeekendOfferActive: boolean;
+  weekendOfferEndsAt: string;
+};
+
 function getFormValue(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
+}
+
+function formatRupees(amount: string | null) {
+  if (!amount) {
+    return "";
+  }
+
+  const parsed = Number(amount);
+
+  if (!Number.isFinite(parsed)) {
+    return `Rs.${amount}`;
+  }
+
+  return `Rs.${parsed.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
 }
 
 function buildWhatsappUrl(formData: FormData) {
@@ -76,6 +97,29 @@ export function ConsultationIntakeForm() {
     kind: "idle",
     message: "",
   });
+  const [consultationRate, setConsultationRate] = useState<ConsultationRate | null>(null);
+  const consultationAmountLabel = formatRupees(consultationRate?.amount ?? null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetch("/api/payu/rate")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: ConsultationRate | null) => {
+        if (isMounted && payload) {
+          setConsultationRate(payload);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setConsultationRate(null);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   function updateValue(name: keyof typeof values, value: string | boolean) {
     if (paymentStatus.kind === "error") {
@@ -316,7 +360,9 @@ export function ConsultationIntakeForm() {
             }
           }}
         >
-          Pay consultation fee
+          {consultationAmountLabel
+            ? `Pay ${consultationAmountLabel} consultation fee`
+            : "Pay consultation fee"}
         </button>
         <button
           className="button secondary"
@@ -339,8 +385,11 @@ export function ConsultationIntakeForm() {
         </p>
       ) : null}
       <p className="form-note">
-        Submitting sends your details for follow-up. WhatsApp does not charge you. Payment happens
-        only if you choose Pay consultation fee and complete secure checkout.
+        {consultationRate?.isWeekendOfferActive
+          ? `Weekend consultation fee: ${formatRupees(
+              consultationRate.amount,
+            )}. Submitting sends your details for follow-up. WhatsApp does not charge you. Payment happens only if you choose Pay consultation fee and complete secure checkout.`
+          : "Submitting sends your details for follow-up. WhatsApp does not charge you. Payment happens only if you choose Pay consultation fee and complete secure checkout."}
       </p>
     </form>
   );
