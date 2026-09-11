@@ -77,11 +77,17 @@ async function recordLeadAction(formData: FormData, eventType: LeadAction) {
     body: JSON.stringify(getLeadPayload(formData, eventType)),
     keepalive: true,
   });
-  const payload = (await response.json()) as { ok?: boolean; error?: string };
+  const payload = (await response.json()) as {
+    ok?: boolean;
+    error?: string;
+    customerConfirmationSent?: boolean;
+  };
 
   if (!response.ok || payload.ok !== true) {
     throw new Error(payload.error || "We could not save your request right now.");
   }
+
+  return payload;
 }
 
 export function ConsultationIntakeForm() {
@@ -210,10 +216,12 @@ export function ConsultationIntakeForm() {
     });
 
     try {
-      await recordLeadAction(new FormData(form), "request_submitted");
+      const result = await recordLeadAction(new FormData(form), "request_submitted");
       setPaymentStatus({
         kind: "success",
-        message: "Request received. Ellie’s Botanics will contact you soon.",
+        message: result.customerConfirmationSent
+          ? "Request received and recorded. Please check your email for confirmation; Ellie’s Botanics will contact you soon."
+          : "Request received and recorded. Ellie’s Botanics will contact you soon.",
       });
       form.reset();
       setValues({

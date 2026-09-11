@@ -46,5 +46,8 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({
+    ok: true,
+    customerConfirmationSent: result.customerConfirmationSent,
+  });
 }

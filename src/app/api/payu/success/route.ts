@@ -13,7 +13,7 @@ async function handlePayuReturn(request: Request, pathname: string) {
   const verified = config.salt ? verifyPayuResponse(params, config.salt) : false;
   const destination = new URL(pathname, config.siteUrl);
 
-  await recordLeadEvent({
+  const result = await recordLeadEvent({
     eventType: "payment_success",
     name: params.firstname,
     phone: params.phone,
@@ -29,6 +29,8 @@ async function handlePayuReturn(request: Request, pathname: string) {
   });
 
   destination.searchParams.set("verified", verified ? "1" : "0");
+  destination.searchParams.set("recorded", result.ok ? "1" : "0");
+  destination.searchParams.set("confirmation", result.customerConfirmationSent ? "1" : "0");
 
   if (params.txnid) {
     destination.searchParams.set("txnid", params.txnid);
