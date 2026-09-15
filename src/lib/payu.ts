@@ -32,8 +32,7 @@ type PayuConfig = {
   productinfo: string;
 };
 
-const WEEKEND_CONSULTATION_RATE = "200";
-const WEEKEND_CONSULTATION_RATE_END_UTC = Date.UTC(2026, 8, 13, 18, 30, 0);
+const CONSULTATION_RATE = "200";
 
 let localEnvCache: Record<string, string> | null = null;
 
@@ -82,15 +81,14 @@ function getEnvValue(key: string) {
   return process.env[key]?.trim() || readLocalEnv()[key]?.trim();
 }
 
-export function getConsultationRate(now = new Date()) {
-  const normalAmount = getEnvValue("PAYU_CONSULTATION_AMOUNT");
-  const isWeekendOfferActive = now.getTime() < WEEKEND_CONSULTATION_RATE_END_UTC;
+export function getConsultationRate() {
+  const normalAmount = getEnvValue("PAYU_CONSULTATION_AMOUNT") || CONSULTATION_RATE;
 
   return {
-    amount: isWeekendOfferActive ? WEEKEND_CONSULTATION_RATE : normalAmount,
+    amount: CONSULTATION_RATE,
     normalAmount,
-    isWeekendOfferActive,
-    weekendOfferEndsAt: new Date(WEEKEND_CONSULTATION_RATE_END_UTC).toISOString(),
+    isWeekendOfferActive: false,
+    weekendOfferEndsAt: null,
   };
 }
 

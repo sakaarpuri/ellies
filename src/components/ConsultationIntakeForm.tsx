@@ -15,7 +15,7 @@ type ConsultationRate = {
   amount: string | null;
   normalAmount: string | null;
   isWeekendOfferActive: boolean;
-  weekendOfferEndsAt: string;
+  weekendOfferEndsAt: string | null;
 };
 
 function getFormValue(formData: FormData, key: string) {
