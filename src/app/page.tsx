@@ -8,6 +8,7 @@ import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSectio
 import { JsonLdScript } from "@/components/JsonLd";
 import { getFeaturedPosts } from "@/lib/wisdom";
 import { consultation, doctor } from "@/lib/site";
+import { arohini } from "@/lib/products";
 import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -74,7 +75,7 @@ export default function Home() {
             your day for your own wellbeing.
           </p>
           <p className="home-product-price">
-            200 ml · ₹250 · Free delivery in India
+            200 ml · ₹{arohini.price} · Free delivery in India
           </p>
           <Link className="button primary" href="/products/arohini">
             Discover Arohini

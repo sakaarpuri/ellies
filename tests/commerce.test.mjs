@@ -109,7 +109,7 @@ function harness() {
 const order = {
   txnid: "EB0123456789abcdef01",
   type: "product",
-  amount: "250.00",
+  amount: "270.00",
   productinfo: "Arohini 200 ml",
   name: "Test Customer",
   email: "test@example.com",
@@ -152,13 +152,24 @@ test("verified product payments persist and queue customer/admin confirmation on
   const event = h.records.get(`events/${order.txnid}-payment_success`);
   assert.match(event.customerConfirmationSubject, /Order confirmed/);
   assert.match(event.customerConfirmationBody, /Free within India/);
-  assert.equal(event.amount, "250.00");
+  assert.equal(event.amount, "270.00");
   assert.equal(
     (await orders.getReceipt(order.txnid, orders.receiptToken(order.txnid)))
       .paid,
     true,
   );
   assert.equal(await orders.getReceipt(order.txnid, "0".repeat(64)), null);
+});
+
+test("orders initiated before a price change retain their saved price and confirmation amount", async () => {
+  const h = harness();
+  const orders = h.load("@/lib/orders");
+  assert.equal(h.load("@/lib/products").arohini.price, 270);
+  await orders.saveOrder({ ...order, amount: "250.00" });
+  await orders.processPayment(signed(h, { amount: "250.00" }));
+  const event = h.records.get(`events/${order.txnid}-payment_success`);
+  assert.equal(event.amount, "250.00");
+  assert.match(event.customerConfirmationBody, /Rs\.250/);
 });
 
 test("invalid hash, different merchant, tampered amount and unknown orders never confirm payment", async () => {
@@ -333,7 +344,7 @@ test("checkout sets the price server-side, validates delivery, and preserves con
   const response = await post(product);
   assert.equal(response.status, 200);
   const result = await response.json();
-  assert.equal(result.fields.amount, "500.00");
+  assert.equal(result.fields.amount, "540.00");
   assert.equal(result.fields.udf2, "product");
   assert.equal(
     h.records.get(`orders/${result.fields.txnid}`).shippingAddress,

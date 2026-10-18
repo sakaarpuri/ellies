@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ProductGallery } from "@/components/ProductGallery";
 import { arohini, arohiniBotanicals } from "@/lib/products";
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { JsonLdScript } from "@/components/JsonLd";
@@ -7,7 +7,7 @@ import { JsonLdScript } from "@/components/JsonLd";
 export const metadata = pageMetadata({
   title: "Arohini | Women's Wellness 40+",
   description:
-    "Meet Arohini, a sugar-free Ayurvedic botanical elixir for women 40+. Seven botanicals, 200 ml, Rs.250 with free delivery in India.",
+    `Meet Arohini, a sugar-free Ayurvedic botanical elixir for women 40+. Seven botanicals, 200 ml, Rs.${arohini.price} with free delivery in India.`,
   path: arohini.path,
   image: arohini.image,
   imageAlt: "Arohini 200 ml bottle and packaging",
@@ -17,16 +17,7 @@ export default function ArohiniPage() {
   return (
     <>
       <section className="product-layout">
-        <figure className="product-photo">
-          <Image
-            src={arohini.image}
-            alt="Arohini women's wellness 40+ elixir, 200 ml bottle with its box"
-            width={1122}
-            height={1402}
-            sizes="(max-width: 760px) 100vw, 50vw"
-            priority
-          />
-        </figure>
+        <ProductGallery />
         <div className="product-copy">
           <p className="eyebrow sage">
             Ellie&apos;s Botanics · Women&apos;s wellness 40+
@@ -58,7 +49,7 @@ export default function ArohiniPage() {
             </div>
           </dl>
           <div className="product-price">
-            <strong>₹250</strong>
+            <strong>₹{arohini.price}</strong>
             <span>Free delivery within India</span>
           </div>
           <Link className="button primary product-buy" href="/checkout/arohini">
@@ -117,16 +108,6 @@ export default function ArohiniPage() {
               Follow the directions and warnings on your bottle, or the advice
               of your qualified practitioner. Do not exceed the labelled dose.
             </p>
-          </details>
-          <details>
-            <summary>Is it suitable for everyone?</summary>
-            <p>
-              No herbal preparation is right for everyone. Check with a
-              qualified doctor before use, especially if you take medication,
-              have a health condition, are pregnant or breastfeeding. Stop use
-              and seek advice if you experience an adverse reaction.
-            </p>
-            <Link href="/#joint-comfort-check-in">Request a consultation</Link>
           </details>
           <details>
             <summary>What happens after I order?</summary>

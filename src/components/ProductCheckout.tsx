@@ -70,7 +70,7 @@ export function ProductCheckout() {
             <p>
               Women&apos;s wellness 40+
               <br />
-              200 ml · ₹250 per bottle
+              200 ml · ₹{arohini.price} per bottle
             </p>
           </div>
         </div>

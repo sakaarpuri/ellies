@@ -1,6 +1,6 @@
 # Orders and notifications
 
-Arohini is INR 250 per 200 ml bottle, with free delivery within India. Quantity is limited to 1-6 per checkout. Product prices are calculated on the server. Consultation remains INR 200.
+Arohini is INR 270 per 200 ml bottle, with free delivery within India. Quantity is limited to 1-6 per checkout. Product prices are calculated on the server. Consultation remains INR 200. Existing orders retain the price saved when checkout was initiated.
 
 ## Records
 

@@ -4,7 +4,7 @@ export const arohini = {
   subtitle: "Women's wellness, 40+",
   description:
     "A sugar-free Ayurvedic botanical elixir with seven botanicals, created for women aged 40 and beyond.",
-  price: 250,
+  price: 270,
   size: "200 ml",
   image: "/images/arohini.webp",
   path: "/products/arohini",

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { arohini } from "@/lib/products";
 import { JsonLdScript } from "@/components/JsonLd";
 import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
@@ -26,7 +27,7 @@ export default function TermsPage() {
         <h2>Orders and delivery</h2>
         <p>
           Product prices and the total payable are displayed before payment.
-          Arohini is Rs.250 per 200 ml bottle with free delivery within India.
+          Arohini is Rs.{arohini.price} per 200 ml bottle with free delivery within India.
           Provide an accurate address and contact number. A payment confirmation
           is not a dispatch confirmation; our team will contact you with
           delivery updates. For cancellation, return, damaged delivery or refund
