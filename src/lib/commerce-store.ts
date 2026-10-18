@@ -11,6 +11,8 @@ function store() {
   return getStore({
     name: `commerce-${process.env.CONTEXT || "production"}`,
     consistency: "strong",
+    // Commerce reads must bypass Next's data cache (it also uses Blobs on Netlify).
+    fetch: (url, options) => fetch(url, { ...options, cache: "no-store", signal: AbortSignal.timeout(8000) }),
   });
 }
 

@@ -1,8 +1,8 @@
 export default async function commerceRecovery() {
   const secret = process.env.LEADS_WEBHOOK_SECRET;
   if (!secret) throw new Error("Notification recovery is missing its secret");
-  const origin =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://www.elliesbotanics.com";
+  // Use the primary domain directly: cross-origin redirects strip Authorization.
+  const origin = process.env.URL || "https://elliesbotanics.com";
   const response = await fetch(
     `${origin.replace(/\/$/, "")}/api/internal/commerce-recovery`,
     {

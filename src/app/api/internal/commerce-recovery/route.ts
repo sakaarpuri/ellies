@@ -16,9 +16,14 @@ export async function POST(request: Request) {
     !crypto.timingSafeEqual(suppliedBuffer, expectedBuffer)
   )
     return Response.json({ ok: false }, { status: 401 });
-  const [payments, notifications] = await Promise.all([
-    reconcilePayments(),
-    retryNotifications(),
-  ]);
-  return Response.json({ ok: true, payments, notifications });
+  try {
+    const [payments, notifications] = await Promise.all([
+      reconcilePayments(),
+      retryNotifications(),
+    ]);
+    return Response.json({ ok: true, payments, notifications });
+  } catch (error) {
+    console.error("Commerce recovery failed", error instanceof Error ? error.message : "Unknown error");
+    return Response.json({ ok: false, error: error instanceof Error ? error.name : "Error" }, { status: 503 });
+  }
 }
