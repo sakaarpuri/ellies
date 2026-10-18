@@ -18,24 +18,39 @@ export default function TermsPage() {
         <p className="eyebrow">Terms</p>
         <h1>Terms of Use</h1>
         <p>
-          Website articles provide general, Ayurveda-informed education. Individual assessment and
-          recommendations are provided separately through qualified consultation. Ellie&apos;s
-          Botanics may update site content and policies over time.
+          Website articles provide general, Ayurveda-informed education.
+          Individual assessment and recommendations are provided separately
+          through qualified consultation. Ellie&apos;s Botanics may update site
+          content and policies over time.
+        </p>
+        <h2>Orders and delivery</h2>
+        <p>
+          Product prices and the total payable are displayed before payment.
+          Arohini is Rs.250 per 200 ml bottle with free delivery within India.
+          Provide an accurate address and contact number. A payment confirmation
+          is not a dispatch confirmation; our team will contact you with
+          delivery updates. For cancellation, return, damaged delivery or refund
+          queries, contact support@elliesbotanics.com with your order reference.
+          This does not limit your statutory rights.
         </p>
         <h2>Content use</h2>
         <p>
-          Site text, layout, and visual presentation belong to Ellie&apos;s Botanics unless
-          otherwise noted. Please request permission before reusing original content.
+          Site text, layout, and visual presentation belong to Ellie&apos;s
+          Botanics unless otherwise noted. Please request permission before
+          reusing original content.
         </p>
         <h2>External references</h2>
         <p>
-          Links and references are provided for context. Ellie&apos;s Botanics is not responsible for
-          third-party websites.
+          Links and references are provided for context. Ellie&apos;s Botanics
+          is not responsible for third-party websites.
         </p>
         <h2>Contact</h2>
         <p>
           Questions about these terms can be sent to{" "}
-          <a href="mailto:support@elliesbotanics.com">support@elliesbotanics.com</a>.
+          <a href="mailto:support@elliesbotanics.com">
+            support@elliesbotanics.com
+          </a>
+          .
         </p>
       </section>
       <JsonLdScript

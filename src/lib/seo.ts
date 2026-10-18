@@ -61,8 +61,7 @@ export function pageMetadata({
       images: [
         {
           url: imageUrl,
-          width: 1200,
-          height: 630,
+          ...(image === "/opengraph-image" ? { width: 1200, height: 630 } : {}),
           alt: imageAlt,
         },
       ],

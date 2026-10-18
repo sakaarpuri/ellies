@@ -5,13 +5,14 @@ import { site } from "@/lib/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   const visualRefreshDate = "2026-07-10";
   const staticRoutes = [
-    { path: "", priority: 1, lastModified: visualRefreshDate },
+    { path: "", priority: 1, lastModified: "2026-10-18" },
+    { path: "/products/arohini", priority: 0.9, lastModified: "2026-10-18" },
     { path: "/about", priority: 0.8, lastModified: visualRefreshDate },
     { path: "/education", priority: 0.9, lastModified: visualRefreshDate },
     { path: "/editorial-standards", priority: 0.7, lastModified: "2026-07-04" },
     { path: "/contact", priority: 0.8, lastModified: "2026-07-04" },
-    { path: "/privacy", priority: 0.4, lastModified: "2026-07-04" },
-    { path: "/terms", priority: 0.4, lastModified: "2026-07-04" },
+    { path: "/privacy", priority: 0.4, lastModified: "2026-10-18" },
+    { path: "/terms", priority: 0.4, lastModified: "2026-10-18" },
     { path: "/medical-disclaimer", priority: 0.5, lastModified: "2026-07-04" },
   ];
 

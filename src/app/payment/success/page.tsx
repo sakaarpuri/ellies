@@ -1,76 +1,73 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { ContactCTA } from "@/components/ContactCTA";
-import { pageMetadata } from "@/lib/seo";
+import { getReceipt } from "@/lib/orders";
+import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
-  ...pageMetadata({
-    title: "Payment Received | Ellie’s Botanics",
-    description:
-      "Confirmation page for Ellie’s Botanics consultation payment responses from secure checkout.",
-    path: "/payment/success",
-  }),
-  robots: {
-    index: false,
-    follow: false,
-  },
+export const metadata = {
+  title: "Your payment",
+  robots: { index: false, follow: false },
 };
+export const dynamic = "force-dynamic";
 
-type PaymentPageProps = {
-  searchParams: Promise<{
-    verified?: string;
-    recorded?: string;
-    confirmation?: string;
-    txnid?: string;
-    status?: string;
-  }>;
-};
-
-export default async function PaymentSuccessPage({ searchParams }: PaymentPageProps) {
+export default async function PaymentSuccessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ txnid?: string; token?: string }>;
+}) {
   const params = await searchParams;
-  const verified = params.verified === "1";
-  const recorded = params.recorded === "1";
-  const confirmationSent = params.confirmation === "1";
-
+  let receipt = null;
+  try {
+    receipt = await getReceipt(params.txnid || "", params.token || "");
+  } catch {
+    /* Storage outages must not be described as failed payments. */
+  }
   return (
-    <>
-      <section className="page-hero payment-page">
-        <p className="eyebrow">Consultation Payment</p>
-        <h1>Payment response received.</h1>
-        <p>
-          Thank you. Ellie’s Botanics will review the booking record and follow up on your
-          consultation request.
-        </p>
-        <div className={verified ? "payment-panel success" : "payment-panel caution"}>
-          <strong>{verified ? "Payment response verified" : "Verification pending"}</strong>
+    <section className="page-hero payment-page">
+      <p className="eyebrow">Ellie&apos;s Botanics</p>
+      <h1>
+        {receipt?.paid
+          ? receipt.type === "product"
+            ? "Your order is confirmed."
+            : "Your payment is confirmed."
+          : "Checking your payment."}
+      </h1>
+      <p>
+        {receipt?.paid
+          ? receipt.type === "product"
+            ? "Thank you for choosing Arohini. Our team will prepare your order and share delivery updates."
+            : "Thank you. Our team will contact you to arrange a consultation time."
+          : "We cannot confirm a successful payment on this page yet. If your account was debited, please do not pay again. Keep your payment reference and contact us for help."}
+      </p>
+      {receipt && (
+        <div className="order-receipt">
           <p>
-            {verified
-              ? "The payment response signature was verified."
-              : "The payment response could not be verified on this page. Please keep your payment confirmation message until our team confirms it."}
+            <strong>Reference:</strong> {receipt.txnid}
           </p>
-          {confirmationSent ? (
+          <p>
+            {receipt.productinfo}
+            {receipt.type === "product"
+              ? ` · Quantity ${receipt.quantity}`
+              : ""}
+          </p>
+          <p>
+            <strong>
+              {receipt.paid ? "Paid" : "Order total"}: Rs. {receipt.amount}
+            </strong>
+          </p>
+          {receipt.paid && (
             <p>
-              Your consultation record has been saved. A confirmation email is sent to the email
-              address entered with the booking.
-            </p>
-          ) : recorded ? (
-            <p>
-              Your consultation record has been saved. Please keep the transaction reference below
-              for your records.
-            </p>
-          ) : (
-            <p>
-              If the booking record is not visible to our team, Ellie’s Botanics can still trace it
-              from the transaction reference below.
+              {receipt.emailSent
+                ? "A confirmation email has been sent to the address you provided."
+                : "Your record is saved. Your email confirmation is pending; please keep this reference."}
             </p>
           )}
-          {params.txnid ? <small>Transaction reference: {params.txnid}</small> : null}
         </div>
-        <Link className="button primary" href="/">
-          Return home
-        </Link>
-      </section>
-      <ContactCTA />
-    </>
+      )}
+      <p>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+      <Link className="button primary" href="/">
+        Return home
+      </Link>
+    </section>
   );
 }

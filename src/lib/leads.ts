@@ -2,6 +2,12 @@ import "server-only";
 
 import crypto from "node:crypto";
 import { site } from "@/lib/site";
+import {
+  deleteRecord,
+  nextBatch,
+  readRecord,
+  writeRecord,
+} from "@/lib/commerce-store";
 
 export type LeadEventType =
   | "request_submitted"
@@ -11,7 +17,7 @@ export type LeadEventType =
   | "whatsapp_opened"
   | "email_opened";
 
-type LeadEventInput = {
+export type LeadEventInput = {
   eventType: LeadEventType;
   name?: string;
   phone?: string;
@@ -26,12 +32,16 @@ type LeadEventInput = {
   verified?: string | boolean;
   source?: string;
   referenceId?: string;
+  orderType?: string;
+  shippingAddress?: string;
+  quantity?: string;
 };
 
 type LeadStorageResult = {
   target: "webhook";
   status: "stored" | "skipped" | "failed";
   customerConfirmationStatus?: string;
+  adminAlertStatus?: string;
 };
 
 function clean(value: unknown, maxLength = 600) {
@@ -44,7 +54,11 @@ function clean(value: unknown, maxLength = 600) {
 function createReferenceId(eventType: LeadEventType) {
   const prefix = eventType === "payment_success" ? "EBP" : "EBR";
   const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-  const suffix = crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase();
+  const suffix = crypto
+    .randomUUID()
+    .replace(/-/g, "")
+    .slice(0, 8)
+    .toUpperCase();
 
   return `${prefix}-${date}-${suffix}`;
 }
@@ -62,13 +76,14 @@ function formatDisplayAmount(amount: string) {
   })}`;
 }
 
-function buildCustomerConfirmation(fields: ReturnType<typeof normalizeLeadEvent>): Record<string, string> {
+function buildCustomerConfirmation(
+  fields: ReturnType<typeof normalizeLeadEvent>,
+): Record<string, string> {
   if (!fields.email) {
     return {};
   }
 
   const name = fields.name || "there";
-  const concernArea = fields.concernArea || "Not specified";
   const submittedAt = new Date(fields.createdAt).toLocaleString("en-IN", {
     dateStyle: "medium",
     timeStyle: "short",
@@ -85,7 +100,6 @@ function buildCustomerConfirmation(fields: ReturnType<typeof normalizeLeadEvent>
         `Thank you for contacting ${site.name}. This email confirms that your consultation request has been received and recorded.`,
         "",
         `Reference: ${fields.referenceId}`,
-        `Concern area: ${concernArea}`,
         `Submitted: ${submittedAt}`,
         "",
         "Next step: our team will review the details and contact you using the phone, WhatsApp, or email shared in the form.",
@@ -99,24 +113,40 @@ function buildCustomerConfirmation(fields: ReturnType<typeof normalizeLeadEvent>
     };
   }
 
-  if (fields.eventType === "payment_success") {
-    const amount = fields.amount ? formatDisplayAmount(fields.amount) : "Recorded";
+  if (
+    fields.eventType === "payment_success" &&
+    fields.verified === "yes" &&
+    fields.paymentStatus === "success"
+  ) {
+    const amount = fields.amount
+      ? formatDisplayAmount(fields.amount)
+      : "Recorded";
+    const product = fields.orderType === "product";
 
     return {
       customerConfirmationTo: fields.email,
-      customerConfirmationSubject: `Consultation payment received - ${site.name}`,
+      customerConfirmationSubject: `${product ? "Order confirmed" : "Consultation payment received"} - ${site.name}`,
       customerConfirmationBody: [
         `Hi ${name},`,
         "",
-        `Thank you. This email confirms that your consultation payment has been received and recorded by ${site.name}.`,
+        `Thank you. Your ${product ? "order" : "consultation payment"} has been received and recorded by ${site.name}.`,
         "",
         `Booking reference: ${fields.referenceId}`,
         `Transaction ID: ${fields.txnid || "Not available"}`,
         `Amount: ${amount}`,
         `Payment status: ${fields.paymentStatus || "success"}`,
-        `Concern area: ${concernArea}`,
+        ...(product
+          ? [
+              `Product: ${fields.productinfo}`,
+              `Quantity: ${fields.quantity}`,
+              "Delivery: Free within India",
+              `Delivery address: ${fields.shippingAddress}`,
+            ]
+          : []),
         "",
-        "Next step: our team will review the booking record and coordinate the consultation follow-up.",
+        product
+          ? "Our team will prepare your order and contact you with delivery updates. This email confirms payment, not dispatch."
+          : "Our team will contact you to arrange your consultation. A consultation time is not confirmed until it is agreed with you.",
         "",
         "Please keep this email for your records.",
         "",
@@ -142,14 +172,26 @@ function normalizeLeadEvent(input: LeadEventInput) {
     email: clean(input.email, 120).toLowerCase(),
     concernArea: clean(input.concernArea, 80),
     concern: clean(input.concern, 900),
-    consent: input.consent === true || input.consent === "true" ? "yes" : clean(input.consent, 30),
+    consent:
+      input.consent === true || input.consent === "true"
+        ? "yes"
+        : clean(input.consent, 30),
     txnid,
     amount: clean(input.amount, 30),
     productinfo: clean(input.productinfo, 120),
     paymentStatus: clean(input.paymentStatus, 80),
-    verified: input.verified === true || input.verified === "true" ? "yes" : clean(input.verified, 30),
+    verified:
+      input.verified === true || input.verified === "true"
+        ? "yes"
+        : clean(input.verified, 30),
     source: clean(input.source || "elliesbotanics.com", 120),
-    referenceId: clean(input.referenceId || txnid || createReferenceId(eventType), 80),
+    referenceId: clean(
+      input.referenceId || txnid || createReferenceId(eventType),
+      80,
+    ),
+    orderType: clean(input.orderType || "consultation", 30),
+    shippingAddress: clean(input.shippingAddress, 600),
+    quantity: clean(input.quantity, 10),
   };
 }
 
@@ -167,15 +209,23 @@ async function submitWebhook(fields: Record<string, string>) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(webhookSecret ? { ...fields, secret: webhookSecret } : fields),
+      body: JSON.stringify(
+        webhookSecret ? { ...fields, secret: webhookSecret } : fields,
+      ),
+      signal: AbortSignal.timeout(12000),
     });
     const responseText = await response.text();
-    let responseBody: { ok?: unknown; customerConfirmationStatus?: unknown } | null = null;
+    let responseBody: {
+      ok?: unknown;
+      customerConfirmationStatus?: unknown;
+      adminAlertStatus?: unknown;
+    } | null = null;
 
     try {
       responseBody = JSON.parse(responseText) as {
         ok?: unknown;
         customerConfirmationStatus?: unknown;
+        adminAlertStatus?: unknown;
       };
     } catch {
       responseBody = null;
@@ -188,8 +238,12 @@ async function submitWebhook(fields: Record<string, string>) {
 
     return {
       target: "webhook",
-      status: response.ok && responseBody?.ok !== false ? "stored" : "failed",
+      status: response.ok && responseBody?.ok === true ? "stored" : "failed",
       customerConfirmationStatus,
+      adminAlertStatus:
+        typeof responseBody?.adminAlertStatus === "string"
+          ? responseBody.adminAlertStatus
+          : undefined,
     } satisfies LeadStorageResult;
   } catch {
     return { target: "webhook", status: "failed" } satisfies LeadStorageResult;
@@ -197,20 +251,74 @@ async function submitWebhook(fields: Record<string, string>) {
 }
 
 export async function recordLeadEvent(input: LeadEventInput) {
+  if (
+    input.eventType === "payment_success" &&
+    (input.verified !== true || input.paymentStatus !== "success")
+  ) {
+    throw new Error("Unverified payment cannot generate confirmation");
+  }
   const fields = normalizeLeadEvent(input);
   const customerConfirmation = buildCustomerConfirmation(fields);
   const formName =
-    input.eventType === "payment_success" || input.eventType === "payment_failure"
+    input.eventType === "payment_success" ||
+    input.eventType === "payment_failure"
       ? "consultation_payment"
       : "consultation_lead";
 
-  const results = [await submitWebhook({ formName, ...fields, ...customerConfirmation })];
+  const eventId = `${fields.referenceId}-${fields.eventType}`;
+  const payload = { formName, ...fields, ...customerConfirmation, eventId };
+  try {
+    await writeRecord(`events/${eventId}`, payload, true);
+    await writeRecord(
+      `outbox/${eventId}`,
+      { createdAt: fields.createdAt },
+      true,
+    );
+    const result = await deliverEvent(eventId);
+    return {
+      ok: true,
+      customerConfirmationSent: result?.customerConfirmationStatus === "sent",
+    };
+  } catch {
+    console.error("Could not persist website event", { eventId });
+    return { ok: false, customerConfirmationSent: false };
+  }
+}
 
-  return {
-    ok: results.some((result) => result.status === "stored"),
-    customerConfirmationSent: results.some(
-      (result) => result.customerConfirmationStatus === "sent",
-    ),
-    results,
-  };
+export async function deliverEvent(eventId: string) {
+  const fields = await readRecord<Record<string, string>>(`events/${eventId}`);
+  if (!fields) return null;
+  const previous = await readRecord<LeadStorageResult>(`delivery/${eventId}`);
+  if (previous?.status === "stored" && previous.customerConfirmationStatus === "sent" && previous.adminAlertStatus === "sent") {
+    await deleteRecord(`outbox/${eventId}`);
+    return previous;
+  }
+  const result = await submitWebhook(fields);
+  await writeRecord(`delivery/${eventId}`, {
+    ...result,
+    attemptedAt: new Date().toISOString(),
+  });
+  const needsCustomer = Boolean(fields.customerConfirmationTo);
+  const needsAdmin = [
+    "request_submitted",
+    "payment_success",
+    "whatsapp_opened",
+    "email_opened",
+  ].includes(fields.eventType);
+  if (
+    result.status === "stored" &&
+    (!needsCustomer || result.customerConfirmationStatus === "sent") &&
+    (!needsAdmin || result.adminAlertStatus === "sent")
+  ) {
+    await deleteRecord(`outbox/${eventId}`);
+  }
+  return result;
+}
+
+export async function retryNotifications() {
+  const keys = await nextBatch("outbox/");
+  await Promise.all(
+    keys.map((key) => deliverEvent(key.slice("outbox/".length))),
+  );
+  return keys.length;
 }

@@ -1,54 +1,6 @@
-import { NextResponse } from "next/server";
-import { recordLeadEvent } from "@/lib/leads";
-import { getPayuConfig, verifyPayuResponse } from "@/lib/payu";
-
+import { handlePaymentReturn } from "@/lib/payment-return";
 export const runtime = "nodejs";
-
-async function handlePayuReturn(request: Request, pathname: string) {
-  const formData = await request.formData();
-  const params = Object.fromEntries(
-    Array.from(formData.entries()).map(([key, value]) => [key, String(value)]),
-  );
-  const config = getPayuConfig();
-  const verified = config.salt ? verifyPayuResponse(params, config.salt) : false;
-  const destination = new URL(pathname, config.siteUrl);
-
-  const result = await recordLeadEvent({
-    eventType: "payment_success",
-    name: params.firstname,
-    phone: params.phone,
-    email: params.email,
-    concernArea: params.udf1,
-    concern: params.udf3,
-    txnid: params.txnid,
-    amount: params.amount,
-    productinfo: params.productinfo,
-    paymentStatus: params.status || "success",
-    verified,
-    source: "payment return",
-  });
-
-  destination.searchParams.set("verified", verified ? "1" : "0");
-  destination.searchParams.set("recorded", result.ok ? "1" : "0");
-  destination.searchParams.set("confirmation", result.customerConfirmationSent ? "1" : "0");
-
-  if (params.txnid) {
-    destination.searchParams.set("txnid", params.txnid);
-  }
-
-  if (params.status) {
-    destination.searchParams.set("status", params.status);
-  }
-
-  return NextResponse.redirect(destination, 303);
-}
-
-export async function POST(request: Request) {
-  return handlePayuReturn(request, "/payment/success");
-}
-
-export function GET() {
-  const destination = new URL("/payment/success", getPayuConfig().siteUrl);
-
-  return NextResponse.redirect(destination, 303);
+export const POST = handlePaymentReturn;
+export function GET(request: Request) {
+  return Response.redirect(new URL("/payment/success", request.url), 303);
 }

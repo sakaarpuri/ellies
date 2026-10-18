@@ -3,6 +3,7 @@ import Image from "next/image";
 import { site } from "@/lib/site";
 
 const footerLinks = [
+  { label: "Arohini", href: "/products/arohini" },
   { label: "About", href: "/about" },
   { label: "Journal", href: "/education" },
   { label: "Editorial Standards", href: "/editorial-standards" },
@@ -36,7 +37,7 @@ export function SiteFooter() {
         <Link href="/terms">Terms</Link>
       </div>
       <div className="footer-bottom">
-        <p>Education, not diagnosis. © 2026 Ellie&apos;s Botanics · {site.email}</p>
+        <p>Ayurvedic wellness. © 2026 Ellie&apos;s Botanics · {site.email}</p>
       </div>
     </footer>
   );

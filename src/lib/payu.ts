@@ -82,7 +82,8 @@ function getEnvValue(key: string) {
 }
 
 export function getConsultationRate() {
-  const normalAmount = getEnvValue("PAYU_CONSULTATION_AMOUNT") || CONSULTATION_RATE;
+  const normalAmount =
+    getEnvValue("PAYU_CONSULTATION_AMOUNT") || CONSULTATION_RATE;
 
   return {
     amount: CONSULTATION_RATE,
@@ -99,9 +100,13 @@ export function getPayuConfig(): PayuConfig {
     key: getEnvValue("PAYU_MERCHANT_KEY"),
     salt: getEnvValue("PAYU_MERCHANT_SALT"),
     baseUrl: getEnvValue("PAYU_BASE_URL") || "https://test.payu.in/_payment",
-    siteUrl: (getEnvValue("NEXT_PUBLIC_SITE_URL") || site.url).replace(/\/$/, ""),
+    siteUrl: (getEnvValue("NEXT_PUBLIC_SITE_URL") || site.url).replace(
+      /\/$/,
+      "",
+    ),
     amount: consultationRate.amount,
-    productinfo: getEnvValue("PAYU_CONSULTATION_PRODUCTINFO") || "Ayurvedic Consultation",
+    productinfo:
+      getEnvValue("PAYU_CONSULTATION_PRODUCTINFO") || "Ayurvedic Consultation",
   };
 }
 
@@ -167,19 +172,28 @@ export function generatePaymentHash({
   udf4 = "",
   udf5 = "",
   salt,
-}: Omit<PayuPaymentFields, "hash" | "surl" | "furl" | "phone"> & { salt: string }) {
+}: Omit<PayuPaymentFields, "hash" | "surl" | "furl" | "phone"> & {
+  salt: string;
+}) {
   return sha512(
     `${key}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|${udf1}|${udf2}|${udf3}|${udf4}|${udf5}||||||${salt}`,
   );
 }
 
-export function generateResponseHash(params: Record<string, string>, salt: string) {
+export function generateResponseHash(
+  params: Record<string, string>,
+  salt: string,
+) {
+  const charges = params.additional_charges || params.additionalCharges;
   return sha512(
-    `${salt}|${params.status ?? ""}||||||${params.udf5 ?? ""}|${params.udf4 ?? ""}|${params.udf3 ?? ""}|${params.udf2 ?? ""}|${params.udf1 ?? ""}|${params.email ?? ""}|${params.firstname ?? ""}|${params.productinfo ?? ""}|${params.amount ?? ""}|${params.txnid ?? ""}|${params.key ?? ""}`,
+    `${charges ? `${charges}|` : ""}${salt}|${params.status ?? ""}||||||${params.udf5 ?? ""}|${params.udf4 ?? ""}|${params.udf3 ?? ""}|${params.udf2 ?? ""}|${params.udf1 ?? ""}|${params.email ?? ""}|${params.firstname ?? ""}|${params.productinfo ?? ""}|${params.amount ?? ""}|${params.txnid ?? ""}|${params.key ?? ""}`,
   );
 }
 
-export function verifyPayuResponse(params: Record<string, string>, salt: string) {
+export function verifyPayuResponse(
+  params: Record<string, string>,
+  salt: string,
+) {
   const received = params.hash ?? "";
   const expected = generateResponseHash(params, salt);
   const receivedBuffer = Buffer.from(received);

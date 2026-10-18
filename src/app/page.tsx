@@ -13,7 +13,7 @@ import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Ellie’s Botanics | Ayurvedic Herbal Wellness Guidance in India",
   description:
-    "Ellie's Botanics offers Ayurveda-informed herbal wellness education, responsible self-care guidance, and consultation enquiries for readers in India and Punjab.",
+    "Discover Arohini women's wellness 40+, Ayurvedic herbal education and qualified consultation with Ellie's Botanics. Free Arohini delivery within India.",
   path: "/",
 });
 
@@ -41,8 +41,8 @@ export default function Home() {
             Rooted in <span>ancient</span> wisdom. Built for modern health.
           </h1>
           <p>
-            Herbal knowledge you can question, check, and trust — from the tradition that has
-            practiced it longest.
+            Herbal knowledge you can question, check, and trust — from the
+            tradition that has practiced it longest.
           </p>
           <div className="hero-actions">
             <Link className="button primary" href="/#joint-comfort-check-in">
@@ -54,6 +54,32 @@ export default function Home() {
           </div>
         </div>
         <BotanicalCollage />
+      </section>
+
+      <section className="home-product" aria-labelledby="arohini-title">
+        <Link href="/products/arohini" className="home-product-photo">
+          <Image
+            src="/images/arohini.webp"
+            alt="Arohini women's wellness botanical elixir, bottle and box"
+            width={1122}
+            height={1402}
+            sizes="(max-width: 760px) 90vw, 360px"
+          />
+        </Link>
+        <div>
+          <p className="eyebrow sage">Women&apos;s wellness 40+</p>
+          <h2 id="arohini-title">Meet Arohini.</h2>
+          <p>
+            Seven botanicals. A sugar-free Ayurvedic elixir. A little space in
+            your day for your own wellbeing.
+          </p>
+          <p className="home-product-price">
+            200 ml · ₹250 · Free delivery in India
+          </p>
+          <Link className="button primary" href="/products/arohini">
+            Discover Arohini
+          </Link>
+        </div>
       </section>
 
       <section className="knowing-panel" aria-labelledby="knowing-title">
@@ -119,16 +145,23 @@ export default function Home() {
       <section className="consult-card" aria-labelledby="consult-card-title">
         <div>
           <p className="eyebrow">Consultation</p>
-          <h2 id="consult-card-title">Speak with a qualified Ayurvedic doctor.</h2>
+          <h2 id="consult-card-title">
+            Speak with a qualified Ayurvedic doctor.
+          </h2>
           <p>
-            Share your concern in a short form. Our team receives the details and coordinates the
-            next step with care.
+            Share your concern in a short form. Our team receives the details
+            and coordinates the next step with care.
           </p>
         </div>
         <div>
           <div className="doctor-row">
             <div className="doctor-photo">
-              <Image src={doctor.image} alt={doctor.name} width={72} height={72} />
+              <Image
+                src={doctor.image}
+                alt={doctor.name}
+                width={72}
+                height={72}
+              />
             </div>
             <div>
               <p>{doctor.name}</p>

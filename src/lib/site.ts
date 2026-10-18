@@ -9,7 +9,7 @@ export const site = {
     { label: "7717607269", href: "tel:+917717607269" },
   ],
   description:
-    "Ellie's Botanics shares practical Ayurvedic herbal education and helps readers in India request qualified Ayurvedic consultation.",
+    "Ellie's Botanics offers Arohini women's wellness 40+, Ayurvedic herbal education and qualified consultation enquiries in India.",
   locale: "en_IN",
   areaServed: ["India", "Punjab"],
   keywords: [
@@ -38,6 +38,7 @@ export const doctor = {
 
 export const navItems = [
   { label: "Home", href: "/" },
+  { label: "Arohini", href: "/products/arohini" },
   { label: "Journal", href: "/education" },
   { label: "About", href: "/about" },
   { label: "Consultation", href: "/#joint-comfort-check-in" },

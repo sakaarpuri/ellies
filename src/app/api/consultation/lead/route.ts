@@ -17,10 +17,20 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
+  if (!body || typeof body !== "object" || Array.isArray(body))
+    return NextResponse.json({ ok: false }, { status: 400 });
 
   const eventType = String(body.eventType || "") as LeadEventType;
 
-  if (!allowedEvents.has(eventType)) {
+  if (
+    !allowedEvents.has(eventType) ||
+    body.consent !== true ||
+    String(body.name || "").trim().length < 2 ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(body.email || "")) ||
+    !/^\+?[0-9 ()-]{10,20}$/.test(String(body.phone || "")) ||
+    String(body.phone).replace(/\D/g, "").length < 10 ||
+    String(body.phone).replace(/\D/g, "").length > 15
+  ) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
 
