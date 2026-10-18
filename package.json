@@ -13,12 +13,14 @@
     "@netlify/blobs": "^11.1.4",
     "marked": "^16.4.2",
     "next": "^16.4.2",
+    "nodemailer": "^10.1.6",
     "react": "latest",
     "react-dom": "latest"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "eslint": "latest",

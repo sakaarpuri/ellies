@@ -2,7 +2,10 @@ import "server-only";
 
 import crypto from "node:crypto";
 import { site } from "@/lib/site";
+import { notificationMessages, sendNotificationMail } from "@/lib/notification-mail";
 import {
+  claimDeliveryLease,
+  releaseDeliveryLease,
   deleteRecord,
   nextBatch,
   readRecord,
@@ -42,6 +45,7 @@ type LeadStorageResult = {
   status: "stored" | "skipped" | "failed";
   customerConfirmationStatus?: string;
   adminAlertStatus?: string;
+  provider?: string;
 };
 
 function clean(value: unknown, maxLength = 600) {
@@ -131,7 +135,7 @@ function buildCustomerConfirmation(
         "",
         `Thank you. Your ${product ? "order" : "consultation payment"} has been received and recorded by ${site.name}.`,
         "",
-        `Booking reference: ${fields.referenceId}`,
+        `${product ? "Order" : "Booking"} reference: ${fields.referenceId}`,
         `Transaction ID: ${fields.txnid || "Not available"}`,
         `Amount: ${amount}`,
         `Payment status: ${fields.paymentStatus || "success"}`,
@@ -204,13 +208,20 @@ async function submitWebhook(fields: Record<string, string>) {
   }
 
   try {
+    // Never POST to a legacy script that could send mail as the owner's personal Gmail.
+    const capability = await fetch(webhookUrl, { cache: "no-store", signal: AbortSignal.timeout(5000) });
+    const protocol = await capability.json();
+    if (!capability.ok || protocol?.service !== "ellies-records-only-v1") {
+      return { target: "webhook", status: "failed" } satisfies LeadStorageResult;
+    }
+    const recordsOnly = Object.fromEntries(Object.entries(fields).filter(([key]) => !key.startsWith("customerConfirmation")));
     const response = await fetch(webhookUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(
-        webhookSecret ? { ...fields, secret: webhookSecret } : fields,
+        webhookSecret ? { ...recordsOnly, secret: webhookSecret } : recordsOnly,
       ),
       signal: AbortSignal.timeout(12000),
     });
@@ -288,31 +299,42 @@ export async function recordLeadEvent(input: LeadEventInput) {
 export async function deliverEvent(eventId: string) {
   const fields = await readRecord<Record<string, string>>(`events/${eventId}`);
   if (!fields) return null;
-  const previous = await readRecord<LeadStorageResult>(`delivery/${eventId}`);
-  if (previous?.status === "stored" && previous.customerConfirmationStatus === "sent" && previous.adminAlertStatus === "sent") {
-    await deleteRecord(`outbox/${eventId}`);
-    return previous;
+  const token = await claimDeliveryLease(eventId);
+  if (!token) return readRecord<LeadStorageResult>(`delivery/${eventId}`);
+  try {
+    const previous = await readRecord<LeadStorageResult>(`delivery/${eventId}`);
+    const messages = notificationMessages(fields);
+    const send = async (recipient: "customer" | "admin") => {
+      const status = recipient === "customer" ? previous?.customerConfirmationStatus : previous?.adminAlertStatus;
+      const key = `mail/${eventId}-${recipient}`;
+      if (status === "sent" || (await readRecord<{ status: string }>(key))?.status === "sent") return "sent";
+      const message = messages[recipient];
+      if (!message) return "not_applicable";
+      try {
+        const result = await sendNotificationMail(`${eventId}-${recipient}`, message);
+        await writeRecord(key, { status: "sent", ...result, acceptedAt: new Date().toISOString() });
+        return "sent";
+      } catch (error) {
+        console.error("Notification mail failed", { eventId, recipient, code: (error as { code?: string }).code || "MAIL_FAILED" });
+        return "failed";
+      }
+    };
+    const [sheet, customer, admin] = await Promise.all([
+      previous?.status === "stored" ? Promise.resolve(previous) : submitWebhook(fields),
+      send("customer"), send("admin"),
+    ]);
+    const result: LeadStorageResult = {
+      target: "webhook", status: sheet.status, provider: "titan-smtp",
+      customerConfirmationStatus: customer, adminAlertStatus: admin,
+    };
+    await writeRecord(`delivery/${eventId}`, { ...result, attemptedAt: new Date().toISOString() });
+    if (result.status === "stored" && customer !== "failed" && admin !== "failed") {
+      await deleteRecord(`outbox/${eventId}`);
+    }
+    return result;
+  } finally {
+    await releaseDeliveryLease(eventId, token);
   }
-  const result = await submitWebhook(fields);
-  await writeRecord(`delivery/${eventId}`, {
-    ...result,
-    attemptedAt: new Date().toISOString(),
-  });
-  const needsCustomer = Boolean(fields.customerConfirmationTo);
-  const needsAdmin = [
-    "request_submitted",
-    "payment_success",
-    "whatsapp_opened",
-    "email_opened",
-  ].includes(fields.eventType);
-  if (
-    result.status === "stored" &&
-    (!needsCustomer || result.customerConfirmationStatus === "sent") &&
-    (!needsAdmin || result.adminAlertStatus === "sent")
-  ) {
-    await deleteRecord(`outbox/${eventId}`);
-  }
-  return result;
 }
 
 export async function retryNotifications() {

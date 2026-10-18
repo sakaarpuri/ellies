@@ -9,6 +9,10 @@ const ts = require("typescript");
 
 function harness() {
   const records = new Map();
+  const sent = [];
+  const requests = [];
+  let failRecipient = "";
+  let failAll = false;
   let response = {
     ok: true,
     customerConfirmationStatus: "sent",
@@ -23,6 +27,7 @@ function harness() {
     NEXT_PUBLIC_SITE_URL: "http://localhost:3000",
     LEADS_WEBHOOK_URL: "https://example.invalid/test",
     LEADS_WEBHOOK_SECRET: "test-secret",
+    SMTP_PASSWORD: "test-password",
   };
   const store = {
     readRecord: async (key) => records.get(key) || null,
@@ -32,6 +37,12 @@ function harness() {
       return true;
     },
     deleteRecord: async (key) => records.delete(key),
+    claimDeliveryLease: async (id) => {
+      if (records.has(`leases/${id}`)) return null;
+      records.set(`leases/${id}`, true);
+      return "test-lease";
+    },
+    releaseDeliveryLease: async (id) => records.delete(`leases/${id}`),
     nextBatch: async (prefix) =>
       [...records.keys()].filter((key) => key.startsWith(prefix)).slice(0, 4),
   };
@@ -39,6 +50,19 @@ function harness() {
   function load(name) {
     if (name === "server-only") return {};
     if (name === "@/lib/commerce-store") return store;
+    if (name === "nodemailer") return {
+      createTransport: (options) => ({
+        sendMail: async (message) => {
+          assert.equal(options.host, "smtpout.secureserver.net");
+          assert.equal(options.secure, true);
+          assert.equal(options.auth.user, "support@elliesbotanics.com");
+          if (failAll || message.to === failRecipient) throw Object.assign(Error("Test SMTP failure"), { code: "EAUTH" });
+          sent.push(message);
+          return { accepted: [message.to] };
+        },
+        close() {},
+      }),
+    };
     if (!name.startsWith("@/")) return require(name);
     if (cache.has(name)) return cache.get(name);
     const filename = path.join(process.cwd(), "src", name.slice(2) + ".ts");
@@ -50,10 +74,13 @@ function harness() {
       },
     }).outputText;
     const loaded = { exports: {} };
-    const mockedFetch = async () =>
-      new Response(
+    const mockedFetch = async (url, options) => {
+      requests.push({ url, ...options });
+      if (options?.method !== "POST") return new Response(typeof response === "string" ? response : JSON.stringify({ service: "ellies-records-only-v1" }));
+      return new Response(
         typeof response === "string" ? response : JSON.stringify(response),
       );
+    };
     new Function(
       "require",
       "module",
@@ -69,6 +96,10 @@ function harness() {
   return {
     load,
     records,
+    sent,
+    requests,
+    env,
+    failMail(recipient = "", all = false) { failRecipient = recipient; failAll = all; },
     setResponse(value) {
       response = value;
     },
@@ -163,7 +194,7 @@ test("failed signed callbacks never send a paid confirmation or downgrade an exi
   assert.equal(h.records.has(`paid/${order.txnid}`), true);
 });
 
-test("HTTP 200 Google HTML errors do not count as saved-to-Sheets or email sent; retry remains queued", async () => {
+test("Sheets failures do not block Titan email; recipient and Sheets retries are independent", async () => {
   const h = harness();
   h.setResponse("<html>MailApp permission denied</html>");
   const leads = h.load("@/lib/leads");
@@ -176,22 +207,56 @@ test("HTTP 200 Google HTML errors do not count as saved-to-Sheets or email sent;
   };
   const result = await leads.recordLeadEvent(input);
   assert.equal(result.ok, true); // Independently persisted, even though Google failed.
-  assert.equal(result.customerConfirmationSent, false);
+  assert.equal(result.customerConfirmationSent, true);
+  assert.equal(h.sent.length, 2);
+  assert.equal(h.requests.some(r => r.method === "POST"), false); // Never call the legacy mail script.
   assert.equal(h.records.has("outbox/EBR-test-request_submitted"), true);
-  h.setResponse({
-    ok: true,
-    customerConfirmationStatus: "sent",
-    adminAlertStatus: "failed",
-  });
-  await leads.retryNotifications();
-  assert.equal(h.records.has("outbox/EBR-test-request_submitted"), true);
-  h.setResponse({
-    ok: true,
-    customerConfirmationStatus: "sent",
-    adminAlertStatus: "sent",
-  });
+  h.setResponse({ ok: true });
   await leads.retryNotifications();
   assert.equal(h.records.has("outbox/EBR-test-request_submitted"), false);
+  assert.equal(h.sent.length, 2);
+  const posted = JSON.parse(h.requests.find(r => r.method === "POST").body);
+  assert.equal(posted.customerConfirmationTo, undefined);
+  assert.equal(posted.customerConfirmationBody, undefined);
+});
+
+test("Titan failures stay queued without a personal-email fallback; retry only sends failed recipients", async () => {
+  const h = harness();
+  h.failMail("support@elliesbotanics.com");
+  const leads = h.load("@/lib/leads");
+  await leads.recordLeadEvent({ eventType: "request_submitted", referenceId: "retry", email: "customer@example.com", name: "Test" });
+  assert.equal(h.sent.length, 1);
+  assert.equal(h.records.has("outbox/retry-request_submitted"), true);
+  h.failMail();
+  await leads.retryNotifications();
+  await leads.deliverEvent("retry-request_submitted");
+  assert.equal(h.sent.length, 2);
+  assert.equal(h.records.has("outbox/retry-request_submitted"), false);
+  for (const mail of h.sent) {
+    assert.equal(mail.from.address, "support@elliesbotanics.com");
+    assert.equal(mail.replyTo, "support@elliesbotanics.com");
+    assert.equal(mail.envelope.from, "support@elliesbotanics.com");
+    assert.doesNotMatch(JSON.stringify(mail), /puri\.sakaar|gmail\.com/);
+  }
+});
+
+test("missing SMTP credentials never reports confirmation sent", async () => {
+  const h = harness();
+  delete h.env.SMTP_PASSWORD;
+  const result = await h.load("@/lib/leads").recordLeadEvent({ eventType: "request_submitted", referenceId: "missing", email: "customer@example.com" });
+  assert.equal(result.customerConfirmationSent, false);
+  assert.equal(h.sent.length, 0);
+  assert.equal(h.records.has("outbox/missing-request_submitted"), true);
+});
+
+test("concurrent delivery workers cannot send duplicate confirmations", async () => {
+  const h = harness();
+  const leads = h.load("@/lib/leads");
+  h.failMail("", true);
+  await leads.recordLeadEvent({ eventType: "request_submitted", referenceId: "concurrent", email: "customer@example.com" });
+  h.failMail();
+  await Promise.all([leads.deliverEvent("concurrent-request_submitted"), leads.deliverEvent("concurrent-request_submitted")]);
+  assert.equal(h.sent.length, 2);
 });
 
 test("consultation confirmation identifies the booking and never exposes private concern text", async () => {
@@ -302,10 +367,8 @@ test("checkout sets the price server-side, validates delivery, and preserves con
   );
 });
 
-test("Apps Script saves before mail, retries failed recipient only, and prevents formula injection", () => {
+test("Apps Script stores records idempotently without any email permission and prevents formula injection", () => {
   const rows = [];
-  const delivered = [];
-  let failAdmin = true;
   const sheet = {
     getLastRow: () => rows.length,
     appendRow: (row) => rows.push(row),
@@ -351,12 +414,7 @@ test("Apps Script saves before mail, retries failed recipient only, and prevents
       flush() {},
     },
     MailApp: {
-      sendEmail: (message) => {
-        assert.equal(rows.length, 2);
-        if (message.to === "support@elliesbotanics.com" && failAdmin)
-          throw Error("Permission denied");
-        delivered.push(message);
-      },
+      sendEmail: () => assert.fail("The record-only script must never send mail"),
     },
   });
   vm.runInContext(
@@ -378,13 +436,12 @@ test("Apps Script saves before mail, retries failed recipient only, and prevents
     context.doPost({ postData: { contents: JSON.stringify(data) } });
   const first = call();
   assert.equal(first.ok, true);
-  assert.equal(first.customerConfirmationStatus, "sent");
-  assert.equal(first.adminAlertStatus, "failed");
+  assert.equal(first.service, "ellies-records-only-v1");
+  assert.equal(context.doGet().service, "ellies-records-only-v1");
   assert.equal(rows[1][5], "'=IMPORTXML(test)");
-  failAdmin = false;
   call();
   call();
   assert.equal(rows.length, 2);
-  assert.equal(delivered.length, 2);
+  assert.doesNotMatch(fs.readFileSync("docs/google-apps-script-leads.gs", "utf8"), /MailApp|GmailApp/);
   assert.equal(context.doPost().error, "missing_body");
 });

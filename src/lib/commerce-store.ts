@@ -2,6 +2,7 @@ import "server-only";
 import { getStore } from "@netlify/blobs";
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 
 // Local development never writes to the live site's customer records.
 const local = process.env.NODE_ENV !== "production" && !process.env.NETLIFY;
@@ -61,6 +62,36 @@ export async function writeRecord(
 export async function deleteRecord(key: string) {
   if (!local) return store().delete(key);
   await fs.rm(file(key), { force: true });
+}
+
+// A conditional lease prevents the callback and scheduled worker sending the same event concurrently.
+export async function claimDeliveryLease(eventId: string) {
+  const key = `leases/${eventId}`;
+  const token = crypto.randomUUID();
+  const lease = { token, expiresAt: Date.now() + 120000 };
+  if (local) {
+    const previous = await readRecord<{ expiresAt: number }>(key);
+    if (previous && previous.expiresAt > Date.now()) return null;
+    if (previous) await deleteRecord(key);
+    return await writeRecord(key, lease, true) ? token : null;
+  }
+  const previous = await store().getWithMetadata(key, { type: "json" });
+  if (previous && previous.data.expiresAt > Date.now()) return null;
+  const result = await store().setJSON(key, lease, previous ? { onlyIfMatch: previous.etag } : { onlyIfNew: true });
+  return result.modified ? token : null;
+}
+
+export async function releaseDeliveryLease(eventId: string, token: string) {
+  const key = `leases/${eventId}`;
+  if (local) {
+    const previous = await readRecord<{ token: string }>(key);
+    if (previous?.token === token) await deleteRecord(key);
+    return;
+  }
+  const previous = await store().getWithMetadata(key, { type: "json" });
+  if (previous?.data.token === token) {
+    await store().setJSON(key, { token, expiresAt: 0 }, { onlyIfMatch: previous.etag });
+  }
 }
 
 export async function listRecords(prefix: string, limit = 25) {
