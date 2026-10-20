@@ -54,7 +54,6 @@ export function ProductGallery() {
           <ChevronLeft size={22} aria-hidden="true" />
         </button>
         <span className="product-gallery-caption" aria-live="polite" aria-atomic="true">
-          <span>{captions[index]}</span>
           <span className="product-gallery-count">{index + 1} / {captions.length}</span>
         </span>
         <button type="button" onClick={() => move(1)} aria-label="Next product photo" title="Next photo" aria-controls="arohini-gallery-photo">
