@@ -58,14 +58,16 @@ export default function Home() {
       </section>
 
       <section className="home-product" aria-labelledby="arohini-title">
-        <Link href="/products/arohini" className="home-product-photo product-arch">
-          <Image
-            src="/images/arohini-arch.webp"
-            alt="Arohini women's wellness botanical elixir, bottle and box"
-            width={1036}
-            height={1518}
-            sizes="(max-width: 760px) 240px, 300px"
-          />
+        <Link href="/products/arohini" className="home-product-photo">
+          <span className="home-product-arch product-arch">
+            <Image
+              src="/images/arohini-arch.webp"
+              alt="Arohini women's wellness botanical elixir, bottle and box"
+              width={1036}
+              height={1518}
+              sizes="(max-width: 760px) 240px, 300px"
+            />
+          </span>
         </Link>
         <div>
           <p className="eyebrow sage">Women&apos;s wellness 40+</p>

@@ -270,7 +270,7 @@ test("concurrent delivery workers cannot send duplicate confirmations", async ()
   assert.equal(h.sent.length, 2);
 });
 
-test("consultation confirmation identifies the booking and never exposes private concern text", async () => {
+test("existing Rs.200 consultations retain their price and never expose private concern text", async () => {
   const h = harness();
   const orders = h.load("@/lib/orders");
   await orders.saveOrder({
@@ -284,6 +284,7 @@ test("consultation confirmation identifies the booking and never exposes private
     signed(h, { amount: "200.00", productinfo: "Ayurvedic Consultation" }),
   );
   const event = h.records.get(`events/${order.txnid}-payment_success`);
+  assert.equal(event.amount, "200.00");
   assert.match(
     event.customerConfirmationSubject,
     /Consultation payment received/,
@@ -370,12 +371,22 @@ test("checkout sets the price server-side, validates delivery, and preserves con
       concern: "Private health information",
     })
   ).json();
-  assert.equal(consultation.fields.amount, "200.00");
+  assert.equal(consultation.fields.amount, "500.00");
   assert.equal(consultation.fields.udf2, "consultation");
   assert.equal(
     JSON.stringify(consultation).includes("Private health information"),
     false,
   );
+});
+
+test("consultation rate display and checkout agree on Rs.500 despite the previous environment rate", async () => {
+  const h = harness();
+  const { GET } = h.load("@/app/api/payu/rate/route");
+  const rate = await GET().json();
+  assert.equal(rate.amount, "500.00");
+  assert.equal(rate.normalAmount, "500.00");
+  assert.equal(rate.isWeekendOfferActive, false);
+  assert.equal(h.load("@/lib/payu").getPayuConfig().amount, "500");
 });
 
 test("Apps Script stores records idempotently without any email permission and prevents formula injection", () => {

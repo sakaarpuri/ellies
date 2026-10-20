@@ -32,7 +32,7 @@ type PayuConfig = {
   productinfo: string;
 };
 
-const CONSULTATION_RATE = "200";
+const CONSULTATION_RATE = "500";
 
 let localEnvCache: Record<string, string> | null = null;
 
@@ -82,12 +82,9 @@ function getEnvValue(key: string) {
 }
 
 export function getConsultationRate() {
-  const normalAmount =
-    getEnvValue("PAYU_CONSULTATION_AMOUNT") || CONSULTATION_RATE;
-
   return {
     amount: CONSULTATION_RATE,
-    normalAmount,
+    normalAmount: CONSULTATION_RATE,
     isWeekendOfferActive: false,
     weekendOfferEndsAt: null,
   };

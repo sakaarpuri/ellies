@@ -24,7 +24,7 @@ export function ProductGallery() {
         }
       }}
     >
-      <div className={`product-gallery-stage${index === 0 ? " product-arch" : ""}`} id="arohini-gallery-photo">
+      <div className="product-gallery-stage product-arch" id="arohini-gallery-photo">
         <div className="product-gallery-slide" role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${captions.length}: ${captions[index]}`}>
           {index === 0 ? (
             <Image
@@ -39,10 +39,10 @@ export function ProductGallery() {
           ) : (
             <div className="product-poster">
               <Image
-                src="/images/arohini-wellness-poster.webp"
+                src="/images/arohini-wellness-poster-arch.webp"
                 alt="Arohini women's wellness 40+ poster with a woman beside the bottle and box, headed Support women through every stage of life"
-                width={1070}
-                height={1470}
+                width={1037}
+                height={1517}
                 sizes="(max-width: 416px) calc(100vw - 36px), 380px"
               />
             </div>
