@@ -72,7 +72,7 @@ export default function Home() {
         <div>
           <p className="eyebrow sage">Women&apos;s wellness 40+</p>
           <h2 id="arohini-title">Meet Arohini.</h2>
-          <p>
+          <p className="product-introduction">
             Seven botanicals. A sugar-free Ayurvedic elixir. A little space in
             your day for your own wellbeing.
           </p>

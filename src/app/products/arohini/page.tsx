@@ -24,12 +24,12 @@ export default function ArohiniPage() {
           </p>
           <h1>Arohini</h1>
           <p className="product-subtitle">Care for your next chapter.</p>
-          <p>
+          <p className="product-introduction">
             A sugar-free Ayurvedic botanical elixir, bringing together seven
             botanicals in a daily wellness preparation for women aged 40 and
             beyond.
           </p>
-          <p>
+          <p className="product-introduction">
             Changing routines, new priorities, a little more time for yourself.
             Make space for your wellbeing, alongside nourishing food, movement,
             rest and the care you need.
