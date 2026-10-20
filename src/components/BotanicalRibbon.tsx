@@ -29,7 +29,7 @@ export function BotanicalRibbon() {
           className={index === 1 ? "tall" : undefined}
           style={{ "--index": index } as CSSProperties}
         >
-          <BotanicalImage src={item.src} alt={item.alt} sizes="(max-width: 720px) 100vw, 33vw" />
+          <BotanicalImage src={item.src} alt={item.alt} sizes="(max-width: 916px) 38vw, 310px" />
           <figcaption>{item.label}</figcaption>
         </figure>
       ))}

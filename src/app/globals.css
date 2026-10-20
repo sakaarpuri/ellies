@@ -15,6 +15,15 @@
 .product-photo {
   margin: 0;
 }
+.product-arch {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(246, 241, 234, 0.28);
+  border-radius: 999px 999px 10px 10px;
+  background: var(--cream);
+}
 .product-photo img {
   height: auto;
   max-height: 650px;
@@ -23,8 +32,8 @@
 .product-gallery-stage {
   position: relative;
   width: 100%;
-  max-width: 520px;
-  aspect-ratio: 4 / 5;
+  max-width: 380px;
+  aspect-ratio: 3 / 4.4;
   margin-inline: auto;
 }
 .product-gallery-slide {
@@ -38,28 +47,27 @@
   width: 100%;
   height: 100%;
   max-height: none;
-  object-fit: contain;
+  object-fit: cover;
+}
+.product-arch .product-gallery-slide {
+  align-items: flex-end;
 }
 .product-poster {
-  position: relative;
+  width: 100%;
   height: 100%;
-  aspect-ratio: 225 / 309;
-  overflow: hidden;
 }
 .product-gallery .product-poster img {
-  position: absolute;
-  inset: 0 auto auto 0;
-  width: 189.777778%;
-  height: 207.119741%;
-  max-width: none;
+  width: 100%;
+  height: 100%;
   max-height: none;
+  object-fit: contain;
 }
 .product-gallery-controls {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr) 44px;
   align-items: center;
   gap: 12px;
-  max-width: 520px;
+  max-width: 380px;
   margin: 16px auto 0;
 }
 .product-gallery-controls button {
@@ -214,12 +222,14 @@
   border-block: 1px solid var(--green-line);
 }
 .home-product-photo {
-  display: block;
+  width: 100%;
   max-width: 300px;
+  aspect-ratio: 3 / 4.4;
   justify-self: center;
 }
 .home-product-photo img {
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 }
 .home-product-price {
   color: var(--sage);
@@ -917,6 +927,8 @@ h3 {
 }
 
 .botanical-ribbon {
+  width: min(100% - var(--gutter) * 2, 820px);
+  margin-inline: auto;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.18fr) minmax(0, 0.9fr);
   gap: clamp(14px, 2vw, 24px);
@@ -926,7 +938,7 @@ h3 {
 .botanical-ribbon figure {
   position: relative;
   overflow: hidden;
-  min-height: 150px;
+  min-height: 0;
   margin: 0;
   border: 1px solid rgba(246, 241, 234, 0.24);
   border-radius: 999px 999px 10px 10px;
@@ -935,7 +947,7 @@ h3 {
 }
 
 .botanical-ribbon figure.tall {
-  min-height: 205px;
+  min-height: 0;
   aspect-ratio: 3 / 4.45;
 }
 
@@ -1890,7 +1902,6 @@ h3 {
   .knowing-panel,
   .consult-card,
   .intake-section,
-  .botanical-ribbon,
   .page-hero.split,
   .article-hero,
   .answer-section,
@@ -1937,12 +1948,6 @@ h3 {
     min-height: auto;
   }
 
-  .botanical-ribbon figure,
-  .botanical-ribbon figure.tall {
-    min-height: 170px;
-    aspect-ratio: 4 / 3;
-  }
-
   .form-actions {
     grid-template-columns: 1fr;
   }
@@ -1980,6 +1985,18 @@ h3 {
   .botanical-collage p {
     margin-top: -2px;
     font-size: 0.66rem;
+  }
+
+  .botanical-ribbon {
+    gap: 10px;
+  }
+
+  .botanical-ribbon figcaption {
+    right: 4px;
+    bottom: 6px;
+    padding: 4px 5px;
+    font-size: 0.5rem;
+    letter-spacing: 0;
   }
 
   .knowing-panel {

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { arohini } from "@/lib/products";
 
 const captions = ["Bottle & packaging", "Arohini wellness poster"];
 
@@ -25,27 +24,26 @@ export function ProductGallery() {
         }
       }}
     >
-      <div className="product-gallery-stage" id="arohini-gallery-photo">
+      <div className={`product-gallery-stage${index === 0 ? " product-arch" : ""}`} id="arohini-gallery-photo">
         <div className="product-gallery-slide" role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${captions.length}: ${captions[index]}`}>
           {index === 0 ? (
             <Image
               className="product-packshot"
-              src={arohini.image}
+              src="/images/arohini-arch.webp"
               alt="Arohini women's wellness 40+ elixir, 200 ml bottle with its box"
-              width={1122}
-              height={1402}
-              sizes="(max-width: 760px) 100vw, 520px"
+              width={1036}
+              height={1518}
+              sizes="(max-width: 416px) calc(100vw - 36px), 380px"
               priority
             />
           ) : (
             <div className="product-poster">
-              {/* Display only panel one of the supplied brochure, without redrawing its artwork. */}
               <Image
-                src="/images/arohini-wellness-brochure.png"
+                src="/images/arohini-wellness-poster.webp"
                 alt="Arohini women's wellness 40+ poster with a woman beside the bottle and box, headed Support women through every stage of life"
-                width={427}
-                height={640}
-                unoptimized
+                width={1070}
+                height={1470}
+                sizes="(max-width: 416px) calc(100vw - 36px), 380px"
               />
             </div>
           )}
