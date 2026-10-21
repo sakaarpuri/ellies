@@ -8,7 +8,6 @@ import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSectio
 import { JsonLdScript } from "@/components/JsonLd";
 import { getFeaturedPosts } from "@/lib/wisdom";
 import { consultation, doctor } from "@/lib/site";
-import { arohini } from "@/lib/products";
 import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -73,11 +72,14 @@ export default function Home() {
           <p className="eyebrow sage">Women&apos;s wellness 40+</p>
           <h2 id="arohini-title">Meet Arohini.</h2>
           <p className="product-introduction">
-            Seven botanicals. A sugar-free Ayurvedic elixir. A little space in
-            your day for your own wellbeing.
+            A sugar-free Ayurvedic botanical elixir, bringing together seven
+            botanicals in a daily wellness preparation for women aged 40 and
+            beyond.
           </p>
-          <p className="home-product-price">
-            200 ml · ₹{arohini.price} · Free delivery in India
+          <p className="product-introduction">
+            Changing routines, new priorities, a little more time for yourself.
+            Make space for your wellbeing, alongside nourishing food, movement,
+            rest and the care you need.
           </p>
           <Link className="button primary" href="/products/arohini">
             Discover Arohini
