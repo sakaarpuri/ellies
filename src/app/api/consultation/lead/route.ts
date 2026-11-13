@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     String(body.phone).replace(/\D/g, "").length > 15
   ) {
     return NextResponse.json(
-      { ok: false, error: "Please check your contact details and tell us about your problem." },
+      { ok: false, error: "Please complete your contact details, age, gender and a description of your problem." },
       { status: 400 },
     );
   }
@@ -48,6 +48,9 @@ export async function POST(request: Request) {
     concernArea: String(body.concernArea || ""),
     ...details,
     consent: body.consent === true,
+    amount: "0",
+    productinfo: "Free Ayurvedic Consultation",
+    paymentStatus: "not_required",
     source: "consultation form",
   });
 

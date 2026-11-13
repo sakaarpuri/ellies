@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { formatPayuAmount, getConsultationRate } from "@/lib/payu";
+import { getConsultationRate } from "@/lib/payu";
 
 export const runtime = "nodejs";
 
@@ -7,8 +7,9 @@ export function GET() {
   const rate = getConsultationRate();
 
   return NextResponse.json({
-    amount: rate.amount ? formatPayuAmount(rate.amount) : null,
-    normalAmount: rate.normalAmount ? formatPayuAmount(rate.normalAmount) : null,
+    amount: Number(rate.amount).toFixed(2),
+    normalAmount: Number(rate.normalAmount).toFixed(2),
+    isFree: true,
     isWeekendOfferActive: rate.isWeekendOfferActive,
     weekendOfferEndsAt: rate.weekendOfferEndsAt,
   });

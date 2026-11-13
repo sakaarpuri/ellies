@@ -17,7 +17,7 @@ export const metadata = pageMetadata({
 export default function ArohiniPage() {
   return (
     <>
-      <section className="product-layout">
+      <section className="product-layout product-light">
         <ProductGallery />
         <div className="product-copy">
           <p className="eyebrow sage">

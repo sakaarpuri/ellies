@@ -32,7 +32,7 @@ type PayuConfig = {
   productinfo: string;
 };
 
-const CONSULTATION_RATE = "500";
+const CONSULTATION_RATE = "0";
 
 let localEnvCache: Record<string, string> | null = null;
 

@@ -8,14 +8,13 @@ import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSectio
 import { JsonLdScript } from "@/components/JsonLd";
 import { getFeaturedPosts } from "@/lib/wisdom";
 import { consultation, doctor } from "@/lib/site";
-import { ArohiniIntroduction } from "@/components/ArohiniIntroduction";
-import { ProductGallery } from "@/components/ProductGallery";
+import { ArohiniShowcase } from "@/components/ArohiniShowcase";
 import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "Ellie's Botanics | Arohini & Ayurvedic Wellness",
   description:
-    "Discover Arohini for women's wellness 40+ around menopause, Ayurvedic herbal education and qualified consultations from Ellie's Botanics.",
+    "Discover Arohini for women's wellness 40+ around menopause, Ayurvedic herbal education and free consultations from Ellie's Botanics in India.",
   path: "/",
 });
 
@@ -58,17 +57,7 @@ export default function Home() {
         <BotanicalCollage />
       </section>
 
-      <section className="home-product" id="meet-arohini" aria-labelledby="arohini-title">
-        <ProductGallery compact />
-        <div>
-          <p className="eyebrow sage">Women&apos;s wellness 40+</p>
-          <h2 id="arohini-title">Meet Arohini.</h2>
-          <ArohiniIntroduction />
-          <Link className="button primary" href="/products/arohini">
-            Discover Arohini
-          </Link>
-        </div>
-      </section>
+      <ArohiniShowcase />
 
       <section className="knowing-panel" aria-labelledby="knowing-title">
         <h2 id="knowing-title" className="sr-only">
@@ -132,7 +121,7 @@ export default function Home() {
 
       <section className="consult-card" aria-labelledby="consult-card-title">
         <div>
-          <p className="eyebrow">Consultation</p>
+          <p className="eyebrow">Free consultation</p>
           <h2 id="consult-card-title">
             Speak with a qualified Ayurvedic doctor.
           </h2>

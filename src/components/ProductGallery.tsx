@@ -1,64 +1,43 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Expand, X } from "lucide-react";
 
 import { arohiniPhotos } from "@/lib/products";
 
 export function ProductGallery({ compact = false }: { compact?: boolean }) {
-  const [index, setIndex] = useState(0);
-  const id = useId();
+  const [selected, setSelected] = useState<number | null>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
   const photos = compact ? arohiniPhotos.slice(0, 4) : arohiniPhotos;
-  const move = (step: number) => setIndex((current) => (current + step + photos.length) % photos.length);
+  useEffect(() => {
+    if (selected === null) return;
+    dialog.current?.showModal();
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previous; };
+  }, [selected]);
 
   return (
-    <figure
-      className={`product-photo product-gallery${compact ? " product-gallery-compact" : ""}`}
-      role="region"
-      aria-roledescription="carousel"
-      aria-label="Arohini product photos"
-      tabIndex={0}
-      onKeyDown={(event) => {
-        if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
-          event.preventDefault();
-          move(event.key === "ArrowRight" ? 1 : -1);
-        }
-      }}
-    >
-      <div className="product-gallery-frame">
-        <div className="product-gallery-stage product-arch" id={id}>
-          {photos.map((photo, photoIndex) => (
-            <div key={photo.src} className="product-gallery-slide" hidden={index !== photoIndex}
-              role="group" aria-roledescription="slide" aria-label={`${photoIndex + 1} of ${photos.length}`}>
-              <Image className="product-packshot" src={photo.src} alt={photo.alt}
-                width={photo.width} height={photo.height}
-                sizes={compact ? "(max-width: 760px) 240px, 300px" : "(max-width: 416px) calc(100vw - 36px), 380px"}
-                priority={!compact && photoIndex === 0} />
-            </div>
-          ))}
-        </div>
-      </div>
-      <figcaption className="product-gallery-controls">
-        <button type="button" onClick={() => move(-1)} aria-label="Previous product photo" title="Previous photo" aria-controls={id}>
-          <ChevronLeft size={22} aria-hidden="true" />
-        </button>
-        <span className="product-gallery-caption" aria-live="polite" aria-atomic="true">
-          <span className="product-gallery-count">{index + 1} / {photos.length}</span>
-        </span>
-        <button type="button" onClick={() => move(1)} aria-label="Next product photo" title="Next photo" aria-controls={id}>
-          <ChevronRight size={22} aria-hidden="true" />
-        </button>
-      </figcaption>
-      <div className="product-gallery-thumbnails" aria-label="Choose a product photo">
+    <div className={`product-photo-grid${compact ? " product-photo-grid-home" : ""}`} role="group" aria-label="Arohini product photos">
         {photos.map((photo, photoIndex) => (
-          <button key={photo.src} type="button" onClick={() => setIndex(photoIndex)}
-            aria-label={`Show photo ${photoIndex + 1}: ${photo.alt}`} title={`Photo ${photoIndex + 1}`}
-            aria-pressed={index === photoIndex} aria-controls={id}>
-            <Image src={photo.src} alt="" width={54} height={64} sizes="54px" />
+          <button key={photo.src} className="product-photo-tile" type="button" onClick={() => setSelected(photoIndex)}
+            aria-label={`Enlarge photo: ${photo.alt}`} title="Enlarge photo" aria-haspopup="dialog">
+            <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height}
+              sizes="(max-width: 760px) calc((100vw - 52px) / 2), (max-width: 1100px) 24vw, 310px"
+              priority={!compact && photoIndex === 0} />
+            <span className="photo-expand"><Expand size={16} aria-hidden="true" /></span>
           </button>
         ))}
-      </div>
-    </figure>
+      <dialog ref={dialog} className="product-photo-dialog" aria-label="Enlarged Arohini photo"
+        onClose={() => setSelected(null)} onClick={(event) => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
+        {selected !== null && (
+          <div className="product-photo-dialog-inner">
+            <button type="button" className="photo-close" aria-label="Close photo" title="Close photo" autoFocus onClick={() => dialog.current?.close()}><X size={24} aria-hidden="true" /></button>
+            <Image src={photos[selected].src} alt={photos[selected].alt} width={photos[selected].width} height={photos[selected].height} sizes="(max-width: 760px) 92vw, 760px" />
+          </div>
+        )}
+      </dialog>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useEffect, useState } from "react";
+import { useId, useState } from "react";
 import { consultation } from "@/lib/site";
 import { genderOptions } from "@/lib/consultation-details";
 
@@ -12,29 +12,8 @@ type PaymentStatus = {
 
 type LeadAction = "request_submitted" | "whatsapp_opened" | "email_opened";
 
-type ConsultationRate = {
-  amount: string | null;
-  normalAmount: string | null;
-  isWeekendOfferActive: boolean;
-  weekendOfferEndsAt: string | null;
-};
-
 function getFormValue(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
-}
-
-function formatRupees(amount: string | null) {
-  if (!amount) {
-    return "";
-  }
-
-  const parsed = Number(amount);
-
-  if (!Number.isFinite(parsed)) {
-    return `Rs.${amount}`;
-  }
-
-  return `Rs.${parsed.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
 }
 
 function buildWhatsappUrl(formData: FormData) {
@@ -95,6 +74,7 @@ async function recordLeadAction(formData: FormData, eventType: LeadAction) {
 }
 
 export function ConsultationIntakeForm() {
+  const genderLabelId = useId();
   const [values, setValues] = useState({
     name: "",
     phone: "",
@@ -108,30 +88,6 @@ export function ConsultationIntakeForm() {
     kind: "idle",
     message: "",
   });
-  const [consultationRate, setConsultationRate] = useState<ConsultationRate | null>(null);
-  const consultationAmountLabel = formatRupees(consultationRate?.amount ?? null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    fetch("/api/payu/rate")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((payload: ConsultationRate | null) => {
-        if (isMounted && payload) {
-          setConsultationRate(payload);
-        }
-      })
-      .catch(() => {
-        if (isMounted) {
-          setConsultationRate(null);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   function updateValue(name: keyof typeof values, value: string | boolean) {
     if (paymentStatus.kind === "error") {
       setPaymentStatus({ kind: "idle", message: "" });
@@ -141,70 +97,6 @@ export function ConsultationIntakeForm() {
       ...current,
       [name]: value,
     }));
-  }
-
-  async function handlePayment(form: HTMLFormElement) {
-    if (!form.reportValidity()) {
-      return;
-    }
-
-    setPaymentStatus({
-      kind: "loading",
-      message: "Opening secure checkout...",
-    });
-
-    const formData = new FormData(form);
-
-    try {
-      const response = await fetch("/api/payu/initiate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: getFormValue(formData, "name"),
-          email: getFormValue(formData, "email"),
-          phone: getFormValue(formData, "phone"),
-          age: getFormValue(formData, "age"),
-          gender: getFormValue(formData, "gender"),
-          concern: getFormValue(formData, "concern"),
-          consent: values.consent,
-        }),
-      });
-      const payload = (await response.json()) as {
-        action?: string;
-        fields?: Record<string, string>;
-        error?: string;
-      };
-
-      if (!response.ok || !payload.action || !payload.fields) {
-        throw new Error(payload.error || "Payment could not be started.");
-      }
-
-      const checkoutForm = document.createElement("form");
-      checkoutForm.method = "POST";
-      checkoutForm.action = payload.action;
-      checkoutForm.style.display = "none";
-
-      Object.entries(payload.fields).forEach(([name, value]) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        checkoutForm.append(input);
-      });
-
-      document.body.append(checkoutForm);
-      checkoutForm.submit();
-    } catch (error) {
-      setPaymentStatus({
-        kind: "error",
-        message:
-          error instanceof Error
-            ? error.message
-            : "Payment could not be started. Please try WhatsApp or email.",
-      });
-    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -313,7 +205,7 @@ export function ConsultationIntakeForm() {
 
       <div className="intake-demographics">
         <label>
-          <span>Age (optional)</span>
+          <span>Age</span>
           <input
             name="age"
             type="number"
@@ -321,14 +213,17 @@ export function ConsultationIntakeForm() {
             min={1}
             max={120}
             step={1}
+            required
             value={values.age}
             onChange={(event) => updateValue("age", event.target.value)}
           />
         </label>
         <label>
-          <span>Gender (optional)</span>
+          <span id={genderLabelId}>Gender</span>
           <select
             name="gender"
+            aria-labelledby={genderLabelId}
+            required
             value={values.gender}
             onChange={(event) => updateValue("gender", event.target.value)}
           >
@@ -386,22 +281,6 @@ export function ConsultationIntakeForm() {
             const form = event.currentTarget.form;
 
             if (form) {
-              handlePayment(form);
-            }
-          }}
-        >
-          {consultationAmountLabel
-            ? `Pay ${consultationAmountLabel} consultation fee`
-            : "Pay consultation fee"}
-        </button>
-        <button
-          className="button secondary"
-          type="button"
-          disabled={paymentStatus.kind === "loading"}
-          onClick={(event) => {
-            const form = event.currentTarget.form;
-
-            if (form) {
               handleWhatsapp(form);
             }
           }}
@@ -415,11 +294,8 @@ export function ConsultationIntakeForm() {
         </p>
       ) : null}
       <p className="form-note">
-        {consultationRate?.isWeekendOfferActive
-          ? `Weekend consultation fee: ${formatRupees(
-              consultationRate.amount,
-            )}. Submitting sends your details for follow-up. WhatsApp does not charge you. Payment happens only if you choose Pay consultation fee and complete secure checkout.`
-          : "Submitting sends your details for follow-up. WhatsApp does not charge you. Payment happens only if you choose Pay consultation fee and complete secure checkout."}
+        Consultation is free. No payment is required. Our team will contact you
+        to arrange a time after receiving your request.
       </p>
     </form>
   );

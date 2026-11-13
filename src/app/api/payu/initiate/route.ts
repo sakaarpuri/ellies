@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import {
   createPayuTxnId,
-  formatPayuAmount,
   generatePaymentHash,
   getMissingPayuConfig,
   getPayuConfig,
@@ -10,7 +9,6 @@ import {
 } from "@/lib/payu";
 import { saveOrder } from "@/lib/orders";
 import { arohini } from "@/lib/products";
-import { readConsultationDetails } from "@/lib/consultation-details";
 
 export const runtime = "nodejs";
 
@@ -42,13 +40,13 @@ export async function POST(request: Request) {
       { error: "This product is not available." },
       { status: 400 },
     );
-  const details = product ? null : readConsultationDetails(body);
-  if (!product && !details)
+  // Keep old payment callbacks intact, but never create a new paid consultation.
+  if (!product)
     return NextResponse.json(
-      { error: "Please tell us about your problem and check your age and gender fields." },
-      { status: 400 },
+      { error: "Consultations are free. Please submit the consultation form; no payment is required." },
+      { status: 409 },
     );
-  const quantity = product ? Number(body.quantity ?? 1) : 1;
+  const quantity = Number(body.quantity ?? 1);
   if (!Number.isInteger(quantity) || quantity < 1 || quantity > 6)
     return NextResponse.json(
       { error: "Choose between 1 and 6 bottles." },
@@ -66,35 +64,17 @@ export async function POST(request: Request) {
     );
   }
 
-  let amount: string;
-
-  try {
-    amount = product
-      ? (arohini.price * quantity).toFixed(2)
-      : formatPayuAmount(config.amount as string);
-  } catch {
-    return NextResponse.json(
-      {
-        error:
-          "Online payment is temporarily unavailable. Please send your request by WhatsApp or email.",
-      },
-      { status: 503 },
-    );
-  }
+  const amount = (arohini.price * quantity).toFixed(2);
 
   const firstname = sanitizePayuField(body.name, 60);
   const email = sanitizePayuField(body.email, 100).toLowerCase();
   const phone = sanitizePayuField(body.phone, 20);
-  const concernArea = product
-    ? ""
-    : sanitizePayuField(body.concernArea || "Consultation", 60);
   const consent = body.consent === true;
   const address = sanitizePayuField(body.address, 250);
   const city = sanitizePayuField(body.city, 80);
   const state = sanitizePayuField(body.state, 80);
   const pincode = sanitizePayuField(body.pincode, 6);
   if (
-    product &&
     (address.length < 8 ||
       city.length < 2 ||
       state.length < 2 ||
@@ -130,14 +110,14 @@ export async function POST(request: Request) {
     key: config.key as string,
     txnid: createPayuTxnId(),
     amount,
-    productinfo: product ? "Arohini 200 ml" : config.productinfo,
+    productinfo: "Arohini 200 ml",
     firstname,
     email,
     phone,
     surl: `${config.siteUrl}/api/payu/success`,
     furl: `${config.siteUrl}/api/payu/failure`,
-    udf1: product ? arohini.id : "",
-    udf2: product ? "product" : "consultation",
+    udf1: arohini.id,
+    udf2: "product",
     udf3: "",
     udf4: "",
     udf5: "",
@@ -153,22 +133,18 @@ export async function POST(request: Request) {
 
   try {
     await saveOrder({
-      type: product ? "product" : "consultation",
+      type: "product",
       name: firstname,
       phone,
       email,
-      concernArea,
-      concern: details?.concern || "",
-      age: details?.age,
-      gender: details?.gender,
+      concernArea: "",
+      concern: "",
       consent,
       txnid: fields.txnid,
       amount,
       productinfo: fields.productinfo,
       quantity,
-      shippingAddress: product
-        ? `${address}, ${city}, ${state} ${pincode}, India`
-        : "",
+      shippingAddress: `${address}, ${city}, ${state} ${pincode}, India`,
       createdAt: new Date().toISOString(),
     });
   } catch {

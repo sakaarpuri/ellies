@@ -107,6 +107,7 @@ function buildCustomerConfirmation(
         "",
         `Reference: ${fields.referenceId}`,
         `Submitted: ${submittedAt}`,
+        ...(fields.amount === "0" ? ["Consultation fee: Free. No payment is required."] : []),
         "",
         "Next step: our team will review the details and contact you using the phone, WhatsApp, or email shared in the form.",
         "",

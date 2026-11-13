@@ -318,7 +318,7 @@ test("additional-charge response hash is verified and unverified event generatio
   );
 });
 
-test("checkout sets the price server-side, validates delivery, and preserves consultation pricing", async () => {
+test("product checkout validates delivery and rejects new consultation charges", async () => {
   const h = harness();
   const { POST } = h.load("@/app/api/payu/initiate/route");
   const product = {
@@ -363,31 +363,22 @@ test("checkout sets the price server-side, validates delivery, and preserves con
     { ...product, phone: "(        )" },
   ])
     assert.equal((await post(invalid)).status, 400);
-  const consultation = await (
-    await post({
+  const countBefore = h.records.size;
+  const consultation = await post({
       ...product,
       productId: undefined,
       age: "46",
-      gender: "Woman",
+      gender: "Female",
       concern: "Private health information",
-    })
-  ).json();
-  assert.equal(consultation.fields.amount, "500.00");
-  assert.equal(consultation.fields.udf2, "consultation");
-  const saved = h.records.get(`orders/${consultation.fields.txnid}`);
-  assert.equal(saved.age, "46");
-  assert.equal(saved.gender, "Woman");
-  assert.equal(saved.concern, "Private health information");
-  assert.equal(
-    Object.keys(consultation.fields).some((key) => ["age", "gender", "concern"].includes(key)),
-    false
-  );
-  assert.ok(!JSON.stringify(consultation).includes("Private health information"));
-  const invalidAge = await post({ ...product, productId: undefined, age: "121", concern: "Fatigue" });
-  assert.equal(invalidAge.status, 400);
+    });
+  assert.equal(consultation.status, 409);
+  const blocked = await consultation.json();
+  assert.match(blocked.error, /free/i);
+  assert.equal(blocked.fields, undefined);
+  assert.equal(h.records.size, countBefore);
 });
 
-test("open consultation requests retain optional demographics in the private record and sheet", async () => {
+test("free consultation requests require demographics and retain them privately", async () => {
   const h = harness();
   const { POST } = h.load("@/app/api/consultation/lead/route");
   const request = (body) => POST(new Request("http://localhost/api/consultation/lead", {
@@ -402,29 +393,39 @@ test("open consultation requests retain optional demographics in the private rec
     consent: true,
     concern: "Fatigue and changes in sleep",
     age: "46",
-    gender: "Woman",
+    gender: "Female",
   };
   assert.equal((await request(lead)).status, 200);
   const sheetRequest = h.requests.find((entry) => entry.method === "POST");
   const record = JSON.parse(sheetRequest.body);
   assert.equal(record.age, "46");
-  assert.equal(record.gender, "Woman");
-  assert.equal(record.concern, "Age: 46\nGender: Woman\nFatigue and changes in sleep");
+  assert.equal(record.gender, "Female");
+  assert.equal(record.concern, "Age: 46\nGender: Female\nFatigue and changes in sleep");
   assert.equal(record.concernArea, "");
+  assert.equal(record.amount, "0");
+  assert.equal(record.paymentStatus, "not_required");
   assert.ok(h.sent.every((message) => !message.text.includes(lead.concern)));
-  assert.equal((await request({ ...lead, age: "", gender: "" })).status, 200);
+  assert.equal((await request({ ...lead, age: "", gender: "" })).status, 400);
+  assert.equal((await request({ ...lead, age: "" })).status, 400);
+  assert.equal((await request({ ...lead, gender: "" })).status, 400);
+  assert.equal((await request({ ...lead, age: "121" })).status, 400);
+  assert.equal((await request({ ...lead, age: "0" })).status, 400);
+  assert.equal((await request({ ...lead, age: "40.5" })).status, 400);
+  assert.equal((await request({ ...lead, gender: "Male" })).status, 200);
+  assert.equal((await request({ ...lead, gender: "Non-binary" })).status, 400);
   assert.equal((await request({ ...lead, concern: " " })).status, 400);
   assert.equal((await request({ ...lead, gender: "invalid" })).status, 400);
 });
 
-test("consultation rate display and checkout agree on Rs.500 despite the previous environment rate", async () => {
+test("consultations are free despite the previous paid environment rate", async () => {
   const h = harness();
   const { GET } = h.load("@/app/api/payu/rate/route");
   const rate = await GET().json();
-  assert.equal(rate.amount, "500.00");
-  assert.equal(rate.normalAmount, "500.00");
+  assert.equal(rate.amount, "0.00");
+  assert.equal(rate.normalAmount, "0.00");
+  assert.equal(rate.isFree, true);
   assert.equal(rate.isWeekendOfferActive, false);
-  assert.equal(h.load("@/lib/payu").getPayuConfig().amount, "500");
+  assert.equal(h.load("@/lib/payu").getPayuConfig().amount, "0");
 });
 
 test("Apps Script stores records idempotently without any email permission and prevents formula injection", () => {

@@ -16,7 +16,7 @@ export function ConsultationIntakeSection() {
       aria-labelledby="intake-title"
     >
       <div className="intake-intro">
-        <p className="eyebrow">Ayurvedic Consultation</p>
+        <p className="eyebrow">Free Ayurvedic Consultation</p>
         <h2 id="intake-title">Speak with a qualified Ayurvedic doctor.</h2>
         <p>
           Share what is bothering you, whether it is fatigue, joint pain,
