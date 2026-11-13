@@ -8,12 +8,13 @@ import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSectio
 import { JsonLdScript } from "@/components/JsonLd";
 import { getFeaturedPosts } from "@/lib/wisdom";
 import { consultation, doctor } from "@/lib/site";
+import { arohini } from "@/lib/products";
 import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "Ellie’s Botanics | Ayurvedic Herbal Wellness Guidance in India",
   description:
-    "Discover Arohini women's wellness 40+, Ayurvedic herbal education and qualified consultation with Ellie's Botanics. Free Arohini delivery within India.",
+    "Discover Arohini for women's wellness 40+ around menopause, Ayurvedic herbal education and qualified consultations from Ellie's Botanics.",
   path: "/",
 });
 
@@ -72,9 +73,7 @@ export default function Home() {
           <p className="eyebrow sage">Women&apos;s wellness 40+</p>
           <h2 id="arohini-title">Meet Arohini.</h2>
           <p className="product-introduction">
-            A sugar-free Ayurvedic botanical elixir, bringing together seven
-            botanicals in a daily wellness preparation for women aged 40 and
-            beyond.
+            {arohini.description}
           </p>
           <p className="product-introduction">
             Changing routines, new priorities, a little more time for yourself.

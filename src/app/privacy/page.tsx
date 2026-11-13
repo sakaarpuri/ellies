@@ -32,8 +32,8 @@ export default function PrivacyPage() {
         <p>
           For purchases, we collect your delivery address, order details and
           payment reference to process the order and provide updates.
-          Consultation requests may include health information you choose to
-          share. Records are stored privately through our hosting provider and
+          Consultation requests may include your age, gender and any health
+          information you choose to share. Records are stored privately through our hosting provider and
           Google Sheets, and authorised administrators use them to respond.
           Email confirmations and service notifications may be sent through
           Google. Card and payment credentials are handled by the payment

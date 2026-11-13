@@ -20,6 +20,8 @@ export type Order = {
   consent: boolean;
   concernArea: string;
   concern: string;
+  age?: string;
+  gender?: string;
   quantity: number;
   shippingAddress: string;
   createdAt: string;

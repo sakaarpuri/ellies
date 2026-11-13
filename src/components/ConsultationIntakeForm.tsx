@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { consultation } from "@/lib/site";
+import { genderOptions } from "@/lib/consultation-details";
 
 type PaymentStatus = {
   kind: "idle" | "loading" | "success" | "error";
@@ -40,16 +41,18 @@ function buildWhatsappUrl(formData: FormData) {
   const name = getFormValue(formData, "name") || "Visitor";
   const phone = getFormValue(formData, "phone") || "not shared";
   const email = getFormValue(formData, "email") || "not shared";
-  const concernArea = getFormValue(formData, "concernArea") || "not selected";
+  const age = getFormValue(formData, "age");
+  const gender = getFormValue(formData, "gender");
   const concern = getFormValue(formData, "concern") || "not shared";
   const message = [
     "Hello, I came from Ellie's Botanics.",
     `Name: ${name}`,
     `Phone / WhatsApp: ${phone}`,
     `Email: ${email}`,
-    `Where is the discomfort: ${concernArea}`,
+    ...(age ? [`Age: ${age}`] : []),
+    ...(gender ? [`Gender: ${gender}`] : []),
     "",
-    "Tell us about it:",
+    "Tell us about your problem:",
     concern,
   ].join("\n");
 
@@ -62,7 +65,8 @@ function getLeadPayload(formData: FormData, eventType: LeadAction) {
     name: getFormValue(formData, "name"),
     phone: getFormValue(formData, "phone"),
     email: getFormValue(formData, "email"),
-    concernArea: getFormValue(formData, "concernArea"),
+    age: getFormValue(formData, "age"),
+    gender: getFormValue(formData, "gender"),
     concern: getFormValue(formData, "concern"),
     consent: formData.get("consent") === "on",
   };
@@ -95,7 +99,8 @@ export function ConsultationIntakeForm() {
     name: "",
     phone: "",
     email: "",
-    concernArea: "Knees",
+    age: "",
+    gender: "",
     concern: "",
     consent: false,
   });
@@ -160,7 +165,8 @@ export function ConsultationIntakeForm() {
           name: getFormValue(formData, "name"),
           email: getFormValue(formData, "email"),
           phone: getFormValue(formData, "phone"),
-          concernArea: getFormValue(formData, "concernArea"),
+          age: getFormValue(formData, "age"),
+          gender: getFormValue(formData, "gender"),
           concern: getFormValue(formData, "concern"),
           consent: values.consent,
         }),
@@ -228,7 +234,8 @@ export function ConsultationIntakeForm() {
         name: "",
         phone: "",
         email: "",
-        concernArea: "Knees",
+        age: "",
+        gender: "",
         concern: "",
         consent: false,
       });
@@ -304,38 +311,53 @@ export function ConsultationIntakeForm() {
         />
       </label>
 
-      <div className="choice-field">
-        <p id="concern-area-label" className="form-label">
-          Where is the discomfort?
-        </p>
-        <div className="choice-grid two" role="radiogroup" aria-labelledby="concern-area-label">
-          {["Knees", "Hips", "Shoulders", "Other"].map((option) => (
-            <label key={option} className="choice-option">
-              <input
-                name="concernArea"
-                type="radio"
-                value={option}
-                checked={values.concernArea === option}
-                onChange={() => updateValue("concernArea", option)}
-              />
-              <span>{option}</span>
-            </label>
-          ))}
-        </div>
+      <div className="intake-demographics">
+        <label>
+          <span>Age (optional)</span>
+          <input
+            name="age"
+            type="number"
+            inputMode="numeric"
+            min={1}
+            max={120}
+            step={1}
+            value={values.age}
+            onChange={(event) => updateValue("age", event.target.value)}
+          />
+        </label>
+        <label>
+          <span>Gender (optional)</span>
+          <select
+            name="gender"
+            value={values.gender}
+            onChange={(event) => updateValue("gender", event.target.value)}
+          >
+            <option value="">Select gender</option>
+            {genderOptions.map((option) => (
+              <option key={option}>{option}</option>
+            ))}
+          </select>
+        </label>
       </div>
 
       <label>
-        <span>Tell us about it</span>
+        <span>Tell us about your problem</span>
         <textarea
           name="concern"
           rows={4}
-          placeholder="What do you feel, since when, and what makes it better or worse? दर्द कैसा है, कब से है, और किस चीज़ से आराम या तकलीफ़ बढ़ती है?"
+          placeholder="What are you experiencing, and when did it start? आपको क्या परेशानी है, और यह कब शुरू हुई?"
           required
           minLength={2}
+          maxLength={900}
           value={values.concern}
           onChange={(event) => updateValue("concern", event.target.value)}
         />
       </label>
+
+      <p className="form-note">
+        We use these details to respond to your request.{" "}
+        <a href="/privacy">Privacy policy</a>
+      </p>
 
       <label className="consent-row">
         <input

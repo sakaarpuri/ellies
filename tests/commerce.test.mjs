@@ -367,16 +367,54 @@ test("checkout sets the price server-side, validates delivery, and preserves con
     await post({
       ...product,
       productId: undefined,
-      concernArea: "Knees",
+      age: "46",
+      gender: "Woman",
       concern: "Private health information",
     })
   ).json();
   assert.equal(consultation.fields.amount, "500.00");
   assert.equal(consultation.fields.udf2, "consultation");
+  const saved = h.records.get(`orders/${consultation.fields.txnid}`);
+  assert.equal(saved.age, "46");
+  assert.equal(saved.gender, "Woman");
+  assert.equal(saved.concern, "Private health information");
   assert.equal(
-    JSON.stringify(consultation).includes("Private health information"),
-    false,
+    Object.keys(consultation.fields).some((key) => ["age", "gender", "concern"].includes(key)),
+    false
   );
+  assert.ok(!JSON.stringify(consultation).includes("Private health information"));
+  const invalidAge = await post({ ...product, productId: undefined, age: "121", concern: "Fatigue" });
+  assert.equal(invalidAge.status, 400);
+});
+
+test("open consultation requests retain optional demographics in the private record and sheet", async () => {
+  const h = harness();
+  const { POST } = h.load("@/app/api/consultation/lead/route");
+  const request = (body) => POST(new Request("http://localhost/api/consultation/lead", {
+    method: "POST",
+    body: JSON.stringify(body),
+  }));
+  const lead = {
+    eventType: "request_submitted",
+    name: "Test Visitor",
+    email: "visitor@example.com",
+    phone: "9999999999",
+    consent: true,
+    concern: "Fatigue and changes in sleep",
+    age: "46",
+    gender: "Woman",
+  };
+  assert.equal((await request(lead)).status, 200);
+  const sheetRequest = h.requests.find((entry) => entry.method === "POST");
+  const record = JSON.parse(sheetRequest.body);
+  assert.equal(record.age, "46");
+  assert.equal(record.gender, "Woman");
+  assert.equal(record.concern, "Age: 46\nGender: Woman\nFatigue and changes in sleep");
+  assert.equal(record.concernArea, "");
+  assert.ok(h.sent.every((message) => !message.text.includes(lead.concern)));
+  assert.equal((await request({ ...lead, age: "", gender: "" })).status, 200);
+  assert.equal((await request({ ...lead, concern: " " })).status, 400);
+  assert.equal((await request({ ...lead, gender: "invalid" })).status, 400);
 });
 
 test("consultation rate display and checkout agree on Rs.500 despite the previous environment rate", async () => {

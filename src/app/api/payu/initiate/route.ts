@@ -10,6 +10,7 @@ import {
 } from "@/lib/payu";
 import { saveOrder } from "@/lib/orders";
 import { arohini } from "@/lib/products";
+import { readConsultationDetails } from "@/lib/consultation-details";
 
 export const runtime = "nodejs";
 
@@ -39,6 +40,12 @@ export async function POST(request: Request) {
   if (body.productId && !product)
     return NextResponse.json(
       { error: "This product is not available." },
+      { status: 400 },
+    );
+  const details = product ? null : readConsultationDetails(body);
+  if (!product && !details)
+    return NextResponse.json(
+      { error: "Please tell us about your problem and check your age and gender fields." },
       { status: 400 },
     );
   const quantity = product ? Number(body.quantity ?? 1) : 1;
@@ -81,7 +88,6 @@ export async function POST(request: Request) {
   const concernArea = product
     ? ""
     : sanitizePayuField(body.concernArea || "Consultation", 60);
-  const concern = product ? "" : sanitizePayuField(body.concern, 900);
   const consent = body.consent === true;
   const address = sanitizePayuField(body.address, 250);
   const city = sanitizePayuField(body.city, 80);
@@ -152,7 +158,9 @@ export async function POST(request: Request) {
       phone,
       email,
       concernArea,
-      concern,
+      concern: details?.concern || "",
+      age: details?.age,
+      gender: details?.gender,
       consent,
       txnid: fields.txnid,
       amount,

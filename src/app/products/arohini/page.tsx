@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { ProductGallery } from "@/components/ProductGallery";
-import { arohini, arohiniBotanicals } from "@/lib/products";
+import { arohini, arohiniBotanicals, arohiniPackHighlights } from "@/lib/products";
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { JsonLdScript } from "@/components/JsonLd";
 
 export const metadata = pageMetadata({
   title: "Arohini | Women's Wellness 40+",
   description:
-    `Meet Arohini, a sugar-free Ayurvedic botanical elixir for women 40+. Seven botanicals, 200 ml, Rs.${arohini.price} with free delivery in India.`,
+    `Arohini is a sugar-free Ayurvedic botanical elixir for women's wellness 40+ around menopause. 200 ml, Rs.${arohini.price} with free delivery in India.`,
   path: arohini.path,
   image: arohini.image,
   imageAlt: "Arohini 200 ml bottle and packaging",
@@ -25,9 +25,7 @@ export default function ArohiniPage() {
           <h1>Arohini</h1>
           <p className="product-subtitle">Care for your next chapter.</p>
           <p className="product-introduction">
-            A sugar-free Ayurvedic botanical elixir, bringing together seven
-            botanicals in a daily wellness preparation for women aged 40 and
-            beyond.
+            {arohini.description}
           </p>
           <p className="product-introduction">
             Changing routines, new priorities, a little more time for yourself.
@@ -48,6 +46,15 @@ export default function ArohiniPage() {
               <dd>Seven</dd>
             </div>
           </dl>
+          <div className="product-highlights">
+            <h2>Packaging highlights</h2>
+            <p>Sugar-free. No artificial sweeteners.</p>
+            <ul>
+              {arohiniPackHighlights.map((highlight) => (
+                <li key={highlight}>{highlight}</li>
+              ))}
+            </ul>
+          </div>
           <div className="product-price">
             <strong>₹{arohini.price}</strong>
             <span>Free delivery within India</span>
@@ -100,6 +107,17 @@ export default function ArohiniPage() {
           <Link href="/education" className="text-link">
             Explore herbal wisdom
           </Link>
+          <div className="menopause-guidance">
+            <h3>Questions before or after menopause?</h3>
+            <p>
+              Looking for relief from fatigue, joint pain or other symptoms?
+              Speak with a qualified practitioner about what you are experiencing
+              and the care options that may suit you.
+            </p>
+            <Link href="/#joint-comfort-check-in" className="text-link">
+              Request a consultation
+            </Link>
+          </div>
         </div>
         <div className="product-questions">
           <details open>

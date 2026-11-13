@@ -26,7 +26,7 @@ export const consultation = {
   phone: { label: "9815007269", href: "tel:+919815007269" },
   whatsappNumber: "917717607269",
   whatsapp:
-    "https://wa.me/917717607269?text=Hello%2C%20I%20came%20from%20Ellie%27s%20Botanics.%20I%20would%20like%20professional%20guidance%20for%20a%20joint%20comfort%20concern.",
+    "https://wa.me/917717607269?text=Hello%2C%20I%20came%20from%20Ellie%27s%20Botanics.%20I%20would%20like%20to%20ask%20about%20a%20consultation.",
 };
 
 export const doctor = {

@@ -19,8 +19,9 @@ export function ConsultationIntakeSection() {
         <p className="eyebrow">Ayurvedic Consultation</p>
         <h2 id="intake-title">Speak with a qualified Ayurvedic doctor.</h2>
         <p>
-          Starting with joint and movement concerns. Tell us a little, and our team arranges the
-          rest.
+          Share what is bothering you, whether it is fatigue, joint pain,
+          menopause-related changes or any other health concern. Our team will
+          contact you to arrange a consultation.
         </p>
         <div className="doctor-row dark">
           <div className="doctor-photo">

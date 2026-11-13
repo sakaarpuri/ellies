@@ -27,6 +27,8 @@ export type LeadEventInput = {
   email?: string;
   concernArea?: string;
   concern?: string;
+  age?: string;
+  gender?: string;
   consent?: string | boolean;
   txnid?: string;
   amount?: string;
@@ -176,6 +178,8 @@ function normalizeLeadEvent(input: LeadEventInput) {
     email: clean(input.email, 120).toLowerCase(),
     concernArea: clean(input.concernArea, 80),
     concern: clean(input.concern, 900),
+    age: clean(input.age, 3),
+    gender: clean(input.gender, 30),
     consent:
       input.consent === true || input.consent === "true"
         ? "yes"
@@ -215,6 +219,12 @@ async function submitWebhook(fields: Record<string, string>) {
       return { target: "webhook", status: "failed" } satisfies LeadStorageResult;
     }
     const recordsOnly = Object.fromEntries(Object.entries(fields).filter(([key]) => !key.startsWith("customerConfirmation")));
+    // Keep demographics readable in the existing sheet without changing its live column layout.
+    recordsOnly.concern = [
+      recordsOnly.age ? `Age: ${recordsOnly.age}` : "",
+      recordsOnly.gender ? `Gender: ${recordsOnly.gender}` : "",
+      recordsOnly.concern,
+    ].filter(Boolean).join("\n");
     const response = await fetch(webhookUrl, {
       method: "POST",
       headers: {

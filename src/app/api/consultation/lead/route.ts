@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { recordLeadEvent, type LeadEventType } from "@/lib/leads";
+import { readConsultationDetails } from "@/lib/consultation-details";
 
 export const runtime = "nodejs";
 
@@ -21,9 +22,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false }, { status: 400 });
 
   const eventType = String(body.eventType || "") as LeadEventType;
+  const details = readConsultationDetails(body);
 
   if (
     !allowedEvents.has(eventType) ||
+    !details ||
     body.consent !== true ||
     String(body.name || "").trim().length < 2 ||
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(body.email || "")) ||
@@ -31,7 +34,10 @@ export async function POST(request: Request) {
     String(body.phone).replace(/\D/g, "").length < 10 ||
     String(body.phone).replace(/\D/g, "").length > 15
   ) {
-    return NextResponse.json({ ok: false }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: "Please check your contact details and tell us about your problem." },
+      { status: 400 },
+    );
   }
 
   const result = await recordLeadEvent({
@@ -40,7 +46,7 @@ export async function POST(request: Request) {
     phone: String(body.phone || ""),
     email: String(body.email || ""),
     concernArea: String(body.concernArea || ""),
-    concern: String(body.concern || ""),
+    ...details,
     consent: body.consent === true,
     source: "consultation form",
   });
