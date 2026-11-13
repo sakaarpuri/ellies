@@ -1,18 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const captions = ["Bottle & packaging", "Arohini wellness poster"];
+import { arohiniPhotos } from "@/lib/products";
 
-export function ProductGallery() {
+export function ProductGallery({ compact = false }: { compact?: boolean }) {
   const [index, setIndex] = useState(0);
-  const move = (step: number) => setIndex((current) => (current + step + captions.length) % captions.length);
+  const id = useId();
+  const photos = compact ? arohiniPhotos.slice(0, 4) : arohiniPhotos;
+  const move = (step: number) => setIndex((current) => (current + step + photos.length) % photos.length);
 
   return (
     <figure
-      className="product-photo product-gallery"
+      className={`product-photo product-gallery${compact ? " product-gallery-compact" : ""}`}
       role="region"
       aria-roledescription="carousel"
       aria-label="Arohini product photos"
@@ -24,42 +26,39 @@ export function ProductGallery() {
         }
       }}
     >
-      <div className="product-gallery-stage product-arch" id="arohini-gallery-photo">
-        <div className="product-gallery-slide" role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${captions.length}: ${captions[index]}`}>
-          {index === 0 ? (
-            <Image
-              className="product-packshot"
-              src="/images/arohini-arch.webp"
-              alt="Arohini women's wellness 40+ elixir, 200 ml bottle with its box"
-              width={1036}
-              height={1518}
-              sizes="(max-width: 416px) calc(100vw - 36px), 380px"
-              priority
-            />
-          ) : (
-            <div className="product-poster">
-              <Image
-                src="/images/arohini-wellness-poster-arch.webp"
-                alt="Arohini women's wellness 40+ poster with a woman beside the bottle and box, headed Support women through every stage of life"
-                width={1037}
-                height={1517}
-                sizes="(max-width: 416px) calc(100vw - 36px), 380px"
-              />
+      <div className="product-gallery-frame">
+        <div className="product-gallery-stage product-arch" id={id}>
+          {photos.map((photo, photoIndex) => (
+            <div key={photo.src} className="product-gallery-slide" hidden={index !== photoIndex}
+              role="group" aria-roledescription="slide" aria-label={`${photoIndex + 1} of ${photos.length}`}>
+              <Image className="product-packshot" src={photo.src} alt={photo.alt}
+                width={photo.width} height={photo.height}
+                sizes={compact ? "(max-width: 760px) 240px, 300px" : "(max-width: 416px) calc(100vw - 36px), 380px"}
+                priority={!compact && photoIndex === 0} />
             </div>
-          )}
+          ))}
         </div>
       </div>
       <figcaption className="product-gallery-controls">
-        <button type="button" onClick={() => move(-1)} aria-label="Previous product photo" title="Previous photo" aria-controls="arohini-gallery-photo">
+        <button type="button" onClick={() => move(-1)} aria-label="Previous product photo" title="Previous photo" aria-controls={id}>
           <ChevronLeft size={22} aria-hidden="true" />
         </button>
         <span className="product-gallery-caption" aria-live="polite" aria-atomic="true">
-          <span className="product-gallery-count">{index + 1} / {captions.length}</span>
+          <span className="product-gallery-count">{index + 1} / {photos.length}</span>
         </span>
-        <button type="button" onClick={() => move(1)} aria-label="Next product photo" title="Next photo" aria-controls="arohini-gallery-photo">
+        <button type="button" onClick={() => move(1)} aria-label="Next product photo" title="Next photo" aria-controls={id}>
           <ChevronRight size={22} aria-hidden="true" />
         </button>
       </figcaption>
+      <div className="product-gallery-thumbnails" aria-label="Choose a product photo">
+        {photos.map((photo, photoIndex) => (
+          <button key={photo.src} type="button" onClick={() => setIndex(photoIndex)}
+            aria-label={`Show photo ${photoIndex + 1}: ${photo.alt}`} title={`Photo ${photoIndex + 1}`}
+            aria-pressed={index === photoIndex} aria-controls={id}>
+            <Image src={photo.src} alt="" width={54} height={64} sizes="54px" />
+          </button>
+        ))}
+      </div>
     </figure>
   );
 }

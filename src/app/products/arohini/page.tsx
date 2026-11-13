@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { ProductGallery } from "@/components/ProductGallery";
-import { arohini, arohiniBotanicals, arohiniPackHighlights } from "@/lib/products";
-import { absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { arohini, arohiniBotanicals, arohiniFaqs, arohiniPhotos } from "@/lib/products";
+import { absoluteUrl, breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 import { JsonLdScript } from "@/components/JsonLd";
+import { ArohiniIntroduction } from "@/components/ArohiniIntroduction";
 
 export const metadata = pageMetadata({
-  title: "Arohini | Women's Wellness 40+",
+  title: "Arohini: Sugar-Free Ayurvedic Elixir for Women 40+",
   description:
     `Arohini is a sugar-free Ayurvedic botanical elixir for women's wellness 40+ around menopause. 200 ml, Rs.${arohini.price} with free delivery in India.`,
   path: arohini.path,
@@ -23,15 +24,7 @@ export default function ArohiniPage() {
             Ellie&apos;s Botanics · Women&apos;s wellness 40+
           </p>
           <h1>Arohini</h1>
-          <p className="product-subtitle">Care for your next chapter.</p>
-          <p className="product-introduction">
-            {arohini.description}
-          </p>
-          <p className="product-introduction">
-            Changing routines, new priorities, a little more time for yourself.
-            Make space for your wellbeing, alongside nourishing food, movement,
-            rest and the care you need.
-          </p>
+          <ArohiniIntroduction />
           <dl className="product-facts">
             <div>
               <dt>Format</dt>
@@ -46,15 +39,6 @@ export default function ArohiniPage() {
               <dd>Seven</dd>
             </div>
           </dl>
-          <div className="product-highlights">
-            <h2>Packaging highlights</h2>
-            <p>Sugar-free. No artificial sweeteners.</p>
-            <ul>
-              {arohiniPackHighlights.map((highlight) => (
-                <li key={highlight}>{highlight}</li>
-              ))}
-            </ul>
-          </div>
           <div className="product-price">
             <strong>₹{arohini.price}</strong>
             <span>Free delivery within India</span>
@@ -83,7 +67,7 @@ export default function ArohiniPage() {
           </div>
           <div className="botanical-list">
             {arohiniBotanicals.map(([name, latin, description], index) => (
-              <article key={name}>
+              <article key={name} id={`ingredient-${name.toLowerCase()}`}>
                 <span className="botanical-number">0{index + 1}</span>
                 <div>
                   <h3>{name}</h3>
@@ -119,39 +103,24 @@ export default function ArohiniPage() {
             </Link>
           </div>
         </div>
-        <div className="product-questions">
-          <details open>
-            <summary>How should I use Arohini?</summary>
-            <p>
-              Follow the directions and warnings on your bottle, or the advice
-              of your qualified practitioner. Do not exceed the labelled dose.
-            </p>
-          </details>
-          <details>
-            <summary>What happens after I order?</summary>
-            <p>
-              After successful payment, you will see your order confirmation and
-              reference. We use the email address you provide for order and
-              delivery updates. Please keep your order reference for any
-              questions.
-            </p>
-          </details>
-          <details>
-            <summary>Where do you deliver?</summary>
-            <p>
-              Delivery is free within India. Enter your complete address and PIN
-              code at checkout. For delivery questions or help with an order,
-              email{" "}
-              <a href="mailto:support@elliesbotanics.com">
-                support@elliesbotanics.com
-              </a>
-              .
-            </p>
-          </details>
+        <div className="product-questions" aria-labelledby="arohini-questions-title">
+          <h2 id="arohini-questions-title">Arohini, at a glance.</h2>
+          {arohiniFaqs.map(({ question, answer }, index) => (
+            <details key={question} open={index === 0}>
+              <summary>{question}</summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+          <Link href="/contact" className="text-link">Ask us about Arohini</Link>
         </div>
       </section>
       <JsonLdScript
         data={[
+          {
+            ...webPageJsonLd({ path: arohini.path, name: "Arohini Women's Wellness 40+", description: arohini.description }),
+            mainEntity: { "@id": `${absoluteUrl(arohini.path)}#product` },
+            dateModified: arohini.updatedAt,
+          },
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
             { name: "Arohini", path: arohini.path },
@@ -159,10 +128,18 @@ export default function ArohiniPage() {
           {
             "@context": "https://schema.org",
             "@type": "Product",
+            "@id": `${absoluteUrl(arohini.path)}#product`,
+            url: absoluteUrl(arohini.path),
             name: "Arohini Women's Wellness 40+ 200 ml",
             description: arohini.description,
-            image: absoluteUrl(arohini.image),
+            image: [absoluteUrl(arohini.image), ...arohiniPhotos.map((photo) => absoluteUrl(photo.src))],
             sku: "AROHINI-200",
+            size: "200 ml",
+            category: "Ayurvedic botanical elixir",
+            additionalProperty: [
+              { "@type": "PropertyValue", name: "Botanicals", value: arohiniBotanicals.map(([name]) => name).join(", ") },
+              { "@type": "PropertyValue", name: "Formulation", value: "Sugar-free; no artificial sweeteners" },
+            ],
             brand: { "@type": "Brand", name: "Ellie's Botanics" },
             offers: {
               "@type": "Offer",
@@ -171,6 +148,7 @@ export default function ArohiniPage() {
               priceCurrency: "INR",
               availability: "https://schema.org/InStock",
               itemCondition: "https://schema.org/NewCondition",
+              seller: { "@id": `${absoluteUrl()}/#organization` },
               shippingDetails: {
                 "@type": "OfferShippingDetails",
                 shippingRate: {

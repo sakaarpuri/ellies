@@ -8,11 +8,12 @@ import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSectio
 import { JsonLdScript } from "@/components/JsonLd";
 import { getFeaturedPosts } from "@/lib/wisdom";
 import { consultation, doctor } from "@/lib/site";
-import { arohini } from "@/lib/products";
+import { ArohiniIntroduction } from "@/components/ArohiniIntroduction";
+import { ProductGallery } from "@/components/ProductGallery";
 import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Ellie’s Botanics | Ayurvedic Herbal Wellness Guidance in India",
+  title: "Ellie's Botanics | Arohini & Ayurvedic Wellness",
   description:
     "Discover Arohini for women's wellness 40+ around menopause, Ayurvedic herbal education and qualified consultations from Ellie's Botanics.",
   path: "/",
@@ -57,29 +58,12 @@ export default function Home() {
         <BotanicalCollage />
       </section>
 
-      <section className="home-product" aria-labelledby="arohini-title">
-        <Link href="/products/arohini" className="home-product-photo">
-          <span className="home-product-arch product-arch">
-            <Image
-              src="/images/arohini-arch.webp"
-              alt="Arohini women's wellness botanical elixir, bottle and box"
-              width={1036}
-              height={1518}
-              sizes="(max-width: 760px) 240px, 300px"
-            />
-          </span>
-        </Link>
+      <section className="home-product" id="meet-arohini" aria-labelledby="arohini-title">
+        <ProductGallery compact />
         <div>
           <p className="eyebrow sage">Women&apos;s wellness 40+</p>
           <h2 id="arohini-title">Meet Arohini.</h2>
-          <p className="product-introduction">
-            {arohini.description}
-          </p>
-          <p className="product-introduction">
-            Changing routines, new priorities, a little more time for yourself.
-            Make space for your wellbeing, alongside nourishing food, movement,
-            rest and the care you need.
-          </p>
+          <ArohiniIntroduction />
           <Link className="button primary" href="/products/arohini">
             Discover Arohini
           </Link>
@@ -196,7 +180,7 @@ export default function Home() {
         data={[
           webPageJsonLd({
             path: "/",
-            name: "Ellie’s Botanics | Ayurvedic Herbal Wellness Guidance in India",
+            name: "Ellie's Botanics | Arohini Women's Wellness & Ayurvedic Care in India",
             description: metadata.description as string,
           }),
           breadcrumbJsonLd([{ name: "Home", path: "/" }]),

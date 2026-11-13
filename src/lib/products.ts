@@ -8,7 +8,46 @@ export const arohini = {
   size: "200 ml",
   image: "/images/arohini.webp",
   path: "/products/arohini",
+  updatedAt: "2026-11-13",
 };
+
+export const arohiniQualityStatement =
+  "Every batch of every ingredient is quality-approved before it goes into Arohini.";
+
+export const arohiniPhotos = [
+  { src: "/images/arohini-arch.webp", alt: "Arohini women's wellness 40+ elixir, 200 ml bottle and box", width: 1036, height: 1518 },
+  { src: "/images/arohini-morning.webp", alt: "Woman holding an Arohini bottle at a bright breakfast table", width: 900, height: 1200 },
+  { src: "/images/arohini-reading.webp", alt: "Woman reading beside a small Arohini bottle", width: 900, height: 1200 },
+  { src: "/images/arohini-portrait.webp", alt: "Woman in a burgundy blouse holding a small Arohini bottle", width: 900, height: 1200 },
+  { src: "/images/arohini-wellness-poster-arch.webp", alt: "Arohini women's wellness 40+ poster with the bottle and box", width: 1037, height: 1517 },
+] as const;
+
+export const arohiniFaqs = [
+  {
+    question: "What is Arohini?",
+    answer: `${arohini.description} It comes in a 200 ml bottle and contains no artificial sweeteners.`,
+  },
+  {
+    question: "Which ingredients are in Arohini?",
+    answer: "Arohini combines Shatavari, Moringa, Ashoka, Guduchi, Amalaki, Brahmi and Ashwagandha. Follow the full ingredient information and directions on your bottle.",
+  },
+  {
+    question: "How is ingredient quality checked?",
+    answer: `${arohiniQualityStatement} For questions about the ingredients or your bottle's batch, contact support@elliesbotanics.com with the batch number.`,
+  },
+  {
+    question: "How should I use Arohini?",
+    answer: "Follow the directions and warnings on your bottle, or the advice of your qualified practitioner. Do not exceed the labelled dose. If you take medication or have a health condition, check with your practitioner before use.",
+  },
+  {
+    question: "What happens after I order?",
+    answer: "After successful payment, you will see your order confirmation and reference. A confirmation email is sent to the address you provide. Please keep your order reference for any questions.",
+  },
+  {
+    question: "How much does Arohini cost, and where do you deliver?",
+    answer: `Arohini costs Rs.${arohini.price} for a 200 ml bottle, with free delivery within India. Enter your complete address and PIN code at checkout. For help, email support@elliesbotanics.com.`,
+  },
+] as const;
 
 export const arohiniPackHighlights = [
   "Hormonal harmony",
