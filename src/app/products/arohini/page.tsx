@@ -19,7 +19,7 @@ export default function ArohiniPage() {
   return (
     <>
       <section className="product-layout product-light">
-        <ProductGallery />
+        <ProductGallery><ArohiniHerbs showSources /></ProductGallery>
         <div className="product-copy">
           <p className="eyebrow sage">
             Ellie&apos;s Botanics · Women&apos;s wellness 40+
@@ -51,7 +51,6 @@ export default function ArohiniPage() {
             Questions before ordering? <Link href="/contact">Talk to us</Link>.
           </p>
         </div>
-        <ArohiniHerbs showSources />
       </section>
       <section className="product-editorial">
         <div className="product-section-inner">

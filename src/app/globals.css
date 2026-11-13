@@ -18,6 +18,7 @@
 .product-light :focus-visible { outline: 3px solid #792641; outline-offset: 4px; }
 .product-light .arohini-ingredients a:hover { color: #792641; }
 .product-photo-grid {
+  container: arohini-gallery / inline-size;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
@@ -166,30 +167,25 @@
 }
 .arohini-benefits li::marker { color: #792641; }
 .arohini-benefits strong { font-weight: 700; }
-.arohini-herb-stories { grid-column: 1 / -1; min-width: 0; border-top: 1px solid var(--green-line); padding-top: 32px; }
-.arohini-herb-heading { margin-bottom: 24px; }
-.arohini-herb-heading :is(h2, h3) { font-size: 2rem; line-height: 1.2; color: #283c31; }
-.arohini-herb-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.arohini-herb-stories { grid-column: 1 / -1; min-width: 0; border-top: 1px solid var(--green-line); padding-top: 20px; }
+.arohini-herb-heading { margin-bottom: 16px; }
+.arohini-herb-heading :is(h2, h3) { font-size: 1.4rem; line-height: 1.3; color: #283c31; }
+.arohini-herb-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .arohini-herb-photo { position: relative; margin: 0; min-width: 0; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 6px; }
 .arohini-herb-photo > img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.arohini-herb-photo figcaption { position: absolute; inset: auto 0 0; min-height: 124px; padding: 20px 24px; color: #23342b; background: rgba(248, 250, 245, 0.94); }
-.arohini-herb-photo :is(h3, h4) { margin: 0 0 6px; font-size: 1.7rem; line-height: 1.15; color: #23342b; }
-.arohini-herb-photo figcaption p { margin: 0; font-size: 1rem; line-height: 1.45; color: #23342b; }
+.arohini-herb-photo figcaption { position: absolute; inset: auto 0 0; min-height: 112px; padding: 12px; color: #23342b; background: rgba(248, 250, 245, 0.94); }
+.arohini-herb-photo :is(h3, h4) { margin: 0 0 6px; font-size: 1.1rem; line-height: 1.2; color: #23342b; }
+.arohini-herb-photo figcaption p { margin: 0; font-size: 0.875rem; line-height: 1.45; color: #23342b; }
 .arohini-herb-note { margin: 18px 0 0; font-size: 0.875rem; line-height: 1.5; color: #52614f; }
 .arohini-herb-sources { margin-top: 12px; font-size: 0.875rem; color: #283c31; }
 .arohini-herb-sources summary { cursor: pointer; padding-block: 8px; }
 .arohini-herb-sources ul { padding-left: 20px; list-style: disc; }
 .arohini-herb-sources a { text-decoration: underline; text-underline-offset: 3px; }
-@media (min-width: 601px) and (max-width: 1000px) {
-  .arohini-herb-grid { gap: 16px; }
-  .arohini-herb-photo { aspect-ratio: 3 / 5; }
-  .arohini-herb-photo figcaption { padding: 16px; }
-  .arohini-herb-photo :is(h3, h4) { font-size: 1.4rem; }
-}
-@media (max-width: 600px) {
-  .arohini-herb-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
-  .arohini-herb-photo { width: 100%; max-width: 390px; justify-self: center; }
-  .arohini-herb-heading :is(h2, h3) { font-size: 1.7rem; }
+@container arohini-gallery (max-width: 500px) {
+  .arohini-herb-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .arohini-herb-photo { display: grid; grid-template-columns: 104px minmax(0, 1fr); aspect-ratio: auto; min-height: 128px; }
+  .arohini-herb-photo > img { height: 100%; max-height: 150px; object-position: center top; }
+  .arohini-herb-photo figcaption { position: static; min-height: 0; align-content: center; }
 }
 .arohini-ingredients {
   font-size: 1rem;

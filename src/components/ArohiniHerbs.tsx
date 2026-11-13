@@ -14,7 +14,7 @@ export function ArohiniHerbs({ showSources = false }: { showSources?: boolean })
         {arohiniHerbPhotos.map((herb) => (
           <figure key={herb.name} className="arohini-herb-photo">
             <Image src={herb.src} alt={herb.alt} width={900} height={1200}
-              sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 1400px) 30vw, 424px" />
+              sizes="(max-width: 540px) 104px, (max-width: 760px) 30vw, (max-width: 1050px) 104px, 220px" />
             <figcaption>
               <HerbHeading>{herb.name}</HerbHeading>
               <p>{herb.benefit}</p>
