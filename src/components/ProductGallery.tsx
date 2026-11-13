@@ -9,7 +9,7 @@ import { arohiniPhotos } from "@/lib/products";
 export function ProductGallery({ compact = false }: { compact?: boolean }) {
   const [selected, setSelected] = useState<number | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
-  const photos = compact ? arohiniPhotos.slice(0, 4) : arohiniPhotos;
+  const photos = compact ? arohiniPhotos.slice(0, 2) : arohiniPhotos;
   useEffect(() => {
     if (selected === null) return;
     dialog.current?.showModal();
@@ -21,7 +21,7 @@ export function ProductGallery({ compact = false }: { compact?: boolean }) {
   return (
     <div className={`product-photo-grid${compact ? " product-photo-grid-home" : ""}`} role="group" aria-label="Arohini product photos">
         {photos.map((photo, photoIndex) => (
-          <button key={photo.src} className="product-photo-tile" type="button" onClick={() => setSelected(photoIndex)}
+          <button key={photo.src} className={`product-photo-tile${photo.src.includes("poster") ? " product-photo-poster" : ""}`} type="button" onClick={() => setSelected(photoIndex)}
             aria-label={`Enlarge photo: ${photo.alt}`} title="Enlarge photo" aria-haspopup="dialog">
             <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height}
               sizes="(max-width: 760px) calc((100vw - 52px) / 2), (max-width: 1100px) 24vw, 310px"

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArohiniIntroduction } from "@/components/ArohiniIntroduction";
 import { ProductGallery } from "@/components/ProductGallery";
+import { ArohiniHerbs } from "@/components/ArohiniHerbs";
 
 export function ArohiniShowcase() {
   return (
@@ -12,6 +13,7 @@ export function ArohiniShowcase() {
         <ArohiniIntroduction />
         <Link className="button primary" href="/products/arohini">Discover Arohini</Link>
       </div>
+      <ArohiniHerbs />
     </section>
   );
 }

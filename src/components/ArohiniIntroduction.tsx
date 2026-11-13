@@ -8,7 +8,7 @@ export function ArohiniIntroduction() {
       <p className="product-introduction">{arohini.description}</p>
       <p className="arohini-formula">Sugar-free. No artificial sweeteners.</p>
       <ul className="arohini-benefits" aria-label="Arohini wellness highlights">
-        {arohiniPackHighlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
+        {arohiniPackHighlights.map((highlight) => <li key={highlight}><strong>{highlight}</strong></li>)}
       </ul>
       <p className="arohini-ingredients">
         <strong>Seven key botanicals</strong>

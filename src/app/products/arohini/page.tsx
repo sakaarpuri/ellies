@@ -4,6 +4,7 @@ import { arohini, arohiniBotanicals, arohiniFaqs, arohiniPhotos } from "@/lib/pr
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 import { JsonLdScript } from "@/components/JsonLd";
 import { ArohiniIntroduction } from "@/components/ArohiniIntroduction";
+import { ArohiniHerbs } from "@/components/ArohiniHerbs";
 
 export const metadata = pageMetadata({
   title: "Arohini: Sugar-Free Ayurvedic Elixir for Women 40+",
@@ -50,6 +51,7 @@ export default function ArohiniPage() {
             Questions before ordering? <Link href="/contact">Talk to us</Link>.
           </p>
         </div>
+        <ArohiniHerbs showSources />
       </section>
       <section className="product-editorial">
         <div className="product-section-inner">

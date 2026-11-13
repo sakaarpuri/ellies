@@ -17,9 +17,31 @@ export const arohiniQualityStatement =
 export const arohiniPhotos = [
   { src: "/images/arohini-arch.webp", alt: "Arohini women's wellness 40+ elixir, 200 ml bottle and box", width: 1036, height: 1518 },
   { src: "/images/arohini-morning.webp", alt: "Woman holding an Arohini bottle at a bright breakfast table", width: 900, height: 1200 },
-  { src: "/images/arohini-reading.webp", alt: "Woman reading beside a small Arohini bottle", width: 900, height: 1200 },
-  { src: "/images/arohini-portrait.webp", alt: "Woman in a burgundy blouse holding a small Arohini bottle", width: 900, height: 1200 },
   { src: "/images/arohini-wellness-poster-arch.webp", alt: "Arohini women's wellness 40+ poster with the bottle and box", width: 1037, height: 1517 },
+] as const;
+
+export const arohiniHerbPhotos = [
+  {
+    name: "Shatavari",
+    src: "/images/arohini-herb-shatavari.webp",
+    alt: "Shatavari roots and fine green foliage on pale pink stone",
+    benefit: "Traditionally used to nourish women's wellbeing.",
+    source: "https://cb.imsc.res.in/imppat/therapeutics/Asparagus%20racemosus",
+  },
+  {
+    name: "Ashwagandha",
+    src: "/images/arohini-herb-ashwagandha.webp",
+    alt: "Ashwagandha roots, leaves and orange berries on sage-green stone",
+    benefit: "Traditionally used for stress support and restful sleep.",
+    source: "https://ods.od.nih.gov/factsheets/Ashwagandha-HealthProfessional/",
+  },
+  {
+    name: "Brahmi",
+    src: "/images/arohini-herb-brahmi.webp",
+    alt: "Fresh Brahmi stems with small green leaves and white flowers on blue-grey stone",
+    benefit: "Traditionally used to support memory and mental wellbeing.",
+    source: "https://www.ncbi.nlm.nih.gov/books/NBK603563/",
+  },
 ] as const;
 
 export const arohiniFaqs = [
