@@ -3,6 +3,7 @@
 const SECRET = "REPLACE_WITH_THE_SAME_LEADS_WEBHOOK_SECRET";
 const SHEET_ID = "1GqAQSQBcSTpoikrha0NO7zRue_4q6iJVKEiAX4lyZj0";
 const TAB = "Website orders and bookings";
+const NEWSLETTER_TAB = "Arohini newsletter and feedback";
 const HEADERS = ["Event ID", "Created At", "Event", "Reference", "Type", "Name", "Phone", "Email", "Concern Area", "Concern", "Consent", "Transaction", "Amount INR", "Product", "Quantity", "Delivery Address", "Payment Status", "Verified", "Customer Email", "Admin Email"];
 
 function authorizeRecords() {
@@ -38,9 +39,26 @@ function doPost(e) {
         data.txnid, data.amount, data.productinfo, data.quantity, data.shippingAddress,
         data.paymentStatus, data.verified, "Managed by website", "Managed by website"
       ].map(safeCell));
-      SpreadsheetApp.flush();
     }
-    return jsonResponse({ ok: true, service: "ellies-records-only-v1" });
+    const result = { ok: true, service: "ellies-records-only-v1" };
+    if (data.eventType === "payment_success" && data.orderType === "product" && data.newsletterOptInAt) {
+      const email = String(data.email || "").trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return jsonResponse({ ok: false, error: "invalid_subscriber" });
+      const subscribers = spreadsheet.getSheetByName(NEWSLETTER_TAB) || spreadsheet.insertSheet(NEWSLETTER_TAB);
+      if (subscribers.getLastRow() === 0) {
+        subscribers.appendRow(["Email", "Opted in at", "Paid order reference", "Status"]);
+        subscribers.setFrozenRows(1);
+      }
+      const existing = subscribers.getLastRow() > 1
+        ? subscribers.getRange(2, 1, subscribers.getLastRow() - 1, 1).createTextFinder(email).matchEntireCell(true).findNext()
+        : null;
+      if (!existing) {
+        subscribers.appendRow([email, data.newsletterOptInAt, data.referenceId, "Subscribed"].map(safeCell));
+      }
+      result.newsletterStored = true;
+    }
+    SpreadsheetApp.flush();
+    return jsonResponse(result);
   } catch (error) {
     console.error(String(error));
     return jsonResponse({ ok: false, error: "processing_failed" });

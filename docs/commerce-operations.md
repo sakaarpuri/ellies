@@ -1,12 +1,14 @@
 # Orders and notifications
 
-Arohini is INR 270 per 200 ml bottle, with free delivery within India. Quantity is limited to 1-6 per checkout. Product prices are calculated on the server. Consultation remains INR 200. Existing orders retain the price saved when checkout was initiated.
+Arohini is INR 270 per 200 ml bottle, with free delivery within India and a typical delivery time of 7 days. International customers can enquire at `support@elliesbotanics.com`. Quantity is limited to 1-6 per checkout. Product prices are calculated on the server. Consultations are free. Existing orders retain the price saved when checkout was initiated.
 
 ## Records
 
 Netlify Blobs stores private order details before payment and an immutable paid marker after verification. Store: `commerce-production`. Events and a retry outbox are independent of Google Sheets. Local development uses git-ignored `.local-commerce/` and never writes to the live store.
 
 The existing Google Sheet receives records in a new tab, **Website orders and bookings**. Existing tabs remain untouched. Share the sheet only with authorised administrators; never publish it. The data includes contact details, health concerns and delivery addresses.
+
+The **Arohini newsletter and feedback** tab is created when the first paid buyer opts in. Checkout collects optional consent separately. The list stores one row per email address, with the opt-in timestamp, order reference, and subscription status. For unsubscribe requests, set the row to **Unsubscribed** and retain that status so payment retries and repeat purchases cannot add the address back. Use only rows marked **Subscribed** for sending. Update an unsubscribed row only in response to a fresh opt-in you have verified. Keep this tab private. No newsletter or feedback emails are sent automatically.
 
 Customer and administrator emails are sent after verified payment using Titan SMTP, independently of Sheets. A consultation enquiry has a separate acknowledgement, not a paid-booking receipt. The sender, envelope sender, reply-to and admin destination are `support@elliesbotanics.com`. No personal Google account sends email. Failed emails remain in the outbox. Dispatch and consultation scheduling still require the team to contact the customer.
 
@@ -21,7 +23,7 @@ Delivery checkpoints track each recipient independently. `sent` means the SMTP s
 1. Replace the existing Apps Script code with `docs/google-apps-script-leads.gs`, preserving the same secret as Netlify's `LEADS_WEBHOOK_SECRET`. Alternatively set the script property `LEADS_WEBHOOK_SECRET`. Never commit the real secret.
 2. Run `authorizeRecords` as the spreadsheet owner and approve Sheets access only. There is no email permission and no email test in this script. Remove any old MailApp/GmailApp code and explicit mail scopes from the script project.
 3. In **Deploy > Manage deployments**, edit the existing Web App deployment, select **New version**, and deploy. Execute as the owner. Preserve the existing `/exec` URL and access configuration; requests must pass the shared secret.
-4. Confirm the deployment URL returns `{"service":"ellies-records-only-v1"}` on GET. Perform a labelled test enquiry and check the new tab. Email delivery is tracked by the website, not this sheet. Do not make a live charge just for testing without approval.
+4. Confirm the deployment URL returns `{"service":"ellies-records-only-v1"}` on GET and verify the updated deployment in Apps Script. A paid opt-in stays queued until the script acknowledges it with `newsletterStored: true`. Verify the subscribers tab after a paid opt-in in a controlled test or on the first opted-in paid order. Email delivery is tracked by the website, not this sheet.
 
 The previously deployed script returned an HTML error with HTTP 200 because MailApp was not authorised. The website now checks the records-only protocol before sending any POST, preventing the old script from sending as the owner's personal account. It requires explicit JSON `ok: true` for sheet storage. Sheet failures remain queued but do not block email. Publish the records-only script to resume sheet syncing.
 
@@ -39,4 +41,4 @@ For orders created before this storage system, check the existing sheet and PayU
 
 Run `npm test`, `npm run lint`, and `npm run build`. Tests cover amount tampering, failed/forged callbacks, consent/address validation, receipt tokens, notification retries and Apps Script record-first/idempotent behaviour. Browser checkout tests must intercept the gateway submission so they do not create a live charge.
 
-The product page uses the supplied product image and conservative descriptions from the supplied document. Dosage, delivery timelines and product-specific return guarantees were not invented. Confirm final labelling and commercial policies before a broader sales campaign.
+The product page uses the supplied product image and conservative descriptions from the supplied document. Confirm final label directions and product-specific return terms before a broader sales campaign.

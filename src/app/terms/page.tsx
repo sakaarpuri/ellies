@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { arohini } from "@/lib/products";
 import { JsonLdScript } from "@/components/JsonLd";
 import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
+import { site } from "@/lib/site";
 
 const description =
   "Terms of use for Ellie’s Botanics herbal wellness education, website content, and consultation enquiry information.";
@@ -28,11 +29,14 @@ export default function TermsPage() {
         <p>
           Product prices and the total payable are displayed before payment.
           Arohini is Rs.{arohini.price} per 200 ml bottle with free delivery within India.
-          Provide an accurate address and contact number. A payment confirmation
-          is not a dispatch confirmation; our team will contact you with
-          delivery updates. For cancellation, return, damaged delivery or refund
-          queries, contact support@elliesbotanics.com with your order reference.
-          This does not limit your statutory rights.
+          {" "}{arohini.deliveryEstimate} For international orders, email{" "}
+          <a href={`mailto:${site.email}?subject=International%20Arohini%20order`}>
+            {site.email}
+          </a>.
+          Provide an accurate address and contact number. Our team will share
+          delivery updates. For cancellation, return, damaged delivery or
+          refund queries, contact {site.email} with your order reference.
+          Your statutory rights still apply.
         </p>
         <h2>Content use</h2>
         <p>

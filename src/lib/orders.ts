@@ -18,6 +18,7 @@ export type Order = {
   email: string;
   phone: string;
   consent: boolean;
+  newsletterOptIn?: boolean;
   concernArea: string;
   concern: string;
   age?: string;
@@ -87,6 +88,8 @@ async function settle(order: Order, status: string) {
     verified: true,
     orderType: order.type,
     quantity: String(order.quantity),
+    newsletterOptInAt:
+      order.type === "product" && order.newsletterOptIn === true ? order.createdAt : undefined,
     source: "verified payment",
   });
   if (!result.ok) throw new Error("Payment notification could not be queued");

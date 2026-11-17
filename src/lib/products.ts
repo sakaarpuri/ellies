@@ -8,6 +8,7 @@ export const arohini = {
   size: "200 ml",
   image: "/images/arohini.webp",
   path: "/products/arohini",
+  deliveryEstimate: "Typically delivered in 7 days within India.",
   updatedAt: "2026-11-13",
 };
 
@@ -67,7 +68,7 @@ export const arohiniFaqs = [
   },
   {
     question: "How much does Arohini cost, and where do you deliver?",
-    answer: `Arohini costs Rs.${arohini.price} for a 200 ml bottle, with free delivery within India. Enter your complete address and PIN code at checkout. For help, email support@elliesbotanics.com.`,
+    answer: `Arohini costs Rs.${arohini.price} for a 200 ml bottle, with free delivery within India. ${arohini.deliveryEstimate} For international orders, email support@elliesbotanics.com.`,
   },
 ] as const;
 

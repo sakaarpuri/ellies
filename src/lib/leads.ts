@@ -2,6 +2,7 @@ import "server-only";
 
 import crypto from "node:crypto";
 import { site } from "@/lib/site";
+import { arohini } from "@/lib/products";
 import { notificationMessages, sendNotificationMail } from "@/lib/notification-mail";
 import {
   claimDeliveryLease,
@@ -40,6 +41,7 @@ export type LeadEventInput = {
   orderType?: string;
   shippingAddress?: string;
   quantity?: string;
+  newsletterOptInAt?: string;
 };
 
 type LeadStorageResult = {
@@ -147,12 +149,13 @@ function buildCustomerConfirmation(
               `Product: ${fields.productinfo}`,
               `Quantity: ${fields.quantity}`,
               "Delivery: Free within India",
+              arohini.deliveryEstimate,
               `Delivery address: ${fields.shippingAddress}`,
             ]
           : []),
         "",
         product
-          ? "Our team will prepare your order and contact you with delivery updates. This email confirms payment, not dispatch."
+          ? "Our team will prepare your order and share delivery updates."
           : "Our team will contact you to arrange your consultation. A consultation time is not confirmed until it is agreed with you.",
         "",
         "Please keep this email for your records.",
@@ -201,6 +204,7 @@ function normalizeLeadEvent(input: LeadEventInput) {
     orderType: clean(input.orderType || "consultation", 30),
     shippingAddress: clean(input.shippingAddress, 600),
     quantity: clean(input.quantity, 10),
+    newsletterOptInAt: clean(input.newsletterOptInAt, 30),
   };
 }
 
@@ -239,16 +243,13 @@ async function submitWebhook(fields: Record<string, string>) {
     const responseText = await response.text();
     let responseBody: {
       ok?: unknown;
+      newsletterStored?: unknown;
       customerConfirmationStatus?: unknown;
       adminAlertStatus?: unknown;
     } | null = null;
 
     try {
-      responseBody = JSON.parse(responseText) as {
-        ok?: unknown;
-        customerConfirmationStatus?: unknown;
-        adminAlertStatus?: unknown;
-      };
+      responseBody = JSON.parse(responseText);
     } catch {
       responseBody = null;
     }
@@ -260,7 +261,11 @@ async function submitWebhook(fields: Record<string, string>) {
 
     return {
       target: "webhook",
-      status: response.ok && responseBody?.ok === true ? "stored" : "failed",
+      status:
+        response.ok && responseBody?.ok === true &&
+        (!fields.newsletterOptInAt || responseBody.newsletterStored === true)
+          ? "stored"
+          : "failed",
       customerConfirmationStatus,
       adminAlertStatus:
         typeof responseBody?.adminAlertStatus === "string"

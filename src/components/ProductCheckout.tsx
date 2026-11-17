@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { arohini } from "@/lib/products";
+import { site } from "@/lib/site";
 
 export function ProductCheckout() {
   const [quantity, setQuantity] = useState(1);
@@ -23,6 +24,7 @@ export function ProductCheckout() {
           productId: arohini.id,
           quantity,
           consent: data.get("consent") === "on",
+          newsletterOptIn: data.get("newsletterOptIn") === "on",
         }),
       });
       const result = await response.json();
@@ -102,11 +104,13 @@ export function ProductCheckout() {
             <dd>₹{quantity * arohini.price}</dd>
           </div>
         </dl>
+        <p className="product-small">{arohini.deliveryEstimate}</p>
         <p className="product-small">
-          Need help?{" "}
-          <a href="mailto:support@elliesbotanics.com">
-            support@elliesbotanics.com
+          For international orders, email{" "}
+          <a href={`mailto:${site.email}?subject=International%20Arohini%20order`}>
+            {site.email}
           </a>
+          .
         </p>
       </div>
       <form className="checkout-form" onSubmit={submit}>
@@ -197,6 +201,13 @@ export function ProductCheckout() {
               I agree to the <Link href="/terms">terms</Link> and{" "}
               <Link href="/privacy">privacy policy</Link>, and to being
               contacted about this order.
+            </span>
+          </label>
+          <label className="checkout-consent">
+            <input type="checkbox" name="newsletterOptIn" />
+            <span>
+              Email me the Ellie&apos;s Botanics newsletter and occasional
+              requests for product feedback. (Optional)
             </span>
           </label>
           <p className="product-small">

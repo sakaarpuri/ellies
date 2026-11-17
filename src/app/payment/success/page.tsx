@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getReceipt } from "@/lib/orders";
+import { arohini } from "@/lib/products";
 import { site } from "@/lib/site";
 
 export const metadata = {
@@ -33,7 +34,7 @@ export default async function PaymentSuccessPage({
       <p>
         {receipt?.paid
           ? receipt.type === "product"
-            ? "Thank you for choosing Arohini. Our team will prepare your order and share delivery updates."
+            ? `Thank you for choosing Arohini. ${arohini.deliveryEstimate} Our team will share delivery updates.`
             : "Thank you. Our team will contact you to arrange a consultation time."
           : "We cannot confirm a successful payment on this page yet. If your account was debited, please do not pay again. Keep your payment reference and contact us for help."}
       </p>

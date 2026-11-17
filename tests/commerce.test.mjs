@@ -152,6 +152,8 @@ test("verified product payments persist and queue customer/admin confirmation on
   const event = h.records.get(`events/${order.txnid}-payment_success`);
   assert.match(event.customerConfirmationSubject, /Order confirmed/);
   assert.match(event.customerConfirmationBody, /Free within India/);
+  assert.match(event.customerConfirmationBody, /Typically delivered in 7 days within India/);
+  assert.equal(event.newsletterOptInAt, "");
   assert.equal(event.amount, "270.00");
   assert.equal(
     (await orders.getReceipt(order.txnid, orders.receiptToken(order.txnid)))
@@ -159,6 +161,26 @@ test("verified product payments persist and queue customer/admin confirmation on
     true,
   );
   assert.equal(await orders.getReceipt(order.txnid, "0".repeat(64)), null);
+});
+
+test("paid checkout opt-ins stay queued until the subscriber list acknowledges them", async () => {
+  const h = harness();
+  const orders = h.load("@/lib/orders");
+  const eventId = `${order.txnid}-payment_success`;
+  await orders.saveOrder({ ...order, newsletterOptIn: true });
+  assert.equal(h.requests.length, 0);
+  await orders.processPayment(signed(h, { status: "failure" }));
+  assert.equal(h.requests.length, 0);
+  await orders.processPayment(signed(h));
+  assert.equal(h.records.has(`outbox/${eventId}`), true);
+  assert.equal(h.sent.length, 2);
+  const payload = JSON.parse(h.requests.find((request) => request.method === "POST").body);
+  assert.equal(payload.email, order.email);
+  assert.equal(payload.newsletterOptInAt, order.createdAt);
+  h.setResponse({ ok: true, newsletterStored: true });
+  await h.load("@/lib/leads").retryNotifications();
+  assert.equal(h.records.has(`outbox/${eventId}`), false);
+  assert.equal(h.sent.length, 2);
 });
 
 test("orders initiated before a price change retain their saved price and confirmation amount", async () => {
@@ -347,11 +369,15 @@ test("product checkout validates delivery and rejects new consultation charges",
   const result = await response.json();
   assert.equal(result.fields.amount, "540.00");
   assert.equal(result.fields.udf2, "product");
+  assert.equal(h.records.get(`orders/${result.fields.txnid}`).newsletterOptIn, false);
   assert.equal(
     h.records.get(`orders/${result.fields.txnid}`).shippingAddress,
     "Test address, do not fulfil, Chandigarh, Chandigarh 160001, India",
   );
   assert.equal(JSON.stringify(result).includes("test-salt"), false);
+  const optedIn = await (await post({ ...product, newsletterOptIn: true })).json();
+  assert.equal(h.records.get(`orders/${optedIn.fields.txnid}`).newsletterOptIn, true);
+  assert.equal(optedIn.fields.newsletterOptIn, undefined);
   for (const invalid of [
     null,
     [],
@@ -429,26 +455,28 @@ test("consultations are free despite the previous paid environment rate", async 
 });
 
 test("Apps Script stores records idempotently without any email permission and prevents formula injection", () => {
-  const rows = [];
-  const sheet = {
-    getLastRow: () => rows.length,
-    appendRow: (row) => rows.push(row),
-    setFrozenRows() {},
-    getRange(row, col) {
-      return {
-        getValues: () => [[rows[row - 1][18], rows[row - 1][19]]],
-        setValue: (value) => {
-          rows[row - 1][col - 1] = value;
+  const sheets = new Map();
+  const spreadsheet = {
+    getSheetByName: (name) => sheets.get(name),
+    insertSheet(name) {
+      const rows = [];
+      const sheet = {
+        rows,
+        getLastRow: () => rows.length,
+        appendRow: (row) => rows.push(row),
+        setFrozenRows() {},
+        getRange(row, col, count) {
+          return {
+            createTextFinder: (text) => ({
+              matchEntireCell: () => ({
+                findNext: () => rows.slice(row - 1, row - 1 + count).find((record) => record[col - 1] === text),
+              }),
+            }),
+          };
         },
-        createTextFinder: (text) => ({
-          matchEntireCell: () => ({
-            findNext: () => {
-              const index = rows.findIndex((r) => r[0] === text);
-              return index < 0 ? null : { getRow: () => index + 1 };
-            },
-          }),
-        }),
       };
+      sheets.set(name, sheet);
+      return sheet;
     },
   };
   const context = vm.createContext({
@@ -468,10 +496,7 @@ test("Apps Script stores records idempotently without any email permission and p
       }),
     },
     SpreadsheetApp: {
-      openById: () => ({
-        getSheetByName: () => sheet,
-        getUrl: () => "https://example.com/private-sheet",
-      }),
+      openById: () => spreadsheet,
       flush() {},
     },
     MailApp: {
@@ -493,16 +518,38 @@ test("Apps Script stores records idempotently without any email permission and p
     customerConfirmationSubject: "Received",
     customerConfirmationBody: "Test record",
   };
-  const call = () =>
-    context.doPost({ postData: { contents: JSON.stringify(data) } });
-  const first = call();
+  const call = (changes = {}) =>
+    context.doPost({ postData: { contents: JSON.stringify({ ...data, ...changes }) } });
+  const first = call({ newsletterOptInAt: order.createdAt });
   assert.equal(first.ok, true);
   assert.equal(first.service, "ellies-records-only-v1");
   assert.equal(context.doGet().service, "ellies-records-only-v1");
+  const rows = sheets.get("Website orders and bookings").rows;
   assert.equal(rows[1][5], "'=IMPORTXML(test)");
   call();
   call();
   assert.equal(rows.length, 2);
+  assert.equal(sheets.has("Arohini newsletter and feedback"), false);
+  const paidEvent = {
+    eventId: "paid-payment_success",
+    eventType: "payment_success",
+    orderType: "product",
+    paymentStatus: "success",
+    verified: "yes",
+    email: "TEST@example.com",
+    referenceId: "paid",
+    newsletterOptInAt: order.createdAt,
+  };
+  assert.equal(call({ ...paidEvent, verified: "no" }).error, "unverified_payment");
+  assert.equal(call({ ...paidEvent, newsletterOptInAt: "" }).newsletterStored, undefined);
+  assert.equal(sheets.has("Arohini newsletter and feedback"), false);
+  assert.equal(call(paidEvent).newsletterStored, true);
+  const subscriberRows = sheets.get("Arohini newsletter and feedback").rows;
+  assert.deepEqual(Array.from(subscriberRows[1]), [order.email, order.createdAt, "paid", "Subscribed"]);
+  subscriberRows[1][3] = "Unsubscribed";
+  assert.equal(call({ ...paidEvent, eventId: "repeat-payment_success" }).newsletterStored, true);
+  assert.equal(subscriberRows.length, 2);
+  assert.equal(subscriberRows[1][3], "Unsubscribed");
   assert.doesNotMatch(fs.readFileSync("docs/google-apps-script-leads.gs", "utf8"), /MailApp|GmailApp/);
   assert.equal(context.doPost().error, "missing_body");
 });

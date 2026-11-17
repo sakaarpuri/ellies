@@ -43,6 +43,17 @@ export default function PrivacyPage() {
           We use information for communication, site improvement, and record
           keeping. We do not sell personal information.
         </p>
+        <h2>Newsletter and product feedback</h2>
+        <p>
+          If you opt in at checkout and complete your purchase, we save your
+          email address and a record of your choice so we can send our newsletter
+          and occasional requests for product feedback. You can unsubscribe at
+          any time by emailing{" "}
+          <a href="mailto:support@elliesbotanics.com?subject=Unsubscribe">
+            support@elliesbotanics.com
+          </a>
+          . Order updates use the email address you provided at checkout.
+        </p>
         <h2>Contact</h2>
         <p>
           For privacy questions, write to{" "}

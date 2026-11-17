@@ -140,6 +140,7 @@ export async function POST(request: Request) {
       concernArea: "",
       concern: "",
       consent,
+      newsletterOptIn: body.newsletterOptIn === true,
       txnid: fields.txnid,
       amount,
       productinfo: fields.productinfo,
