@@ -1,6 +1,8 @@
 # Orders and notifications
 
-Arohini is INR 270 per 200 ml bottle, with free delivery within India and a typical delivery time of 7 days. International customers can enquire at `support@elliesbotanics.com`. Quantity is limited to 1-6 per checkout. Product prices are calculated on the server. Consultations are free. Existing orders retain the price saved when checkout was initiated.
+Arohini is INR 270 per 200 ml bottle, with free delivery within India and a typical delivery time of 7 days. Checkout applies 10% off each complete set of three bottles and limits orders to 1–6 bottles. The server calculates the PayU amount from the quantity. Existing orders retain the price saved when checkout was initiated. International customers can enquire at `support@elliesbotanics.com`. Consultations are free.
+
+Checkout suggests delivery areas from the [GeoNames India postal directory](https://www.geonames.org/export/zip/) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)). The bundled 18 November 2026 extract groups deduplicated postal areas by PIN, city or town, and state. The directory supplies suggestions, and buyers can edit or enter their full address manually.
 
 ## Records
 

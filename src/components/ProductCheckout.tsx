@@ -2,13 +2,22 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { arohini } from "@/lib/products";
+import { CheckoutAddress } from "@/components/CheckoutAddress";
+import { arohini, arohiniBundle, getArohiniPrice } from "@/lib/products";
 import { site } from "@/lib/site";
+
+const rupees = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 0,
+});
 
 export function ProductCheckout() {
   const [quantity, setQuantity] = useState(1);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const { subtotal, discount, total } = getArohiniPrice(quantity);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
@@ -72,9 +81,13 @@ export function ProductCheckout() {
             <p>
               Women&apos;s wellness 40+
               <br />
-              200 ml · ₹{arohini.price} per bottle
+              {arohini.size} · {rupees.format(arohini.price)} per bottle
             </p>
           </div>
+        </div>
+        <div className="checkout-offer">
+          <p>One {arohini.size} bottle covers a regular 10-day course when taken as directed on the label.</p>
+          <p><strong>Save {arohiniBundle.discountPercent}% on every set of {arohiniBundle.quantity} bottles.</strong></p>
         </div>
         <label className="quantity-field">
           Quantity{" "}
@@ -85,23 +98,29 @@ export function ProductCheckout() {
           >
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <option key={n} value={n}>
-                {n}
+                {n} {n === 1 ? "bottle" : "bottles"}
               </option>
             ))}
           </select>
         </label>
-        <dl className="checkout-totals">
+        <dl className="checkout-totals" aria-live="polite">
           <div>
             <dt>Subtotal</dt>
-            <dd>₹{quantity * arohini.price}</dd>
+            <dd>{rupees.format(subtotal)}</dd>
           </div>
+          {discount > 0 && (
+            <div className="checkout-savings">
+              <dt>{arohiniBundle.discountPercent}% bundle discount</dt>
+              <dd>−{rupees.format(discount)}</dd>
+            </div>
+          )}
           <div>
             <dt>Delivery within India</dt>
             <dd>Free</dd>
           </div>
           <div>
             <dt>Total</dt>
-            <dd>₹{quantity * arohini.price}</dd>
+            <dd>{rupees.format(total)}</dd>
           </div>
         </dl>
         <p className="product-small">{arohini.deliveryEstimate}</p>
@@ -115,7 +134,7 @@ export function ProductCheckout() {
       </div>
       <form className="checkout-form" onSubmit={submit}>
         <fieldset disabled={busy}>
-          <legend>Contact &amp; delivery</legend>
+          <legend>Contact details</legend>
           <div className="checkout-fields">
             <label className="full">
               Full name
@@ -148,53 +167,11 @@ export function ProductCheckout() {
                 maxLength={20}
               />
             </label>
-            <label className="full">
-              Delivery address
-              <textarea
-                name="address"
-                autoComplete="street-address"
-                required
-                minLength={8}
-                maxLength={250}
-                rows={3}
-              />
-            </label>
-            <label>
-              City
-              <input
-                name="city"
-                autoComplete="address-level2"
-                required
-                minLength={2}
-                maxLength={80}
-              />
-            </label>
-            <label>
-              State / Union territory
-              <input
-                name="state"
-                autoComplete="address-level1"
-                required
-                minLength={2}
-                maxLength={80}
-              />
-            </label>
-            <label>
-              PIN code
-              <input
-                name="pincode"
-                autoComplete="postal-code"
-                inputMode="numeric"
-                pattern="[1-9][0-9]{5}"
-                required
-                maxLength={6}
-              />
-            </label>
-            <label>
-              Country
-              <input value="India" readOnly autoComplete="country-name" />
-            </label>
           </div>
+          <section className="checkout-delivery" aria-labelledby="delivery-heading">
+            <h2 id="delivery-heading">Delivery address</h2>
+            <CheckoutAddress />
+          </section>
           <label className="checkout-consent">
             <input type="checkbox" name="consent" required />
             <span>
@@ -222,7 +199,7 @@ export function ProductCheckout() {
           <button type="submit" className="button primary">
             {busy
               ? "Opening secure checkout..."
-              : `Pay ₹${quantity * arohini.price}`}
+              : `Pay ${rupees.format(total)}`}
           </button>
         </fieldset>
       </form>

@@ -2,8 +2,8 @@ import "server-only";
 
 import crypto from "node:crypto";
 import { site } from "@/lib/site";
-import { arohini } from "@/lib/products";
 import { notificationMessages, sendNotificationMail } from "@/lib/notification-mail";
+import { buildOrderConfirmation, formatDisplayAmount } from "@/lib/order-confirmation";
 import {
   claimDeliveryLease,
   releaseDeliveryLease,
@@ -71,19 +71,6 @@ function createReferenceId(eventType: LeadEventType) {
   return `${prefix}-${date}-${suffix}`;
 }
 
-function formatDisplayAmount(amount: string) {
-  const parsed = Number(amount);
-
-  if (!Number.isFinite(parsed)) {
-    return amount;
-  }
-
-  return `Rs.${parsed.toLocaleString("en-IN", {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: parsed % 1 === 0 ? 0 : 2,
-  })}`;
-}
-
 function buildCustomerConfirmation(
   fields: ReturnType<typeof normalizeLeadEvent>,
 ): Record<string, string> {
@@ -127,36 +114,29 @@ function buildCustomerConfirmation(
     fields.verified === "yes" &&
     fields.paymentStatus === "success"
   ) {
-    const amount = fields.amount
-      ? formatDisplayAmount(fields.amount)
-      : "Recorded";
-    const product = fields.orderType === "product";
+    if (fields.orderType === "product") {
+      const { subject, text } = buildOrderConfirmation(fields);
+      return {
+        customerConfirmationTo: fields.email,
+        customerConfirmationSubject: subject,
+        customerConfirmationBody: text,
+      };
+    }
 
     return {
       customerConfirmationTo: fields.email,
-      customerConfirmationSubject: `${product ? "Order confirmed" : "Consultation payment received"} - ${site.name}`,
+      customerConfirmationSubject: `Consultation payment received - ${site.name}`,
       customerConfirmationBody: [
         `Hi ${name},`,
         "",
-        `Thank you. Your ${product ? "order" : "consultation payment"} has been received and recorded by ${site.name}.`,
+        `Thank you. Your consultation payment has been received and recorded by ${site.name}.`,
         "",
-        `${product ? "Order" : "Booking"} reference: ${fields.referenceId}`,
+        `Booking reference: ${fields.referenceId}`,
         `Transaction ID: ${fields.txnid || "Not available"}`,
-        `Amount: ${amount}`,
+        `Amount: ${formatDisplayAmount(fields.amount)}`,
         `Payment status: ${fields.paymentStatus || "success"}`,
-        ...(product
-          ? [
-              `Product: ${fields.productinfo}`,
-              `Quantity: ${fields.quantity}`,
-              "Delivery: Free within India",
-              arohini.deliveryEstimate,
-              `Delivery address: ${fields.shippingAddress}`,
-            ]
-          : []),
         "",
-        product
-          ? "Our team will prepare your order and share delivery updates."
-          : "Our team will contact you to arrange your consultation. A consultation time is not confirmed until it is agreed with you.",
+        "Our team will contact you to arrange your consultation. A consultation time is not confirmed until it is agreed with you.",
         "",
         "Please keep this email for your records.",
         "",

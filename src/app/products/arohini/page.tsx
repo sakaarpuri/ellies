@@ -5,7 +5,6 @@ import { absoluteUrl, breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/li
 import { JsonLdScript } from "@/components/JsonLd";
 import { ArohiniIntroduction } from "@/components/ArohiniIntroduction";
 import { ArohiniHerbs } from "@/components/ArohiniHerbs";
-import { site } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Arohini: Sugar-Free Ayurvedic Elixir for Women 40+",
@@ -20,7 +19,6 @@ export default function ArohiniPage() {
   return (
     <>
       <section className="product-layout product-light">
-        <ProductGallery><ArohiniHerbs showSources /></ProductGallery>
         <div className="product-copy">
           <p className="eyebrow sage">
             Ellie&apos;s Botanics · Women&apos;s wellness 40+
@@ -49,39 +47,8 @@ export default function ArohiniPage() {
           <Link className="button primary product-buy" href="/checkout/arohini">
             Buy Arohini
           </Link>
-          <p className="product-small">
-            Ordering from outside India?{" "}
-            <a href={`mailto:${site.email}?subject=International%20Arohini%20order`}>Email us</a>.
-          </p>
         </div>
-      </section>
-      <section className="product-editorial">
-        <div className="product-section-inner">
-          <div className="product-section-heading">
-            <p className="eyebrow">The botanical blend</p>
-            <h2>
-              Seven herbs.
-              <br />A shared tradition of care.
-            </h2>
-            <p>
-              Meet the botanicals in Arohini. These descriptions explain their
-              place in Ayurveda; traditional use is not proof that this blend
-              treats a medical condition.
-            </p>
-          </div>
-          <div className="botanical-list">
-            {arohiniBotanicals.map(([name, latin, description], index) => (
-              <article key={name} id={`ingredient-${name.toLowerCase()}`}>
-                <span className="botanical-number">0{index + 1}</span>
-                <div>
-                  <h3>{name}</h3>
-                  <em>{latin}</em>
-                  <p>{description}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
+        <ProductGallery><ArohiniHerbs /></ProductGallery>
       </section>
       <section className="product-guidance">
         <div>
@@ -141,7 +108,7 @@ export default function ArohiniPage() {
             size: "200 ml",
             category: "Ayurvedic botanical elixir",
             additionalProperty: [
-              { "@type": "PropertyValue", name: "Botanicals", value: arohiniBotanicals.map(([name]) => name).join(", ") },
+              { "@type": "PropertyValue", name: "Botanicals", value: arohiniBotanicals.map(({ name }) => name).join(", ") },
               { "@type": "PropertyValue", name: "Formulation", value: "Sugar-free; no artificial sweeteners" },
             ],
             brand: { "@type": "Brand", name: "Ellie's Botanics" },

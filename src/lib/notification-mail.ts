@@ -1,6 +1,10 @@
 import "server-only";
 import crypto from "node:crypto";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import nodemailer from "nodemailer";
+import { buildOrderConfirmation, orderLogoCid } from "@/lib/order-confirmation";
+import { site } from "@/lib/site";
 
 export const notificationAddress = "support@elliesbotanics.com";
 
@@ -8,6 +12,7 @@ export type NotificationMessage = {
   to: string;
   subject: string;
   text: string;
+  html?: string;
 };
 
 export function notificationMessages(fields: Record<string, string>) {
@@ -15,10 +20,18 @@ export function notificationMessages(fields: Record<string, string>) {
   if (paid && (fields.verified !== "yes" || fields.paymentStatus !== "success")) {
     throw new Error("Unverified payment cannot generate email");
   }
-  const customer = ["request_submitted", "payment_success"].includes(fields.eventType) &&
-    fields.customerConfirmationTo && fields.customerConfirmationSubject && fields.customerConfirmationBody
-    ? { to: fields.customerConfirmationTo, subject: fields.customerConfirmationSubject, text: fields.customerConfirmationBody }
-    : null;
+  let customer: NotificationMessage | null = null;
+  if ((paid || fields.eventType === "request_submitted") && fields.customerConfirmationTo) {
+    if (paid && fields.orderType === "product") {
+      customer = { to: fields.customerConfirmationTo, ...buildOrderConfirmation(fields) };
+    } else if (fields.customerConfirmationSubject && fields.customerConfirmationBody) {
+      customer = {
+        to: fields.customerConfirmationTo,
+        subject: fields.customerConfirmationSubject,
+        text: fields.customerConfirmationBody,
+      };
+    }
+  }
   const admin = ["request_submitted", "payment_success", "whatsapp_opened", "email_opened"].includes(fields.eventType)
     ? {
         to: notificationAddress,
@@ -41,6 +54,10 @@ export async function sendNotificationMail(id: string, message: NotificationMess
   const pass = process.env.SMTP_PASSWORD;
   if (!pass) throw new Error("SMTP_PASSWORD is not configured");
   if (!/^[^\s@<>;,]+@[^\s@<>;,]+\.[^\s@<>;,]+$/.test(message.to)) throw new Error("Invalid recipient");
+  const logo = message.html
+    ? await readFile(path.join(process.cwd(), "src/lib/branding/ellies-email-logo.jpg")).catch(() => null)
+    : null;
+  const html = logo ? message.html : message.html?.replace(`cid:${orderLogoCid}`, `${site.url}${site.logo}`);
   const transport = nodemailer.createTransport({
     host: "smtpout.secureserver.net",
     port: 465,
@@ -63,6 +80,14 @@ export async function sendNotificationMail(id: string, message: NotificationMess
       to: message.to,
       subject: message.subject.replace(/[\r\n]/g, " "),
       text: message.text,
+      html,
+      attachments: logo ? [{
+        filename: "ellies-botanics.jpg",
+        content: logo,
+        contentType: "image/jpeg",
+        contentDisposition: "inline",
+        cid: orderLogoCid,
+      }] : undefined,
       messageId,
     });
     if (!result.accepted?.some((address) => String(address).toLowerCase() === message.to.toLowerCase())) {

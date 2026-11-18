@@ -89,7 +89,7 @@ function harness() {
       "fetch",
       "console",
       output,
-    )(load, loaded, loaded.exports, { env }, mockedFetch, { error() {} });
+    )(load, loaded, loaded.exports, { env, cwd: process.cwd }, mockedFetch, { error() {} });
     cache.set(name, loaded.exports);
     return loaded.exports;
   }
@@ -153,6 +153,14 @@ test("verified product payments persist and queue customer/admin confirmation on
   assert.match(event.customerConfirmationSubject, /Order confirmed/);
   assert.match(event.customerConfirmationBody, /Free within India/);
   assert.match(event.customerConfirmationBody, /Typically delivered in 7 days within India/);
+  assert.doesNotMatch(event.customerConfirmationBody, /Transaction ID|Payment status/);
+  const customer = h.sent.find((message) => message.to === order.email);
+  assert.match(customer.html, /Your Arohini order is confirmed/);
+  assert.match(customer.html, /Total paid/);
+  assert.match(customer.html, /Delivering to/);
+  assert.equal(customer.attachments[0].contentType, "image/jpeg");
+  assert.ok(Buffer.isBuffer(customer.attachments[0].content));
+  assert.ok(customer.html.includes(`src="cid:${customer.attachments[0].cid}"`));
   assert.equal(event.newsletterOptInAt, "");
   assert.equal(event.amount, "270.00");
   assert.equal(
@@ -378,6 +386,19 @@ test("product checkout validates delivery and rejects new consultation charges",
   const optedIn = await (await post({ ...product, newsletterOptIn: true })).json();
   assert.equal(h.records.get(`orders/${optedIn.fields.txnid}`).newsletterOptIn, true);
   assert.equal(optedIn.fields.newsletterOptIn, undefined);
+  for (const [quantity, expected] of [[1, "270.00"], [3, "729.00"], [4, "999.00"], [5, "1269.00"], [6, "1458.00"]]) {
+    const bundled = await (await post({
+      ...product,
+      quantity,
+      address: "Flat 5, Test Building,",
+      addressLine2: "Test Road,",
+      landmark: "Test Library",
+    })).json();
+    assert.equal(bundled.fields.amount, expected);
+    const saved = h.records.get(`orders/${bundled.fields.txnid}`);
+    assert.equal(saved.amount, expected);
+    assert.equal(saved.shippingAddress, "Flat 5, Test Building, Test Road, Near Test Library, Chandigarh, Chandigarh 160001, India");
+  }
   for (const invalid of [
     null,
     [],

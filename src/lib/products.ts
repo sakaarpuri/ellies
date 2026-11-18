@@ -9,8 +9,18 @@ export const arohini = {
   image: "/images/arohini.webp",
   path: "/products/arohini",
   deliveryEstimate: "Typically delivered in 7 days within India.",
-  updatedAt: "2026-11-13",
+  updatedAt: "2026-11-18",
 };
+
+export const arohiniBundle = { quantity: 3, discountPercent: 10 } as const;
+
+export function getArohiniPrice(quantity: number) {
+  const subtotal = quantity * arohini.price;
+  const bundles = Math.floor(quantity / arohiniBundle.quantity);
+  const discount =
+    (bundles * arohiniBundle.quantity * arohini.price * arohiniBundle.discountPercent) / 100;
+  return { subtotal, discount, total: subtotal - discount };
+}
 
 export const arohiniQualityStatement =
   "Every batch of every ingredient is quality-approved before it goes into Arohini.";
@@ -18,31 +28,6 @@ export const arohiniQualityStatement =
 export const arohiniPhotos = [
   { src: "/images/arohini-arch.webp", alt: "Arohini women's wellness 40+ elixir, 200 ml bottle and box", width: 1036, height: 1518 },
   { src: "/images/arohini-morning.webp", alt: "Woman holding an Arohini bottle at a bright breakfast table", width: 900, height: 1200 },
-  { src: "/images/arohini-wellness-poster-arch.webp", alt: "Arohini women's wellness 40+ poster with the bottle and box", width: 1037, height: 1517 },
-] as const;
-
-export const arohiniHerbPhotos = [
-  {
-    name: "Shatavari",
-    src: "/images/arohini-herb-shatavari.webp",
-    alt: "Shatavari roots and fine green foliage on pale pink stone",
-    benefit: "Traditionally used to nourish women's wellbeing.",
-    source: "https://cb.imsc.res.in/imppat/therapeutics/Asparagus%20racemosus",
-  },
-  {
-    name: "Ashwagandha",
-    src: "/images/arohini-herb-ashwagandha.webp",
-    alt: "Ashwagandha roots, leaves and orange berries on sage-green stone",
-    benefit: "Traditionally used for stress support and restful sleep.",
-    source: "https://ods.od.nih.gov/factsheets/Ashwagandha-HealthProfessional/",
-  },
-  {
-    name: "Brahmi",
-    src: "/images/arohini-herb-brahmi.webp",
-    alt: "Fresh Brahmi stems with small green leaves and white flowers on blue-grey stone",
-    benefit: "Traditionally used to support memory and mental wellbeing.",
-    source: "https://www.ncbi.nlm.nih.gov/books/NBK603563/",
-  },
 ] as const;
 
 export const arohiniFaqs = [
@@ -68,7 +53,7 @@ export const arohiniFaqs = [
   },
   {
     question: "How much does Arohini cost, and where do you deliver?",
-    answer: `Arohini costs Rs.${arohini.price} for a 200 ml bottle, with free delivery within India. ${arohini.deliveryEstimate} For international orders, email support@elliesbotanics.com.`,
+    answer: `Arohini costs Rs.${arohini.price} for a 200 ml bottle, with free delivery within India. ${arohini.deliveryEstimate}`,
   },
 ] as const;
 
@@ -81,39 +66,46 @@ export const arohiniPackHighlights = [
 ] as const;
 
 export const arohiniBotanicals = [
-  [
-    "Shatavari",
-    "Asparagus racemosus",
-    "A nourishing herb with a long history in Ayurvedic women's wellness traditions.",
-  ],
-  [
-    "Moringa",
-    "Moringa oleifera",
-    "A leafy botanical traditionally used as part of everyday nourishment.",
-  ],
-  [
-    "Ashoka",
-    "Saraca asoca",
-    "A botanical associated with women's care in classical Ayurvedic practice.",
-  ],
-  [
-    "Guduchi",
-    "Tinospora cordifolia",
-    "Traditionally included in Ayurvedic rejuvenative preparations.",
-  ],
-  [
-    "Amalaki",
-    "Emblica officinalis",
-    "Indian gooseberry, a familiar fruit in Ayurvedic food and wellness traditions.",
-  ],
-  [
-    "Brahmi",
-    "Bacopa monnieri",
-    "An herb with a history of use in traditional approaches to mental wellbeing.",
-  ],
-  [
-    "Ashwagandha",
-    "Withania somnifera",
-    "Traditionally used in Ayurvedic routines centred on vitality and resilience.",
-  ],
+  {
+    name: "Shatavari",
+    latin: "Asparagus racemosus",
+    alt: "Shatavari roots and fine green foliage",
+    use: "Nourishment in women’s wellness routines.",
+  },
+  {
+    name: "Moringa",
+    latin: "Moringa oleifera",
+    alt: "A moringa cutting with clusters of small oval green leaves",
+    use: "Leafy greens for everyday nourishment.",
+  },
+  {
+    name: "Ashoka",
+    latin: "Saraca asoca",
+    alt: "A cluster of orange and yellow ashoka flowers",
+    use: "Bark used in Ayurvedic women’s care.",
+  },
+  {
+    name: "Guduchi",
+    latin: "Tinospora cordifolia",
+    alt: "Heart-shaped green leaves of the guduchi vine",
+    use: "Included in Ayurvedic tonics for vitality.",
+  },
+  {
+    name: "Amalaki",
+    latin: "Phyllanthus emblica",
+    alt: "Pale green amalaki fruits with faint ridges",
+    use: "Indian gooseberry used for digestive wellbeing.",
+  },
+  {
+    name: "Brahmi",
+    latin: "Bacopa monnieri",
+    alt: "Brahmi stems with small green leaves and white flowers",
+    use: "Used in Ayurvedic routines for memory.",
+  },
+  {
+    name: "Ashwagandha",
+    latin: "Withania somnifera",
+    alt: "Ashwagandha roots, broad green leaves and orange berries",
+    use: "Used for stress support and restful sleep.",
+  },
 ] as const;

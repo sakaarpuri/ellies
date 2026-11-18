@@ -1,34 +1,34 @@
 import Image from "next/image";
-import { arohiniHerbPhotos } from "@/lib/products";
+import { arohiniBotanicals } from "@/lib/products";
 
-export function ArohiniHerbs({ showSources = false }: { showSources?: boolean }) {
-  const Heading = showSources ? "h2" : "h3";
-  const HerbHeading = showSources ? "h3" : "h4";
+export function ArohiniHerbs({ onHomePage = false }: { onHomePage?: boolean }) {
+  const Heading = onHomePage ? "h3" : "h2";
+  const HerbHeading = onHomePage ? "h4" : "h3";
   return (
-    <div className="arohini-herb-stories">
+    <section className="arohini-herb-stories" aria-labelledby="arohini-herbs-heading">
       <div className="arohini-herb-heading">
-        <p className="eyebrow">Inside the blend</p>
-        <Heading>Three of our seven botanicals.</Heading>
+        <Heading id="arohini-herbs-heading">The seven botanicals</Heading>
+        <p>Traditional uses in Ayurveda</p>
       </div>
       <div className="arohini-herb-grid">
-        {arohiniHerbPhotos.map((herb) => (
-          <figure key={herb.name} className="arohini-herb-photo">
-            <Image src={herb.src} alt={herb.alt} width={900} height={1200}
-              sizes="(max-width: 540px) 104px, (max-width: 760px) 30vw, (max-width: 1050px) 104px, 220px" />
+        {arohiniBotanicals.map((herb) => (
+          <figure key={herb.name} id={`ingredient-${herb.name.toLowerCase()}`} className="arohini-herb-photo">
+            <div className="arohini-herb-image">
+              <Image
+                src={`/images/arohini-herb-${herb.name.toLowerCase()}.webp`}
+                alt={herb.alt}
+                fill
+                sizes="(max-width: 370px) 45vw, (max-width: 760px) 33vw, 200px"
+              />
+            </div>
             <figcaption>
               <HerbHeading>{herb.name}</HerbHeading>
-              <p>{herb.benefit}</p>
+              <em>{herb.latin}</em>
+              <p>{herb.use}</p>
             </figcaption>
           </figure>
         ))}
       </div>
-      <p className="arohini-herb-note">Traditional uses relate to individual herbs, not proven effects of the finished blend.</p>
-      {showSources && (
-        <details className="arohini-herb-sources">
-          <summary>Ingredient references</summary>
-          <ul>{arohiniHerbPhotos.map((herb) => <li key={herb.name}><a href={herb.source}>{herb.name}: traditional use and evidence</a></li>)}</ul>
-        </details>
-      )}
-    </div>
+    </section>
   );
 }

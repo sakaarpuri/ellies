@@ -29,10 +29,8 @@ export default function TermsPage() {
         <p>
           Product prices and the total payable are displayed before payment.
           Arohini is Rs.{arohini.price} per 200 ml bottle with free delivery within India.
-          {" "}{arohini.deliveryEstimate} For international orders, email{" "}
-          <a href={`mailto:${site.email}?subject=International%20Arohini%20order`}>
-            {site.email}
-          </a>.
+          {" "}{arohini.deliveryEstimate}
+          {" "}
           Provide an accurate address and contact number. Our team will share
           delivery updates. For cancellation, return, damaged delivery or
           refund queries, contact {site.email} with your order reference.

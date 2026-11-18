@@ -63,12 +63,12 @@ export default async function PaymentSuccessPage({
           )}
         </div>
       )}
-      <p>
+      <div className="payment-actions">
         <a href={`mailto:${site.email}`}>{site.email}</a>
-      </p>
-      <Link className="button primary" href="/">
-        Return home
-      </Link>
+        <Link className="button primary" href="/">
+          Return home
+        </Link>
+      </div>
     </section>
   );
 }

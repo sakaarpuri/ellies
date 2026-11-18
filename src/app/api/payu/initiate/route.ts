@@ -8,7 +8,7 @@ import {
   type PayuPaymentFields,
 } from "@/lib/payu";
 import { saveOrder } from "@/lib/orders";
-import { arohini } from "@/lib/products";
+import { arohini, getArohiniPrice } from "@/lib/products";
 
 export const runtime = "nodejs";
 
@@ -64,18 +64,20 @@ export async function POST(request: Request) {
     );
   }
 
-  const amount = (arohini.price * quantity).toFixed(2);
+  const amount = getArohiniPrice(quantity).total.toFixed(2);
 
   const firstname = sanitizePayuField(body.name, 60);
   const email = sanitizePayuField(body.email, 100).toLowerCase();
   const phone = sanitizePayuField(body.phone, 20);
   const consent = body.consent === true;
-  const address = sanitizePayuField(body.address, 250);
+  const address = sanitizePayuField(body.address, 250).replace(/^,+\s*|\s*,+$/g, "");
+  const addressLine2 = sanitizePayuField(body.addressLine2, 120).replace(/^,+\s*|\s*,+$/g, "");
+  const landmark = sanitizePayuField(body.landmark, 100).replace(/^,+\s*|\s*,+$/g, "");
   const city = sanitizePayuField(body.city, 80);
   const state = sanitizePayuField(body.state, 80);
   const pincode = sanitizePayuField(body.pincode, 6);
   if (
-    (address.length < 8 ||
+    (address.length < 3 ||
       city.length < 2 ||
       state.length < 2 ||
       !/^[1-9][0-9]{5}$/.test(pincode))
@@ -145,7 +147,9 @@ export async function POST(request: Request) {
       amount,
       productinfo: fields.productinfo,
       quantity,
-      shippingAddress: `${address}, ${city}, ${state} ${pincode}, India`,
+      shippingAddress: [address, addressLine2, landmark ? `Near ${landmark}` : "", city, `${state} ${pincode}`, "India"]
+        .filter(Boolean)
+        .join(", "),
       createdAt: new Date().toISOString(),
     });
   } catch {

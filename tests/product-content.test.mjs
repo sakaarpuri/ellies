@@ -9,13 +9,13 @@ const output = ts.transpileModule(fs.readFileSync("src/lib/products.ts", "utf8")
 }).outputText;
 const productModule = { exports: {} };
 new Function("module", "exports", output)(productModule, productModule.exports);
-const { arohini, arohiniPhotos, arohiniHerbPhotos, arohiniFaqs, arohiniBotanicals, arohiniPackHighlights } = productModule.exports;
+const { arohini, arohiniPhotos, arohiniFaqs, arohiniBotanicals, arohiniPackHighlights } = productModule.exports;
 
-test("Arohini galleries contain the packshot, first model photo and poster", () => {
-  assert.equal(arohiniPhotos.length, 3);
-  assert.equal(new Set(arohiniPhotos.map(photo => photo.src)).size, 3);
+test("Arohini galleries contain the packshot and model photo", () => {
+  assert.equal(arohiniPhotos.length, 2);
+  assert.equal(new Set(arohiniPhotos.map(photo => photo.src)).size, 2);
   assert(arohiniPhotos[1].src.includes("morning"));
-  assert(!arohiniPhotos.some(photo => /reading|portrait/.test(photo.src)));
+  assert(!arohiniPhotos.some(photo => /reading|portrait|poster/.test(photo.src)));
   for (const photo of arohiniPhotos) {
     assert(fs.existsSync(path.join("public", photo.src)));
     assert(photo.alt.length > 20);
@@ -23,14 +23,13 @@ test("Arohini galleries contain the packshot, first model photo and poster", () 
   }
 });
 
-test("Three original ingredient photos have qualified captions and known ingredients", () => {
-  assert.equal(arohiniHerbPhotos.length, 3);
-  for (const herb of arohiniHerbPhotos) {
-    assert(arohiniBotanicals.some(([name]) => name === herb.name));
-    assert(fs.existsSync(path.join("public", herb.src)));
+test("All seven botanicals have a unique gallery image and a traditional use caption", () => {
+  assert.equal(new Set(arohiniBotanicals.map(({ name }) => name)).size, 7);
+  for (const herb of arohiniBotanicals) {
+    assert(fs.existsSync(path.join("public", "images", `arohini-herb-${herb.name.toLowerCase()}.webp`)));
     assert(herb.alt.length > 20);
-    assert(herb.benefit.startsWith("Traditionally used"));
-    assert(herb.source.startsWith("https://"));
+    assert.match(herb.latin, /^[A-Z][a-z]+ [a-z]+$/);
+    assert(herb.use.length > 20);
   }
 });
 
@@ -39,7 +38,8 @@ test("Product answers match the sale price and the seven named botanicals", () =
   assert(answers.includes(`Rs.${arohini.price}`));
   assert.equal(arohiniBotanicals.length, 7);
   assert.equal(arohiniPackHighlights.length, 5);
-  for (const [name] of arohiniBotanicals) assert(answers.includes(name));
+  for (const { name } of arohiniBotanicals) assert(answers.includes(name));
+  assert.doesNotMatch(answers, /international/i);
   assert(!/certified|safe for everyone|clinically proven/i.test(answers));
   assert(!Number.isNaN(Date.parse(arohini.updatedAt)));
 });
