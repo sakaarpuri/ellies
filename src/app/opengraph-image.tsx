@@ -1,4 +1,7 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { site } from "@/lib/site";
 
 export const size = {
   width: 1200,
@@ -7,7 +10,9 @@ export const size = {
 
 export const contentType = "image/png";
 
-export default function Image() {
+export default async function Image() {
+  const logo = await readFile(join(process.cwd(), "public", site.logo));
+
   return new ImageResponse(
     (
       <div
@@ -15,49 +20,32 @@ export default function Image() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "#F6F1EA",
-          color: "#151515",
-          fontFamily: "Georgia, serif",
-          padding: "64px",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 26,
+          background: "#283C31",
+          color: "#F6F1EA",
         }}
       >
+        <img
+          src={`data:image/jpeg;base64,${logo.toString("base64")}`}
+          alt={site.name}
+          width={410}
+          height={410}
+          style={{ borderRadius: "50%", objectFit: "cover" }}
+        />
         <div
           style={{
             display: "flex",
-            width: "100%",
-            borderTop: "2px solid rgba(21,21,21,0.2)",
-            borderBottom: "2px solid rgba(21,21,21,0.2)",
+            flexDirection: "column",
             alignItems: "center",
-            justifyContent: "space-between",
-            gap: "48px",
+            fontSize: 46,
+            lineHeight: 1.1,
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", maxWidth: "720px" }}>
-            <div
-              style={{
-                color: "#35452F",
-                fontFamily: "Arial, sans-serif",
-                fontSize: "24px",
-                fontWeight: 700,
-                textTransform: "uppercase",
-                marginBottom: "28px",
-              }}
-            >
-              Ellie&apos;s Botanics
-            </div>
-            <div style={{ fontSize: "92px", lineHeight: 0.96 }}>
-              Herbal wisdom for modern wellness.
-            </div>
-          </div>
-          <div
-            style={{
-              width: "290px",
-              height: "430px",
-              border: "2px dashed rgba(53,69,47,0.48)",
-              borderRadius: "999px",
-              background: "#B9BB85",
-            }}
-          />
+          <span>Herbal wisdom for</span>
+          <span>modern wellness.</span>
         </div>
       </div>
     ),

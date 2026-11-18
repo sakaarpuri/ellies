@@ -25,7 +25,6 @@ const defaultMetadata = pageMetadata({
   title: "Ellie's Botanics | Herbal Wisdom for Modern Wellness",
   description: site.description,
   path: "/",
-  imageAlt: "Ellie's Botanics botanical editorial wellness card",
 });
 
 export const metadata: Metadata = {

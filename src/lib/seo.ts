@@ -13,6 +13,7 @@ export type JsonLd = { [key: string]: JsonLdValue };
 
 type PageMetadataInput = {
   title: string;
+  socialTitle?: string;
   description: string;
   path?: string;
   type?: "website" | "article";
@@ -21,6 +22,8 @@ type PageMetadataInput = {
   publishedTime?: string;
   modifiedTime?: string;
 };
+
+const defaultShareImage = "/opengraph-image?v=2";
 
 export function absoluteUrl(path = "") {
   if (path.startsWith("http")) {
@@ -33,11 +36,12 @@ export function absoluteUrl(path = "") {
 
 export function pageMetadata({
   title,
+  socialTitle = title,
   description,
   path = "/",
   type = "website",
-  image = "/opengraph-image",
-  imageAlt = "Ellie's Botanics botanical wellness guide",
+  image = defaultShareImage,
+  imageAlt = "Ellie's Botanics botanical logo with the tagline Herbal wisdom for modern wellness.",
   publishedTime,
   modifiedTime,
 }: PageMetadataInput): Metadata {
@@ -52,7 +56,7 @@ export function pageMetadata({
       canonical,
     },
     openGraph: {
-      title,
+      title: socialTitle,
       description,
       url: canonical,
       siteName: site.name,
@@ -61,7 +65,7 @@ export function pageMetadata({
       images: [
         {
           url: imageUrl,
-          ...(image === "/opengraph-image" ? { width: 1200, height: 630 } : {}),
+          ...(image === defaultShareImage ? { width: 1200, height: 630, type: "image/png" } : {}),
           alt: imageAlt,
         },
       ],
@@ -74,7 +78,7 @@ export function pageMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: socialTitle,
       description,
       images: [imageUrl],
     },

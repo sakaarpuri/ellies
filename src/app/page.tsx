@@ -7,12 +7,13 @@ import { BotanicalRibbon } from "@/components/BotanicalRibbon";
 import { ConsultationIntakeSection } from "@/components/ConsultationIntakeSection";
 import { JsonLdScript } from "@/components/JsonLd";
 import { getFeaturedPosts } from "@/lib/wisdom";
-import { consultation, doctor } from "@/lib/site";
+import { consultation, doctor, site } from "@/lib/site";
 import { ArohiniShowcase } from "@/components/ArohiniShowcase";
 import { breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "Ellie's Botanics | Arohini & Ayurvedic Wellness",
+  socialTitle: site.name,
   description:
     "Discover Arohini for women's wellness 40+ around menopause, Ayurvedic herbal education and free consultations from Ellie's Botanics in India.",
   path: "/",
