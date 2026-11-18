@@ -46,8 +46,7 @@ export const navItems = [
 ];
 
 export const imagery = {
-  hero:
-    "https://images.pexels.com/photos/5480236/pexels-photo-5480236.jpeg?auto=compress&cs=tinysrgb&w=2200",
+  tulsi: "/images/krishna-tulsi.webp",
   basil:
     "https://images.pexels.com/photos/8329272/pexels-photo-8329272.jpeg?auto=compress&cs=tinysrgb&w=1600",
   turmeric:

@@ -38,7 +38,7 @@ export default function Home() {
     <>
       <section className="hero-shell">
         <div className="hero-copy">
-          <p className="eyebrow">Ayurvedic Healthcare · Est. Punjab</p>
+          <p className="eyebrow">Ayurvedic Healthcare</p>
           <h1>
             Rooted in <span>ancient</span> wisdom. Built for modern health.
           </h1>

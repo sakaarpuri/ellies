@@ -96,7 +96,7 @@ export function BotanicalImage({
         priority={priority}
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}
-        unoptimized
+        unoptimized={!src.startsWith("/")}
       />
     </span>
   );

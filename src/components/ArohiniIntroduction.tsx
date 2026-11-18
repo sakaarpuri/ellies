@@ -6,7 +6,6 @@ export function ArohiniIntroduction({ onHomePage = false }: { onHomePage?: boole
   return (
     <div className="arohini-introduction">
       <p className="product-introduction">{arohini.description}</p>
-      <p className="arohini-formula">Sugar-free. No artificial sweeteners.</p>
       <ul className="arohini-benefits" aria-label="Arohini wellness highlights">
         {arohiniPackHighlights.map((highlight) => <li key={highlight}><strong>{highlight}</strong></li>)}
       </ul>

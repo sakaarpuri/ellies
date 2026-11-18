@@ -10,8 +10,9 @@ export function BotanicalCollage({ variant = "hero" }: BotanicalCollageProps) {
     <div className={`botanical-collage ${variant}`}>
       <figure className="collage-frame main">
         <BotanicalImage
-          src={imagery.hero}
-          alt="Fresh tulsi leaves in a natural botanical setting"
+          src={imagery.tulsi}
+          alt="Krishna Tulsi with green leaves, purple stems and flowering spikes"
+          sizes="(max-width: 980px) 48vw, 26vw"
           priority
         />
       </figure>

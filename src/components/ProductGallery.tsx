@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Expand, X } from "lucide-react";
 
 import { arohiniPhotos } from "@/lib/products";
 
-export function ProductGallery({ lazy = false, children }: { lazy?: boolean; children?: ReactNode }) {
+export function ProductGallery({ editorial = false }: { editorial?: boolean }) {
   const [selected, setSelected] = useState<number | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -18,17 +18,20 @@ export function ProductGallery({ lazy = false, children }: { lazy?: boolean; chi
   }, [selected]);
 
   return (
-    <div className="product-photo-grid" role="group" aria-label="Arohini gallery">
-        {arohiniPhotos.map((photo, photoIndex) => (
-          <button key={photo.src} className="product-photo-tile" type="button" onClick={() => setSelected(photoIndex)}
-            aria-label={`Enlarge photo: ${photo.alt}`} title="Enlarge photo" aria-haspopup="dialog">
-            <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height}
-              sizes="(max-width: 760px) calc((100vw - 52px) / 2), (max-width: 1100px) 24vw, 310px"
-              priority={!lazy && photoIndex === 0} />
-            <span className="photo-expand"><Expand size={16} aria-hidden="true" /></span>
-          </button>
-        ))}
-      {children}
+    <div className={editorial ? "product-photo-grid product-photo-grid-editorial" : "product-photo-grid"} role="group" aria-label="Arohini gallery">
+      {arohiniPhotos.map((photo, photoIndex) => (
+        <button key={photo.src} className="product-photo-tile" type="button" onClick={() => setSelected(photoIndex)}
+          aria-label={`Enlarge photo: ${photo.alt}`} title="Enlarge photo" aria-haspopup="dialog">
+          <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height}
+            sizes={editorial
+              ? photoIndex === 0
+                ? "(max-width: 760px) 38vw, 210px"
+                : "(max-width: 760px) 76vw, (max-width: 1100px) 42vw, 500px"
+              : "(max-width: 760px) calc((100vw - 52px) / 2), (max-width: 1100px) 24vw, 330px"}
+            priority={!editorial && photoIndex === 0} />
+          <span className="photo-expand"><Expand size={16} aria-hidden="true" /></span>
+        </button>
+      ))}
       <dialog ref={dialog} className="product-photo-dialog" aria-label="Enlarged Arohini photo"
         onClose={() => setSelected(null)} onClick={(event) => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
         {selected !== null && (

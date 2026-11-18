@@ -52,6 +52,14 @@ export default function TermsPage() {
           <a href="https://www.geonames.org/export/zip/">GeoNames postal directory</a>{" "}
           under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0 licence</a>.
         </p>
+        <p>
+          The{" "}
+          <a href="https://commons.wikimedia.org/wiki/File:A_flourishing_Krishna_Tulsi_shrub_featuring_distinctive_purplish_stems_and_small_flowering_spikes_growing_in_a_home_garden_in_Assam._01.jpg">
+            Krishna Tulsi photograph
+          </a>{" "}
+          by AjayDas was cropped and resized for this site and is shared under the{" "}
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0 licence</a>.
+        </p>
         <h2>Contact</h2>
         <p>
           Questions about these terms can be sent to{" "}

@@ -3,7 +3,8 @@ export const arohini = {
   name: "Arohini",
   subtitle: "Women's wellness, 40+",
   description:
-    "A sugar-free Ayurvedic botanical elixir with seven botanicals for women aged 40 and beyond, including perimenopause and the years after menopause.",
+    "Arohini blends seven Ayurvedic botanicals in an elixir for women 40 and over, from perimenopause through menopause and beyond.",
+  formulation: "Sugar-free, with no artificial sweeteners",
   price: 270,
   size: "200 ml",
   courseDaysPerBottle: 10,
@@ -36,7 +37,7 @@ export const arohiniPhotos = [
 export const arohiniFaqs = [
   {
     question: "What is Arohini?",
-    answer: `${arohini.description} It comes in a 200 ml bottle and contains no artificial sweeteners.`,
+    answer: `${arohini.description} The ${arohini.size} bottle contains a sugar-free elixir with no artificial sweeteners.`,
   },
   {
     question: "Which ingredients are in Arohini?",

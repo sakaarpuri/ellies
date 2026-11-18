@@ -7,9 +7,9 @@ import { ArohiniIntroduction } from "@/components/ArohiniIntroduction";
 import { ArohiniHerbs } from "@/components/ArohiniHerbs";
 
 export const metadata = pageMetadata({
-  title: "Arohini: Sugar-Free Ayurvedic Elixir for Women 40+",
+  title: "Arohini Ayurvedic Elixir for Women 40+",
   description:
-    `Arohini is a sugar-free Ayurvedic botanical elixir for women's wellness 40+ around menopause. 200 ml, Rs.${arohini.price} with free delivery in India.`,
+    `${arohini.description} ${arohini.size}, Rs.${arohini.price} with free delivery in India.`,
   path: arohini.path,
   image: arohini.image,
   imageAlt: "Arohini 200 ml bottle and packaging",
@@ -32,7 +32,7 @@ export default function ArohiniPage() {
             </div>
             <div>
               <dt>Pack size</dt>
-              <dd>200 ml</dd>
+              <dd>{arohini.size}</dd>
             </div>
             <div>
               <dt>Botanicals</dt>
@@ -41,6 +41,10 @@ export default function ArohiniPage() {
             <div>
               <dt>Course duration</dt>
               <dd>{arohini.courseDaysPerBottle} days per bottle</dd>
+            </div>
+            <div className="product-formulation">
+              <dt>Formulation</dt>
+              <dd>{arohini.formulation}</dd>
             </div>
           </dl>
           <div className="product-price">
@@ -53,8 +57,9 @@ export default function ArohiniPage() {
             Buy Arohini
           </Link>
         </div>
-        <ProductGallery><ArohiniHerbs /></ProductGallery>
+        <ProductGallery />
       </section>
+      <ArohiniHerbs />
       <section className="product-guidance">
         <div>
           <p className="eyebrow sage">A thoughtful routine</p>
@@ -114,7 +119,7 @@ export default function ArohiniPage() {
             category: "Ayurvedic botanical elixir",
             additionalProperty: [
               { "@type": "PropertyValue", name: "Botanicals", value: arohiniBotanicals.map(({ name }) => name).join(", ") },
-              { "@type": "PropertyValue", name: "Formulation", value: "Sugar-free; no artificial sweeteners" },
+              { "@type": "PropertyValue", name: "Formulation", value: arohini.formulation },
             ],
             brand: { "@type": "Brand", name: "Ellie's Botanics" },
             offers: {
