@@ -91,19 +91,23 @@ export function CheckoutAddress() {
             aria-describedby="checkout-pin-help"
           />
         </label>
-        <p id="checkout-pin-help" className="checkout-hint" role="status">
+        <p
+          id="checkout-pin-help"
+          className={firstArea ? "sr-only" : "checkout-hint checkout-pin-status"}
+          role="status"
+        >
           {!validPin
-            ? "Enter your six-digit PIN code for area suggestions."
+            ? "Enter six digits for area suggestions."
             : !lookup
               ? "Finding delivery areas…"
               : lookup.unavailable
                 ? "Suggestions are temporarily unavailable. Enter your address below."
                 : areas.length === 0
                   ? "No areas found for this PIN code. Enter your address below."
-                  : "Select a suggested area or enter your address below."}
+                  : "Delivery area suggestions available."}
         </p>
         {areas.length > 0 && (
-          <label className="checkout-area-picker">
+          <label>
             Suggested areas
             <select key={pin} defaultValue="" onChange={(event) => applyArea(areas[parseInt(event.target.value, 10)])}>
               <option value="">Choose your area</option>
@@ -116,11 +120,11 @@ export function CheckoutAddress() {
           </label>
         )}
       </div>
-      <label className="full">
+      <label className="checkout-street">
         Flat / house number and building
         <input name="address" autoComplete="shipping address-line1" required minLength={3} maxLength={250} />
       </label>
-      <label className="full">
+      <label className="checkout-street">
         Street, area or locality (optional)
         <input ref={localityInput} name="addressLine2" autoComplete="shipping address-line2" maxLength={120} />
       </label>
@@ -132,13 +136,13 @@ export function CheckoutAddress() {
         State / Union territory
         <input ref={stateInput} name="state" autoComplete="shipping address-level1" required minLength={2} maxLength={80} />
       </label>
-      <label className="full">
-        Nearby landmark (optional)
-        <input name="landmark" maxLength={100} />
-      </label>
-      <small className="checkout-hint full">
-        PIN data from <a href="https://www.geonames.org/export/zip/">GeoNames</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
-      </small>
+      <details className="checkout-landmark full">
+        <summary>Add landmark</summary>
+        <label>
+          Nearby landmark (optional)
+          <input name="landmark" maxLength={100} />
+        </label>
+      </details>
     </div>
   );
 }

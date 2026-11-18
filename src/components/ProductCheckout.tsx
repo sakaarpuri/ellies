@@ -3,7 +3,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { CheckoutAddress } from "@/components/CheckoutAddress";
-import { arohini, arohiniBundle, getArohiniPrice } from "@/lib/products";
+import { arohini, arohiniBundle, arohiniBundleMessage, getArohiniPrice } from "@/lib/products";
 import { site } from "@/lib/site";
 
 const rupees = new Intl.NumberFormat("en-IN", {
@@ -14,7 +14,7 @@ const rupees = new Intl.NumberFormat("en-IN", {
 });
 
 export function ProductCheckout() {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<number>(arohiniBundle.quantity);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const { subtotal, discount, total } = getArohiniPrice(quantity);
@@ -72,8 +72,8 @@ export function ProductCheckout() {
         <div className="checkout-product">
           <Image
             src={arohini.image}
-            width={112}
-            height={140}
+            width={76}
+            height={95}
             alt="Arohini bottle and box"
           />
           <div>
@@ -85,10 +85,10 @@ export function ProductCheckout() {
             </p>
           </div>
         </div>
-        <div className="checkout-offer">
-          <p>One {arohini.size} bottle covers a regular 10-day course when taken as directed on the label.</p>
-          <p><strong>Save {arohiniBundle.discountPercent}% on every set of {arohiniBundle.quantity} bottles.</strong></p>
-        </div>
+        <p className="arohini-bundle-note">{arohiniBundleMessage}</p>
+        <p className="checkout-course">
+          One {arohini.size} bottle covers a regular {arohini.courseDaysPerBottle}-day course when taken as directed on the label.
+        </p>
         <label className="quantity-field">
           Quantity{" "}
           <select
@@ -98,7 +98,7 @@ export function ProductCheckout() {
           >
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <option key={n} value={n}>
-                {n} {n === 1 ? "bottle" : "bottles"}
+                {n} {n === 1 ? "bottle" : "bottles"} ({n * arohini.courseDaysPerBottle} days)
               </option>
             ))}
           </select>
@@ -135,8 +135,8 @@ export function ProductCheckout() {
       <form className="checkout-form" onSubmit={submit}>
         <fieldset disabled={busy}>
           <legend>Contact details</legend>
-          <div className="checkout-fields">
-            <label className="full">
+          <div className="checkout-fields checkout-contact-fields">
+            <label>
               Full name
               <input
                 name="name"
@@ -144,16 +144,6 @@ export function ProductCheckout() {
                 required
                 minLength={2}
                 maxLength={60}
-              />
-            </label>
-            <label>
-              Email
-              <input
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                maxLength={100}
               />
             </label>
             <label>
@@ -165,6 +155,16 @@ export function ProductCheckout() {
                 required
                 minLength={10}
                 maxLength={20}
+              />
+            </label>
+            <label className="checkout-email">
+              Email
+              <input
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                maxLength={100}
               />
             </label>
           </div>
@@ -187,10 +187,7 @@ export function ProductCheckout() {
               requests for product feedback. (Optional)
             </span>
           </label>
-          <p className="product-small">
-            Your payment details are entered on secure checkout, not stored on
-            this website.
-          </p>
+          <p className="checkout-hint">Enter payment details securely on PayU.</p>
           {error && (
             <p role="alert" className="checkout-error">
               {error}

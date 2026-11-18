@@ -6,6 +6,7 @@ export const arohini = {
     "A sugar-free Ayurvedic botanical elixir with seven botanicals for women aged 40 and beyond, including perimenopause and the years after menopause.",
   price: 270,
   size: "200 ml",
+  courseDaysPerBottle: 10,
   image: "/images/arohini.webp",
   path: "/products/arohini",
   deliveryEstimate: "Typically delivered in 7 days within India.",
@@ -13,6 +14,8 @@ export const arohini = {
 };
 
 export const arohiniBundle = { quantity: 3, discountPercent: 10 } as const;
+export const arohiniBundleMessage =
+  `Save ${arohiniBundle.discountPercent}% on every set of ${arohiniBundle.quantity} bottles.`;
 
 export function getArohiniPrice(quantity: number) {
   const subtotal = quantity * arohini.price;

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ProductGallery } from "@/components/ProductGallery";
-import { arohini, arohiniBotanicals, arohiniFaqs, arohiniPhotos } from "@/lib/products";
+import { arohini, arohiniBotanicals, arohiniBundleMessage, arohiniFaqs, arohiniPhotos } from "@/lib/products";
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata, webPageJsonLd } from "@/lib/seo";
 import { JsonLdScript } from "@/components/JsonLd";
 import { ArohiniIntroduction } from "@/components/ArohiniIntroduction";
@@ -38,12 +38,17 @@ export default function ArohiniPage() {
               <dt>Botanicals</dt>
               <dd>Seven</dd>
             </div>
+            <div>
+              <dt>Course duration</dt>
+              <dd>{arohini.courseDaysPerBottle} days per bottle</dd>
+            </div>
           </dl>
           <div className="product-price">
             <strong>₹{arohini.price}</strong>
-            <span>Free delivery within India</span>
+            <span>Per bottle · Free delivery within India</span>
           </div>
           <p className="product-small">{arohini.deliveryEstimate}</p>
+          <p className="arohini-bundle-note">{arohiniBundleMessage}</p>
           <Link className="button primary product-buy" href="/checkout/arohini">
             Buy Arohini
           </Link>

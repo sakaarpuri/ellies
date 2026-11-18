@@ -47,6 +47,11 @@ export default function TermsPage() {
           Links and references are provided for context. Ellie&apos;s Botanics
           is not responsible for third-party websites.
         </p>
+        <p>
+          Checkout address suggestions use the{" "}
+          <a href="https://www.geonames.org/export/zip/">GeoNames postal directory</a>{" "}
+          under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0 licence</a>.
+        </p>
         <h2>Contact</h2>
         <p>
           Questions about these terms can be sent to{" "}
