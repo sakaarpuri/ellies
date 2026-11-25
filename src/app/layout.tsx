@@ -56,6 +56,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${dmSans.variable} ${marcellus.variable}`}>
+      <head>
+        <script
+          async
+          src="https://www.googletagmanager.com/gtm.js?id=AW-18534973763"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());`,
+          }}
+        />
+      </head>
       <body>
         <a className="skip-link" href="#main">
           Skip to content
